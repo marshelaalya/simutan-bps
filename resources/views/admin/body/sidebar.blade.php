@@ -21,30 +21,32 @@
         <li>
             <a href="javascript: void(0);" class="has-arrow waves-effect">
                 <i class="ri-mail-send-line"></i>
-                <span>Permintaan Barang</span>
+                <span>Approval</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
-                <li><a href="{{ route('permintaan.all')}}">List Permintaan</a></li>
+                <li><a href="{{ route('permintaan.all')}}">List Approval</a></li>
             </ul>
         </li>
 
         <li>
-            <a href="javascript: void(0);" class="has-arrow waves-effect">
+            <a href="javascript:void(0);" class="has-arrow waves-effect">
                 <i class="ri-mail-send-line"></i>
-                <span>Kelompok Barang</span>
+                <span>Barang</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
-                <li><a href="{{ route('kelompok.all')}}">List Kelompok Barang</a></li>
+                <li><a href="{{ route('barang.all') }}">Persediaan Barang</a></li>
+                <li><a href="{{ route('kelompok.all') }}">Kelompok Barang</a></li>
             </ul>
         </li>
+        
 
         <li>
             <a href="javascript: void(0);" class="has-arrow waves-effect">
                 <i class="ri-mail-send-line"></i>
-                <span>Persediaan Barang</span>
+                <span>Permintaan</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
-                <li><a href="{{ route('barang.all')}}">List Persediaan Barang</a></li>
+                <li><a href="{{ route('pilihan.all')}}">List Permintaan</a></li>
             </ul>
         </li>
 
