@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('permintaans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            // $table->unsignedBigInteger('pilihan_id');
+            $table->unsignedBigInteger('no_permintaan');
             $table->date('tgl_request');
-            $table->enum('status', ['pending', 'accepted', 'rejected']);
+            $table->enum('status', ['pending', 'approved by admin', 'approved by supervisor', 'rejected by admin', 'rejected by admin']);
             $table->text('ctt_adm')->nullable();
             $table->text('ctt_spv')->nullable();
             $table->timestamps();
