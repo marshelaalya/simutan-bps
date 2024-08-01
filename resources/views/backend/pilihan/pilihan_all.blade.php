@@ -18,7 +18,7 @@
                     <div class="card-body">
 
                         <a href="{{ route('pilihan.add') }}" class="btn btn-dark btn-rounded waves-effect waves-light" 
-                        style="float:right;">Tambah Pengajuan</a> <br>
+                        style="float:right;">Ajukan Permintaan</a> <br>
 
                         <h4 class="card-title">Halaman Pengajuan Barang</h4>
                         <table id="datatable" class="table table-bordered dt-responsive nowrap" 

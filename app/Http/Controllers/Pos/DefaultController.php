@@ -13,11 +13,18 @@ use Illuminate\Support\Carbon;
 
 class DefaultController extends Controller
 {
-    public function GetCategory(Request $request){
-        $kelompok_id = $request->kelompok_id;
-        // dd($barang_id);
-        $allCategory = Barang::with(['kelompok'])->select('barang_id')->where('kelompok_id', $kelompok_id)->GroupBy('barang_id')->get();
-        dd($allCategory);
+    public function GetCategory(Request $request)
+{
+    $kelompok_id = $request->kelompok_id;
+
+    try {
+        $allCategory = Barang::where('kelompok_id', $kelompok_id)
+                             ->select('id', 'nama', 'qty_item') // Pastikan untuk memilih kolom qty_item
+                             ->get();
         return response()->json($allCategory);
-    } // End Method
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
+
 }

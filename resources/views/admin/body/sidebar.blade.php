@@ -18,15 +18,6 @@
                                 </a>
                             </li>
                
-        <li>
-            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class="ri-mail-send-line"></i>
-                <span>Approval</span>
-            </a>
-            <ul class="sub-menu" aria-expanded="false">
-                <li><a href="{{ route('permintaan.all')}}">List Approval</a></li>
-            </ul>
-        </li>
 
         <li>
             <a href="javascript:void(0);" class="has-arrow waves-effect">
@@ -47,6 +38,7 @@
             </a>
             <ul class="sub-menu" aria-expanded="false">
                 <li><a href="{{ route('pilihan.all')}}">List Permintaan</a></li>
+                <li><a href="{{ route('pilihan.add') }}">Ajukan Permintaan</a></li>
             </ul>
         </li>
 
