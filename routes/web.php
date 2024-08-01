@@ -6,6 +6,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Pos\PermintaanController;
 use App\Http\Controllers\Pos\KelompokController;
 use App\Http\Controllers\Pos\BarangController;
+use App\Http\Controllers\Pos\PilihanController;
+use App\Http\Controllers\Pos\DefaultController;
 
 
 Route::get('/', function () {
@@ -45,8 +47,8 @@ Route::controller(KelompokController::class)->group(function () {
     Route::get('/kelompok/add', 'KelompokAdd')->name('kelompok.add');
     Route::post('/kelompok/store', 'KelompokStore')->name('kelompok.store');
     Route::get('/kelompok/edit/{id}', 'KelompokEdit')->name('kelompok.edit');
-    Route::post('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update'); // Menggunakan {id}
-    Route::get('/kelompok/delete/{id}', 'KelompokDelete')->name('kelompok.delete'); // Pastikan route dan controller method-nya benar
+    Route::post('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update'); 
+    Route::get('/kelompok/delete/{id}', 'KelompokDelete')->name('kelompok.delete');
 });
 
 Route::controller(BarangController::class)->group(function () {
@@ -54,8 +56,26 @@ Route::controller(BarangController::class)->group(function () {
     Route::get('/barang/add', 'BarangAdd')->name('barang.add');
     Route::post('/barang/store', 'BarangStore')->name('barang.store');
     Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
-    Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update'); // Menggunakan {id}
-    Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete'); // Pastikan route dan controller method-nya benar
+    Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update'); 
+    Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete'); 
+});
+
+Route::controller(PilihanController::class)->group(function () {
+    Route::get('/pilihan/all', 'PilihanAll')->name('pilihan.all');
+    Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
+    // Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
+    // Route::get('/pilihan/edit/{id}', 'PilihanEdit')->name('pilihan.edit');
+    // Route::post('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update'); 
+    // Route::get('/pilihan/delete/{id}', 'PilihanDelete')->name('pilihan.delete'); 
+});
+
+Route::controller(DefaultController::class)->group(function () {
+    Route::get('/get-category', 'GetCategory')->name('get-category');
+    // Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
+    // Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
+    // Route::get('/pilihan/edit/{id}', 'PilihanEdit')->name('pilihan.edit');
+    // Route::post('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update'); 
+    // Route::get('/pilihan/delete/{id}', 'PilihanDelete')->name('pilihan.delete'); 
 });
 
 
