@@ -55,6 +55,13 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Pengajuan Permintaan Barang</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Halaman Pengajuan Permintaan</h4><br><br>
@@ -115,7 +122,30 @@
                                             </select>
                                         </div>
                                     </div>
+                            <!-- Step 2 -->
+                            <div id="step2" class="step-content" style="display: none;">
+                                <h5>Langkah 2: Detail Permintaan</h5>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="kelompok_id" class="form-label">Kelompok Barang</label>
+                                            <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
+                                                <option selected disabled>Kelompok Barang</option>
+                                                @foreach($kelompok as $kel)
+                                                    <option value="{{ $kel->id }}">{{ $kel->nama }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
 
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="barang_id" class="form-label">Nama Barang</label>
+                                            <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
+                                                <option selected disabled>Pilih barang yang ingin diajukan</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <label for="barang_id" class="form-label">Nama Barang</label>
@@ -134,7 +164,21 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="req_qty" class="form-label">Kuantitas Permintaan</label>
+                                            <input class="form-control" name="req_qty" type="text" id="req_qty">
+                                            <div id="qty_warning" class="form-text text-danger" style="display: none;">
+                                                Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
+                                        </div>
+                                    </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
@@ -195,9 +239,24 @@
     </tr>
 </script>
 
+<script id="document-template" type="text/x-handlebars-template">
+    <tr class="delete_add_more_item">
+        <td>@{{ date }}</td>
+        <td>@{{ barang_nama }}</td>
+        <td>@{{ kelompok_nama }}</td>
+        <td>@{{ qty_req }} @{{ barang_satuan }}</td>
+        <td>@{{ description }}</td>
+        <td>
+            <i class="btn btn-danger btn-sm fas fa-window-close removeeventmore"></i>
+        </td>
+    </tr>
+</script>
+
 <script type="text/javascript">
     $(document).ready(function() {
+        var currentStep = 1;
         var availableQty = 0; // Variabel untuk menyimpan kuantitas barang yang tersedia
+        var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
         var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
         var today = new Date().toISOString().split('T')[0];
         $('#date').attr('min', today);
@@ -235,6 +294,7 @@
                 success: function(data) {
                     var html = '<option value="">Pilih barang yang ingin diajukan</option>';
                     $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
                         html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
                     });
                     $('#barang_id').html(html);

@@ -8,6 +8,8 @@ use App\Http\Controllers\Pos\KelompokController;
 use App\Http\Controllers\Pos\BarangController;
 use App\Http\Controllers\Pos\PilihanController;
 use App\Http\Controllers\Pos\DefaultController;
+use App\Http\Controllers\Pos\WizardController;
+
 
 
 Route::get('/', function () {
@@ -20,6 +22,10 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/contact', 'ContactMethod')->name('cotact.page');
 });
 
+Route::controller(WizardController::class)->group(function () {
+    Route::get('/wizard', [WizardController::class, 'index'])->name('wizard.index');
+    Route::post('/wizard-submit', [WizardController::class, 'submit'])->name('wizard.submit');
+});
 
  // Admin All Route 
 Route::controller(AdminController::class)->group(function () {

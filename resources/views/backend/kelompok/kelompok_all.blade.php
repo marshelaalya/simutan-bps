@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Kelompok All</h4>
+                    <h4 class="mb-sm-0">List Kelompok Barang</h4>
                 </div>
             </div>
         </div>
@@ -14,29 +14,46 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
+
                     <div class="card-body">
-                        <a href="{{ route('kelompok.add') }}" class="btn btn-dark btn-rounded waves-effect waves-light" style="float:right;">Tambah Kelompok Barang</a> <br>
-                        <h4 class="card-title">Kelompok Barang All Data </h4>
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
+                        
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h4 class="card-title mb-0">Kelompok Barang</h4>
+                            <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">
+                                <i class="mdi mdi-plus-circle"></i> Tambah Barang
+                            </a>
+                        </div>
+                                               
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap" 
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            
+                        <thead>
+                            <tr>
+                                <th width="1%">ID</th>
+                                <th>Nama</th>
+                                <th width="1%">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($kelompoks as $item)
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Nama</th>
-                                    <th width="20%">Action</th>
+                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td class="table-actions" style="text-align: center; vertical-align: middle;">
+                                        <!-- Tombol dengan link route ke halaman view -->
+                                        <a href="{{ route('kelompok.edit', $item->id) }}" class="btn bg-warning btn-sm">
+                                            <i class="fas fa-edit" style="color: #ca8a04"></i>
+                                        </a>
+                                        
+                                        <!-- Tombol dengan link route ke halaman print -->
+                                        <a href="{{ route('kelompok.delete', $item->id) }}" class="btn bg-danger btn-sm">
+                                            <i class="fas fa-trash-alt text-danger"></i>
+                                        </a>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($kelompoks as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->nama }}</td>
-                                        <td>
-                                            <a href="{{ route('kelompok.edit', $item->id) }}" class="btn btn-info sm" title="Edit Data"> <i class="fas fa-edit"></i> </a>
-                                            <a href="{{ route('kelompok.delete', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"> <i class="fas fa-trash-alt"></i> </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
+                            @endforeach
+                        </tbody>
+
                         </table>
                     </div>
                 </div>
