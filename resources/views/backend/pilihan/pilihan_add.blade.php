@@ -139,13 +139,16 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                </div>
+                                <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
-
+                                </div>
+                                    
+                                <div class="row">
                                     <div class="col-md-12 mt-3">
                                         <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                             <thead>
@@ -163,6 +166,8 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                                    
                                 </div>
                             </div>
 
