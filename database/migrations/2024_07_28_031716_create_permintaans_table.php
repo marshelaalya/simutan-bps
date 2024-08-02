@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             // $table->unsignedBigInteger('pilihan_id');
-            $table->unsignedBigInteger('no_permintaan');
+            $table->string('no_permintaan');
             $table->date('tgl_request');
             $table->enum('status', ['pending', 'approved by admin', 'approved by supervisor', 'rejected by admin', 'rejected by admin']);
             $table->text('ctt_adm')->nullable();

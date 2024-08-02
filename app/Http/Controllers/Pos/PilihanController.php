@@ -8,8 +8,9 @@ use App\Models\Pilihan;
 use App\Models\Barang;
 use App\Models\Kelompok;
 use App\Models\Permintaan;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log; // Import Log Facade
 
 class PilihanController extends Controller
 {
@@ -93,4 +94,99 @@ class PilihanController extends Controller
         return view('backend.pilihan.pilihan_add', compact('barang','permintaan','kelompok'));
     }
 
+    public function PermintaanStore(Request $request){
+        // Ambil data terakhir dari tabel untuk menentukan digit pertama
+        $lastPermintaan = Permintaan::orderBy('id', 'desc')->first();
+        $lastNoPermintaan = $lastPermintaan ? $lastPermintaan->no_permintaan : null;
+    
+        // Tentukan digit pertama
+        $digitPertama = '0000';
+        if ($lastNoPermintaan) {
+            $lastDigit = (int) substr($lastNoPermintaan, 2, 4);
+            $digitPertama = str_pad($lastDigit + 1, 4, '0', STR_PAD_LEFT);
+        }
+    
+        // Format untuk bulan dan tahun
+        $bulan = Carbon::now()->format('m');
+        $tahun = Carbon::now()->format('Y');
+    
+        // Format nomor permintaan
+        $noPermintaan = "B-{$digitPertama}/31751/PL.711/{$bulan}/{$tahun}";
+    
+        // Simpan data permintaan
+        $permintaan = Permintaan::create([
+            'user_id' => Auth::user()->id, // ID user yang sedang login
+            'no_permintaan' => $noPermintaan,
+            'tgl_request' => Carbon::now()->format('Y-m-d'),
+            'status' => 'pending', // Status default
+            'ctt_adm' => null,
+            'ctt_spv' => null, 
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+    
+        // Mengembalikan ID permintaan yang baru dibuat
+        return $permintaan->id;
+    }
+    
+    public function PilihanStore(Request $request)
+    {
+        // Ambil data dari input hidden
+        $tableData = $request->input('table_data');
+
+        // Log data untuk debugging
+        Log::info('Table Data:', ['data' => $tableData]);
+
+        // Pastikan data tidak null
+        if (empty($tableData)) {
+            $notification = array(
+                'message' => 'Data tabel tidak ada',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        // Decode data JSON
+        $tableData = json_decode($tableData, true);
+
+        // Periksa apakah $tableData adalah array dan tidak kosong
+        if (is_array($tableData) && !empty($tableData)) {
+            foreach ($tableData as $index => $item) {
+                // Validasi data
+                if (isset($item['date'], $item['kelompok_nama'], $item['barang_nama'], $item['qty_req'], $item['description'])) {
+                    // Proses data
+                    $pilihan = new Pilihan();
+                    $pilihan->permintaan_id = $this->PermintaanStore($request);
+                    $pilihan->date = $item['date']; // Ambil tanggal dari item JSON
+                    // Ambil ID barang dan kelompok dari nama (mungkin perlu penyesuaian jika ID berbeda)
+                    $barang = Barang::where('nama', $item['barang_nama'])->first();
+                    $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
+                    if ($barang && $kelompok) {
+                        $pilihan->barang_id = $barang->id;
+                        // $pilihan->kelompok_id = $kelompok->id;
+                        $pilihan->req_qty = $item['qty_req'];
+                        $pilihan->description = $item['description'];
+                        $pilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur pilihan_no sesuai dengan kebutuhan
+                        $pilihan->created_at = Carbon::now();
+                        $pilihan->updated_at = Carbon::now();
+                        $pilihan->save(); // Simpan ke database
+                    }
+                }
+            }
+
+            // Kirimkan notifikasi sukses dan redirect
+            $notification = array(
+                'message' => 'Data berhasil disimpan',
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        } else {
+            // Jika $tableData bukan array atau kosong
+            $notification = array(
+                'message' => 'Data tabel tidak valid',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+    }
 }

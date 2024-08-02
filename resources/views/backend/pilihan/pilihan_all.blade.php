@@ -1,5 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div class="page-content">
     <div class="container-fluid">
@@ -26,36 +28,30 @@
                             
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Pengaju</th>
-                                    <th>Pilihan</th>
-                                    <th>ID Permintaan</th>
-                                    <th>Barang</th>
-                                    <th>Deskripsi</th>
-                                    <th>Jumlah Permintaan</th>
-                                    <th width="20%">Action</th>
+                                    <th>Tanggal</th>
+                                    <th>Nama Pengaju</th>
+                                    <th>Catatan</th>
+                                    <th>Approval Admin</th>
+                                    <th>Approval Supervisor</th>
+                                    <th width="20%">Aksi</th>
                                 </tr>
                             </thead>
-
+                            
                             <tbody>
                                 @foreach($pilihans as $key => $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
-                                    <td>{{ $item->pilihan_no }}</td>
-                                    <td>{{ $item->permintaan_id }}</td>
-                                    <td>{{ $item->barang->nama ?? 'N/A' }}</td>
+                                    <td>{{ $item->date }}</td>
+                                    <td>{{ $item->permintaan->user->name ?? 'N/A' }}</td>
                                     <td>{{ $item->description }}</td>
-                                    <td>{{ $item->req_qty }}</td>
-                                    <td>{{ $item->satuan }}</td>
+                                    <td>{{ $item->permintaan->status ?? 'N/A' }}</td>
+                                    <td>{{ $item->permintaan->status ?? 'N/A' }}</td>
                                     <td>
                                         <a href="{{ route('barang.edit', $item->id) }}" class="btn btn-info sm" title="Edit Data"><i class="fas fa-edit"></i></a>
                                         <a href="{{ route('barang.delete', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"><i class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
-                            </tbody>                         
-                            
-
+                            </tbody>
                         </table>
                     </div>
                 </div>
