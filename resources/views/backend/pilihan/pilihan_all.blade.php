@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Halaman Barang Ajuan</h4>
+                    <h4 class="mb-sm-0">List Permintaan</h4>
                 </div>
             </div>
         </div>
@@ -42,12 +42,9 @@
 
                     <div class="card-body">
 
-                        <a href="{{ route('pilihan.add') }}" class="btn btn-dark btn-rounded waves-effect waves-light" 
-                        style="float:right;">Ajukan Permintaan</a> <br>
+                        <a href="{{ route('pilihan.add') }}" class="btn btn-dark btn-rounded waves-effect waves-light mb-3">Ajukan Permintaan</a> <br>
 
-                        <h4 class="card-title">Halaman Pengajuan Barang</h4>
-
-                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" 
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap" 
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             
                             <thead>
@@ -59,7 +56,7 @@
                                     <th>Barang</th>
                                     <th>Deskripsi</th>
                                     <th>Jumlah Permintaan</th>
-                                    <th width="20%">Action</th>
+                                    <th width="20%" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
 
