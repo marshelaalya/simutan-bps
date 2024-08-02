@@ -4662,8 +4662,8 @@ textarea.form-control-lg{
 .page-item.active .page-link{
     z-index:3;
     color:#fff;
-    background-color:#0f9cf3;
-    border-color:#0f9cf3
+    background-color:#043277;
+    border-color:#043277
 }
 .page-item.disabled .page-link{
     color:#ced4da;
@@ -11464,6 +11464,10 @@ a,button{
     color:#6c757d;
     margin-bottom:24px
 }
+.table-actions {
+    white-space: nowrap; /* Mencegah teks berpindah baris */
+    width: auto; /* Menyesuaikan lebar dengan konten */
+}
 .dropdown-menu{
     -webkit-box-shadow:0 5px 12px rgba(0,0,0,.1);
     box-shadow:0 5px 12px rgba(0,0,0,.1);
@@ -11616,7 +11620,7 @@ a,button{
     background-color:#fff
 }
 .pagination-rounded .page-link{
-    border-radius:30px!important;
+    border-radius:0.2rem!important;
     margin:0 3px;
     border:none;
     text-align:center;
