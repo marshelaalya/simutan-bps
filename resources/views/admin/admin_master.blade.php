@@ -100,6 +100,9 @@
         <!-- App js -->
         <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 
+        <!-- Handle Bars js -->
+        <script src="{{ asset('backend/assets/js/handlebars.js') }}"></script>
+
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
@@ -131,6 +134,8 @@
 
         <!-- Datatable init js -->
         <script src="{{ asset('backend/assets/js/pages/datatables.init.js') }}"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/notify.js/2.0.0/notify.min.js" integrity="sha512-iy8/ErLJUuqWbu30yUSCxXtE3FCDZi3y5op0Duqdp7vtpeh1E6ZyAPnRS+OrJHddh4uP30oYpwNt7TXPbmP5lQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     </body>

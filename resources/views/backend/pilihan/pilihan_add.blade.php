@@ -72,12 +72,65 @@
                                 </div>
                             </div>
                         </div> {{-- End Row --}}
+                    </div> {{-- End Card Body --}}
+                    {{-- -------------------------------- --}}
+                
+                    <div class="card-body">
+                        <form method="" action="">
+                            @csrf
+                            <!-- Tabel -->
+                            <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20%;">Nama Barang</th>
+                                        <th style="width: 20%;">Kelompok Barang</th>
+                                        <th style="width: 10%;">Kuantitas</th>
+                                        <th style="width: 40%;">Deskripsi</th>
+                                        <th style="width: 10%;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data tabel di sini -->
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info" id="storeButton">Submit</button>
                     </div>
                 </div>
             </div> <!-- end col -->
         </div>
     </div>
 </div>
+
+<script id="document-template" type="text/x-handlebars-template">
+
+    <tr class="delete_add_more_item" id="delete_add_more_item">
+        
+        <input type="hidden" name="date[]" value=@{{ date }}>
+        {{-- <input type="hidden" name="kelompok_id[]" value=@{{ kelompok_id }}>
+        <input type="hidden" name="barang_id[]" value=@{{ barang_id }}>
+        <input type="hidden" name="qty_req[]" value=@{{ qty_req }}> --}}
+    
+        <td>
+            <input type="hidden" name="kelompok_id" value="@{{ kelompok_id }}">@{{ kelompok_nama }}
+        </td>
+        <td>
+            <input type="hidden" name="barang_id" value="@{{ barang_id }}">@{{ barang_nama }}
+        </td>
+    
+        <input type="number" min="1" class="form-control qty_req text-right" name="qty_req[]" value="">
+    
+        <input type="text" min="1" class="form-control" name="description[]" value="">
+    
+        <td>
+            <i class="btn btn-danger btn-sm fas fa-window-close removeeventmore"></i>
+        </td>
+    
+    </tr>
+
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {
