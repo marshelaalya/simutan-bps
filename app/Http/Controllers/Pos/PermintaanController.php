@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Permintaan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use App\Models\Pilihan;
 
 class PermintaanController extends Controller
@@ -54,6 +55,14 @@ class PermintaanController extends Controller
     
         // Mengembalikan ID permintaan yang baru dibuat
         return $permintaan->id;
+    }
+
+    public function ViewPermintaan()
+    {
+        // Ambil semua permintaan dengan relasi pilihan
+        $permintaans = Permintaan::with('pilihan')->get();
+
+        return view('your-view', ['permintaans' => $permintaans]);
     }
     
 }

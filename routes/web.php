@@ -9,8 +9,20 @@ use App\Http\Controllers\Pos\BarangController;
 use App\Http\Controllers\Pos\PilihanController;
 use App\Http\Controllers\Pos\DefaultController;
 use App\Http\Controllers\WizardController;
+use App\Models\Permintaan;
+use Illuminate\Support\Carbon;
 
+Route::get('/index', function () {
+    // Mendapatkan tanggal awal dan akhir bulan ini
+    $startOfMonth = Carbon::now()->startOfMonth();
+    $endOfMonth = Carbon::now()->endOfMonth();
 
+    // Menghitung total permintaan bulan ini
+    $totalPermintaanBulanIni = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])->count();
+
+    // Kirimkan data ke view
+    return view('index', ['totalPermintaanBulanIni' => $totalPermintaanBulanIni]);
+});
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,6 +56,8 @@ Route::controller(AdminController::class)->group(function () {
 Route::controller(PermintaanController::class)->group(function () {
     Route::get('/permintaan/all', 'PermintaanAll')->name('permintaan.all');
     Route::get('/permintaan/add', 'PermintaanAdd')->name('permintaan.add');
+    // Route::get('/permintaans', [PermintaanController::class, 'index'])->name('permintaan.index');
+    // Route::get('/permintaan/saya', 'PermintaanSaya')->name('permintaan.saya');
 
      
 });

@@ -150,10 +150,9 @@
                                         <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                             <thead>
                                                 <tr>
-                                                    <th style="width: 28%;">Nama Barang</th>
                                                     <th style="width: 23%;">Kelompok Barang</th>
+                                                    <th style="width: 28%;">Nama Barang</th>
                                                     <th style="width: 12%;">Kuantitas</th>
-                                                    <th style="width: 27%;">Deskripsi</th>
                                                     <th style="width: 10%;">Aksi</th>
                                                 </tr>
                                             </thead>
@@ -183,16 +182,15 @@
 </div>
 
 <script id="document-template" type="text/x-handlebars-template">
-    <tr class="delete_add_more_item">
-        <td>@{{ date }}</td>
-        <td>@{{ barang_nama }}</td>
+    <tr class="delete_add_more_item" data-date="@{{ date }}" data-description="@{{ description }}">
         <td>@{{ kelompok_nama }}</td>
+        <td>@{{ barang_nama }}</td>
         <td>@{{ qty_req }} @{{ barang_satuan }}</td>
-        <td>@{{ description }}</td>
         <td>
             <i class="btn btn-danger btn-sm fas fa-window-close removeeventmore"></i>
         </td>
     </tr>
+    
 </script>
 
 <script type="text/javascript">
@@ -298,11 +296,13 @@
 
             $('#table-body').append(html);
 
-            // $('#date').val('');
+            // Menjadi Read Only setelah Klik Tambah lagi
+            $('#date').prop('readonly', true);
+            $('#textarea').prop('readonly', true);
+
             $('#kelompok_id').val('');
             $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
             $('#req_qty').val('');
-            $('#textarea').val('');
             $('#current_qty').text('Kuantitas barang sekarang: ');
             validateForm();
         });
@@ -314,26 +314,26 @@
 
         $('#mainForm').on('submit', function(e) {
             e.preventDefault(); // Prevent default form submission
+
             var tableData = [];
             $('#table-body tr').each(function() {
-                var date = $(this).find('td:eq(0)').text();
+                var date = $(this).data('date');
+                var description = $(this).data('description');
+                var kelompok_nama = $(this).find('td:eq(0)').text();
                 var barang_nama = $(this).find('td:eq(1)').text();
-                var kelompok_nama = $(this).find('td:eq(2)').text();
-                var qty_req = $(this).find('td:eq(3)').text();
-                var description = $(this).find('td:eq(4)').text();
+                var qty_req = $(this).find('td:eq(2)').text();
 
                 tableData.push({
                     date: date,
-                    barang_nama: barang_nama,
                     kelompok_nama: kelompok_nama,
+                    barang_nama: barang_nama,
                     qty_req: qty_req,
                     description: description
                 });
             });
-            $('#table_data').val(JSON.stringify(tableData)); // Menyimpan data dalam format JSON
 
-            // Optionally submit the form if you want to submit it programmatically
-            this.submit(); 
+            $('#table_data').val(JSON.stringify(tableData));
+            $(this).off('submit').submit(); // Remove the submit handler and submit the form
         });
 
         // Navigasi antara langkah menggunakan tombol next dan previous
