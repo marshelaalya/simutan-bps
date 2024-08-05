@@ -32,8 +32,7 @@
             <div class="flex-grow-1">
                 <h5 class="font-size-14 mb-1">Total Permintaan Diajukan</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                <h4 class="mb-2 mt-2">58</h4>
-                {{-- <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>9.23%</span>from previous period</p> --}}
+                <h4 class="mb-2 mt-2">{{ $totalPermintaanBulanIni ?? 'Tidak ada data' }}</h4>
             </div>
             <div class="avatar-sm">
                 <span class="avatar-title bg-primary text-primary rounded-3">
@@ -51,8 +50,7 @@
             <div class="flex-grow-1">
                 <h5 class="font-size-14 mb-1">Total Permintaan Selesai</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                <h4 class="mb-2 mt-2">34</h4>
-                {{-- <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="ri-arrow-right-down-line me-1 align-middle"></i>1.09%</span>from previous period</p> --}}
+                <h4 class="mb-2 mt-2">{{ $totalPermintaanSelesai ?? 'Tidak ada data' }}</h4>
             </div>
             <div class="avatar-sm">
                 <span class="avatar-title bg-success text-success rounded-3">
@@ -68,10 +66,9 @@
     <div class="card-body">
         <div class="d-flex">
             <div class="flex-grow-1">
-                <h5 class=" font-size-14 mb-1">Total Permintaan Pending</h5>
+                <h5 class="font-size-14 mb-1">Total Permintaan Pending</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                <h4 class="mb-2 mt-2">12</h4>
-                {{-- <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>16.2%</span>from previous period</p> --}}
+                <h4 class="mb-2 mt-2">{{ $totalPermintaanPending ?? 'Tidak ada data' }}</h4>
             </div>
             <div class="avatar-sm">
                 <span class="avatar-title bg-warning text-warning rounded-3">
@@ -89,10 +86,7 @@
             <div class="flex-grow-1">
                 <h5 class="font-size-14 mb-1">Total Permintaan Ditolak</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                <h4 class="mb-2 mt-2">20</h4>
-
-
-                {{-- <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>11.7%</span>from previous period</p> --}}
+                <h4 class="mb-2 mt-2">{{ $totalPermintaanRejected ?? 'Tidak ada data' }}</h4>
             </div>
             <div class="avatar-sm">
                 <span class="avatar-title bg-danger text-danger rounded-3">

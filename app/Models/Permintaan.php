@@ -13,4 +13,10 @@ class Permintaan extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function pilihan()
+    {
+        return $this->hasMany(Pilihan::class);
+    }
+
 }
