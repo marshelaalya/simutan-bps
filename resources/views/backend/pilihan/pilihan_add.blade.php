@@ -1,6 +1,8 @@
 @extends('admin.admin_master')
 @section('admin')
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
@@ -53,17 +55,10 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Pengajuan Permintaan Barang</h4>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Halaman Pengajuan Permintaan</h4><br><br>
-                        
+
                         <!-- Wizard Steps -->
                         <div id="wizard">
                             <div class="step-indicator">
@@ -84,7 +79,7 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Nama Pengaju</label>
-                                            <input type="text" class="form-control" id="name" value="Nama Pengaju" readonly>
+                                            <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -146,42 +141,44 @@
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
+
                                 </div>
-                                    
-                                <div class="row">
-                                    <div class="col-md-12 mt-3">
+
+                                <!-- Tabel -->
+                                <div class="card-body">
+                                    <form id="mainForm" method="post" action="{{ route('pilihan.store') }}">
+                                        @csrf
                                         <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                             <thead>
                                                 <tr>
-                                                    <th style="width: 20%;">Tanggal</th>
-                                                    <th style="width: 20%;">Nama Barang</th>
-                                                    <th style="width: 20%;">Kelompok Barang</th>
-                                                    <th style="width: 10%;">Kuantitas</th>
-                                                    <th style="width: 20%;">Deskripsi</th>
+                                                    <th style="width: 28%;">Nama Barang</th>
+                                                    <th style="width: 23%;">Kelompok Barang</th>
+                                                    <th style="width: 12%;">Kuantitas</th>
+                                                    <th style="width: 27%;">Deskripsi</th>
                                                     <th style="width: 10%;">Aksi</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="item_table_body">
+                                            <tbody id="table-body">
                                                 <!-- Data tabel di sini -->
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                                    
-                                </div>
-                            </div>
+                                        <input type="hidden" name="table_data" id="table_data" value="">
+                                        <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
 
-                            <!-- Navigation Buttons -->
-                            <div class="mt-4">
-                                <button type="button" class="btn btn-secondary" id="prev_btn" style="display: none;">Previous</button>
-                                <button type="button" class="btn btn-primary" id="next_btn">Next</button>
-                                <button type="submit" class="btn btn-info" id="submit_btn" style="display: none;">Submit</button>
-                                <button type="button" class="btn btn-info" id="addMoreButton" style="display: none;">Tambah Lagi</button>
-                            </div>
+                                        <!-- Navigation Buttons -->
+                                        <div class="mt-4">
+                                            <button type="button" class="btn btn-secondary" id="prev_btn" style="display: none;">Previous</button>
+                                            <button type="button" class="btn btn-primary" id="next_btn">Next</button>
+                                            <button type="submit" class="btn btn-info" id="submit_btn" style="display: none;">Submit</button>
+                                            <button type="button" class="btn btn-info" id="addMoreButton" style="display: none;">Tambah Lagi</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div> 
                         </div>
-                    </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
+                    </div>                 
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -201,19 +198,11 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        var currentStep = 1;
         var availableQty = 0; // Variabel untuk menyimpan kuantitas barang yang tersedia
         var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
         var today = new Date().toISOString().split('T')[0];
         $('#date').attr('min', today);
 
-        // Fungsi untuk format tanggal
-        function formatDate(dateString) {
-            var options = { day: 'numeric', month: 'long', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('id-ID', options);
-        }
-
-        // Fungsi untuk memeriksa semua kondisi dan mengaktifkan tombol submit jika memenuhi syarat
         function validateForm() {
             var date = $('#date').val();
             var kelompok_id = $('#kelompok_id').val();
@@ -221,50 +210,23 @@
             var req_qty = $('#req_qty').val();
             
             if (date && kelompok_id && barang_id && req_qty && req_qty <= availableQty) {
-                $('#addMoreButton').prop('disabled', false); // Aktifkan tombol submit
+                $('#addMoreButton').prop('disabled', false);
             } else {
-                $('#addMoreButton').prop('disabled', true); // Nonaktifkan tombol submit
+                $('#addMoreButton').prop('disabled', true);
             }
         }
 
-        // Fungsi untuk menavigasi ke langkah tertentu
-        function navigateToStep(step) {
-            if (step === 1) {
-                $('#step1').show();
-                $('#step2').hide();
-                $('#prev_btn').hide();
-                $('#next_btn').show();
-                $('#submit_btn').hide();
-                $('#addMoreButton').hide();
-                currentStep = 1;
-                $('.step[data-step="2"]').removeClass('active');
-                $('.step[data-step="1"]').addClass('active');
-            } else if (step === 2) {
-                $('#step1').hide();
-                $('#step2').show();
-                $('#prev_btn').show();
-                $('#next_btn').hide();
-                $('#submit_btn').show();
-                $('#addMoreButton').show();
-                currentStep = 2;
-                $('.step[data-step="1"]').removeClass('active');
-                $('.step[data-step="2"]').addClass('active');
-            }
-        }
-
-        // Ketika tanggal diinput
         $('#date').on('input', function() {
             var selectedDate = $(this).val();
             if (selectedDate < today) {
-                $('#date_warning').show(); // Tampilkan peringatan
-                $('#next_btn').prop('disabled', true); // Nonaktifkan tombol submit
+                $('#date_warning').show();
+                $('#addMoreButton').prop('disabled', true);
             } else {
-                $('#date_warning').hide(); // Sembunyikan peringatan
-                $('#next_btn').prop('disabled', false); // Aktifkan tombol submit
+                $('#date_warning').hide();
+                validateForm();
             }
         });
 
-        // Ketika kelompok barang dipilih
         $('#kelompok_id').on('change', function() {
             var kelompok_id = $(this).val();
             $.ajax({
@@ -277,10 +239,10 @@
                         html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
                     });
                     $('#barang_id').html(html);
-                    $('#req_qty').val(''); // Reset kuantitas permintaan
+                    $('#req_qty').val('');
                     $('#current_qty').text('Kuantitas barang sekarang: ');
-                    $('#qty_warning').hide(); // Sembunyikan peringatan
-                    validateForm(); // Validasi form secara keseluruhan
+                    $('#qty_warning').hide();
+                    validateForm();
                 },
                 error: function(xhr) {
                     console.error('An error occurred:', xhr.responseText);
@@ -288,30 +250,27 @@
             });
         });
 
-        // Ketika barang dipilih
         $('#barang_id').on('change', function() {
             var selectedOption = $(this).find('option:selected');
             availableQty = selectedOption.data('qty');
-            barang_satuan = selectedOption.data('satuan'); // Ambil satuan barang
+            barang_satuan = selectedOption.data('satuan');
             $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
-            $('#req_qty').val(''); // Reset kuantitas permintaan
-            $('#qty_warning').hide(); // Sembunyikan peringatan
-            validateForm(); // Validasi form secara keseluruhan
+            $('#req_qty').val('');
+            $('#qty_warning').hide();
+            validateForm();
         });
 
-        // Ketika kuantitas permintaan diinput
         $('#req_qty').on('input', function() {
             var requestedQty = $(this).val();
             if (requestedQty > availableQty) {
-                $('#qty_warning').show(); // Tampilkan peringatan jika kuantitas permintaan melebihi kuantitas tersedia
-                $('#addMoreButton').prop('disabled', true); // Nonaktifkan tombol submit
+                $('#qty_warning').show();
+                $('#addMoreButton').prop('disabled', true);
             } else {
-                $('#qty_warning').hide(); // Sembunyikan peringatan jika kuantitas permintaan valid
-                validateForm(); // Validasi form secara keseluruhan
+                $('#qty_warning').hide();
+                validateForm();
             }
         });
 
-        // Ketika tombol Tambah lagi diklik
         $('#addMoreButton').on('click', function() {
             var date = $('#date').val();
             var kelompok_id = $('#kelompok_id').val();
@@ -321,47 +280,61 @@
             var qty_req = $('#req_qty').val();
             var description = $('#textarea').val();
 
-            // Validasi form sebelum menambah baris
-            if (kelompok_id == '') {
-                $.notify("Kolom kelompok barang diperlukan.", { globalPosition: 'top right', className: 'error' });
-                return false;
-            }
-            if (barang_id == '') {
-                $.notify("Kolom nama barang diperlukan.", { globalPosition: 'top right', className: 'error' });
-                return false;
-            }
-            if (qty_req == '') {
-                $.notify("Kolom kuantitas permintaan diperlukan.", { globalPosition: 'top right', className: 'error' });
+            if (date == '' || kelompok_id == '' || barang_id == '' || qty_req == '') {
+                $.notify("Semua kolom harus diisi.", { globalPosition: 'top right', className: 'error' });
                 return false;
             }
 
-            var source = $("#document-template").html(); // Ambil template
-            var template = Handlebars.compile(source); // Kompilasi template
+            var source = $("#document-template").html();
+            var template = Handlebars.compile(source);
             var context = {
-                date: formatDate(date), // Format tanggal sebelum menampilkan
+                date: date, // Menampilkan tanggal yang diinput pengguna
                 barang_nama: barang_nama,
                 kelompok_nama: kelompok_nama,
                 qty_req: qty_req,
-                barang_satuan: barang_satuan, // Tambahkan satuan ke context
+                barang_satuan: barang_satuan,
                 description: description
             };
-            var html = template(context); // Render template dengan data
+            var html = template(context);
 
-            $('#item_table_body').append(html); // Menambahkan baris baru ke tabel
+            $('#table-body').append(html);
 
-            // Reset form setelah menambah baris
+            // $('#date').val('');
             $('#kelompok_id').val('');
             $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
             $('#req_qty').val('');
             $('#textarea').val('');
             $('#current_qty').text('Kuantitas barang sekarang: ');
-            validateForm(); // Validasi form secara keseluruhan
+            validateForm();
         });
 
-        // Menghapus baris tabel
         $(document).on("click", ".removeeventmore", function() {
             $(this).closest("tr").remove();
-            validateForm(); // Validasi form setelah menghapus baris
+            validateForm();
+        });
+
+        $('#mainForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            var tableData = [];
+            $('#table-body tr').each(function() {
+                var date = $(this).find('td:eq(0)').text();
+                var barang_nama = $(this).find('td:eq(1)').text();
+                var kelompok_nama = $(this).find('td:eq(2)').text();
+                var qty_req = $(this).find('td:eq(3)').text();
+                var description = $(this).find('td:eq(4)').text();
+
+                tableData.push({
+                    date: date,
+                    barang_nama: barang_nama,
+                    kelompok_nama: kelompok_nama,
+                    qty_req: qty_req,
+                    description: description
+                });
+            });
+            $('#table_data').val(JSON.stringify(tableData)); // Menyimpan data dalam format JSON
+
+            // Optionally submit the form if you want to submit it programmatically
+            this.submit(); 
         });
 
         // Navigasi antara langkah menggunakan tombol next dan previous
@@ -378,6 +351,17 @@
             var step = $(this).parent().data('step');
             navigateToStep(step);
         });
+
+        function navigateToStep(step) {
+            $('.step-content').hide();
+            $('#step' + step).show();
+            $('.step').removeClass('active');
+            $('.step[data-step="' + step + '"]').addClass('active');
+            $('#prev_btn').toggle(step > 1);
+            $('#next_btn').toggle(step < 2);
+            $('#submit_btn').toggle(step == 2);
+            $('#addMoreButton').toggle(step == 2);
+        }
     });
 </script>
 

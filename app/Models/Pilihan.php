@@ -9,4 +9,13 @@ class Pilihan extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'barang_id');
+    }
+
+    public function permintaan()
+    {
+        return $this->belongsTo(Permintaan::class, 'permintaan_id');
+    }
 }

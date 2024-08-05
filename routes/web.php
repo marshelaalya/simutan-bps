@@ -10,8 +10,6 @@ use App\Http\Controllers\Pos\PilihanController;
 use App\Http\Controllers\Pos\DefaultController;
 use App\Http\Controllers\WizardController;
 
-Route::get('/wizard', [WizardController::class, 'index'])->name('wizard.index');
-Route::post('/wizard-submit', [WizardController::class, 'submit'])->name('wizard.submit');
 
 
 Route::get('/', function () {
@@ -24,6 +22,10 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/contact', 'ContactMethod')->name('cotact.page');
 });
 
+Route::controller(WizardController::class)->group(function () {
+    Route::get('/wizard', [WizardController::class, 'index'])->name('wizard.index');
+    Route::post('/wizard-submit', [WizardController::class, 'submit'])->name('wizard.submit');
+});
 
  // Admin All Route 
 Route::controller(AdminController::class)->group(function () {
@@ -41,6 +43,7 @@ Route::controller(AdminController::class)->group(function () {
   // Admin All Route 
 Route::controller(PermintaanController::class)->group(function () {
     Route::get('/permintaan/all', 'PermintaanAll')->name('permintaan.all');
+    Route::get('/permintaan/add', 'PermintaanAdd')->name('permintaan.add');
 
      
 });
@@ -67,7 +70,7 @@ Route::controller(BarangController::class)->group(function () {
 Route::controller(PilihanController::class)->group(function () {
     Route::get('/pilihan/all', 'PilihanAll')->name('pilihan.all');
     Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
-    // Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
+    Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
     // Route::get('/pilihan/edit/{id}', 'PilihanEdit')->name('pilihan.edit');
     // Route::post('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update'); 
     // Route::get('/pilihan/delete/{id}', 'PilihanDelete')->name('pilihan.delete'); 
@@ -75,8 +78,7 @@ Route::controller(PilihanController::class)->group(function () {
 
 Route::controller(DefaultController::class)->group(function () {
     Route::get('/get-category', 'GetCategory')->name('get-category');
-    // Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
-    // Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
+    
     // Route::get('/pilihan/edit/{id}', 'PilihanEdit')->name('pilihan.edit');
     // Route::post('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update'); 
     // Route::get('/pilihan/delete/{id}', 'PilihanDelete')->name('pilihan.delete'); 
