@@ -16,6 +16,8 @@ class Pilihan extends Model
 
     public function permintaan()
     {
-        return $this->belongsTo(Permintaan::class, 'permintaan_id');
+        return $this->belongsTo(Permintaan::class);
     }
+
+    
 }

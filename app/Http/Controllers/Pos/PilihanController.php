@@ -149,16 +149,29 @@ class PilihanController extends Controller
         // Decode data JSON
         $tableData = json_decode($tableData, true);
 
+        $permintaanId = $this->PermintaanStore($request);
+
         // Periksa apakah $tableData adalah array dan tidak kosong
         if (is_array($tableData) && !empty($tableData)) {
+            // Simpan permintaan terlebih dahulu
+
+            // Validasi permintaan ID
+            if (!$permintaanId) {
+                $notification = array(
+                    'message' => 'Gagal membuat permintaan',
+                    'alert-type' => 'error'
+                );
+                return redirect()->back()->with($notification);
+            }
+
+            // Proses data
             foreach ($tableData as $index => $item) {
                 // Validasi data
                 if (isset($item['date'], $item['kelompok_nama'], $item['barang_nama'], $item['qty_req'], $item['description'])) {
-                    // Proses data
                     $pilihan = new Pilihan();
-                    $pilihan->permintaan_id = $this->PermintaanStore($request);
-                    $pilihan->date = $item['date']; // Ambil tanggal dari item JSON
-                    // Ambil ID barang dan kelompok dari nama (mungkin perlu penyesuaian jika ID berbeda)
+                    $pilihan->permintaan_id = $permintaanId; // Gunakan ID permintaan yang baru dibuat
+                    $pilihan->date = $item['date'];
+                    // Ambil ID barang dan kelompok dari nama
                     $barang = Barang::where('nama', $item['barang_nama'])->first();
                     $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
                     if ($barang && $kelompok) {
@@ -190,4 +203,5 @@ class PilihanController extends Controller
             return redirect()->back()->with($notification);
         }
     }
+
 }

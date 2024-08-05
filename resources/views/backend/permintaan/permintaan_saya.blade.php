@@ -71,15 +71,15 @@
                                                     style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
                                                 Rejected
                                             </button>
-                                        @elseif($item->status == 'approved by admin')
+                                        @elseif($item->status == 'accepted by admin')
                                             <button class="btn btn-secondary bg-success btn-sm d-flex align-items-center justify-content-center font-size-13" 
                                                     style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
-                                                Approved
+                                                Accepted
                                             </button>
                                         @endif
                                     </td>
                                     <td style="text-align: center; vertical-align: middle;">
-                                        @if($item->status == 'approved by admin' || $item->status == 'pending')
+                                        @if($item->status == 'pending')
                                             <button class="btn btn-secondary bg-warning btn-sm d-flex align-items-center justify-content-center font-size-13" 
                                                     style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
                                                 Pending
@@ -89,10 +89,10 @@
                                                     style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
                                                 Rejected
                                             </button>
-                                        @elseif($item->status == 'approved by supervisor')
+                                        @elseif($item->status == 'accepted by supervisor')
                                             <button class="btn btn-secondary bg-success btn-sm d-flex align-items-center justify-content-center font-size-13" 
                                                     style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
-                                                Approved
+                                                Accepted
                                             </button>
                                         @endif
                                     </td>
