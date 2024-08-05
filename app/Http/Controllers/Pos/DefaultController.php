@@ -19,7 +19,7 @@ class DefaultController extends Controller
 
     try {
         $allCategory = Barang::where('kelompok_id', $kelompok_id)
-                             ->select('id', 'nama', 'qty_item') // Pastikan untuk memilih kolom qty_item
+                             ->select('id', 'nama', 'qty_item', 'satuan') // Pastikan untuk memilih kolom qty_item
                              ->get();
         return response()->json($allCategory);
     } catch (\Exception $e) {

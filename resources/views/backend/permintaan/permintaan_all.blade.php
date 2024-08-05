@@ -31,12 +31,11 @@
                     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                         <tr>
-                            <th>Sl</th>
-                            <th>ID</th> 
-                            <th>Tanggal Permintaan</th>
-                            <th>Status</th>
-                            <th>Catatan Admin</th>
-                            <th>Catatan Supervisor</th>
+                            <th>Tanggal</th> {{-- Tanggal Permintaan --}}
+                            <th>Nama Pengaju</th>
+                            <th>Catatan</th>
+                            <th>Approval Admin</th>
+                            <th>Approval Supervisor</th>
                             <th>Action</th>
                             
                         </thead>
