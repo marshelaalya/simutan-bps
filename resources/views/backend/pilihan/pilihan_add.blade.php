@@ -8,30 +8,33 @@
 <style>
     .step-indicator {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
+
     .step-indicator .step {
         display: flex;
-        flex-direction: column;
         align-items: center;
         cursor: pointer;
         position: relative;
     }
+
     .step-indicator .step .circle {
         width: 40px;
         height: 40px;
         background-color: #e9ecef;
-        border-radius: 50%;
+        border-radius: 0.25rem;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: bold;
+        color: #000; /* Default text color for circle */
     }
+
     .step-indicator .step.active .circle {
-        background-color: #007bff;
+        background-color: #043277;
         color: white;
     }
+
     .step-indicator .step::after {
         content: '';
         position: absolute;
@@ -43,46 +46,65 @@
         background-color: #e9ecef;
         z-index: -1;
     }
+
     .step-indicator .step:first-child::after {
         display: none;
     }
+
     .step-indicator .step.active + .step::after {
         background-color: #007bff;
     }
+
+    .step .label {
+        font-size: 1.125rem;
+        color: #6c757d; /* Default text color for label */
+    }
+
+    .step.active .label {
+        color: black; /* Color for active step label */
+    }
 </style>
+
 
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+                
                         <h4 class="card-title">Halaman Pengajuan Permintaan</h4><br><br>
 
                         <!-- Wizard Steps -->
                         <div id="wizard">
+                            <div class="card">
+                                <div class="card-body">
                             <div class="step-indicator">
                                 <div class="step active" data-step="1">
                                     <div class="circle">1</div>
-                                    <div class="label">Informasi Permintaan</div>
+                                    <div class="label ms-2">Informasi Permintaan</div>
                                 </div>
+                                <div>
+                                    <i class="mdi mdi-chevron-right mx-3" style="font-size: 30px;"></i>
+                                </div>
+                                
                                 <div class="step" data-step="2">
                                     <div class="circle">2</div>
-                                    <div class="label">Detail Permintaan</div>
+                                    <div class="label ms-2">Detail Barang Permintaan</div>
                                 </div>
                             </div>
-
+                        
+                            
                             <!-- Step 1 -->
                             <div id="step1" class="step-content">
-                                <h5>Langkah 1: Informasi Permintaan</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                {{-- <h5 class="mb-4">Langkah 1: Informasi Permintaan</h5> --}}
+                                <hr class="border border-secondary" style="border-width: 0.2px;">
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Nama Pengaju</label>
                                             <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-sm-6">
                                         <div class="mb-3">
                                             <label for="date" class="form-label">Tanggal Permintaan</label>
                                             <input class="form-control" name="date" type="date" id="date">
@@ -91,21 +113,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-sm-12">
                                         <div class="mb-3">
                                             <label for="textarea" class="form-label mb-1">Catatan</label>
                                             <textarea id="textarea" class="form-control" maxlength="225" rows="3" placeholder="Penjelasan. (Maksimal 225 Karakter)"></textarea>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-info" id="next_btn_step1">Next</button>
+                                </div>
                             </div>
-
+                        
                             <!-- Step 2 -->
                             <div id="step2" class="step-content" style="display: none;">
-                                <h5>Langkah 2: Detail Permintaan</h5>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
+                                {{-- <h5>Langkah 2: Detail Permintaan</h5> --}}
+                                <hr class="border border-secondary" style="border-width: 0.2px;">
+                                
+                                <div class="row g-3 mb-4">
+                                    <div class="col-sm-3">
+                                        <div>
                                             <label for="kelompok_id" class="form-label">Kelompok Barang</label>
                                             <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
                                                 <option selected disabled>Kelompok Barang</option>
@@ -115,37 +142,34 @@
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:38%">
+                                        <div>
                                             <label for="barang_id" class="form-label">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
                                                 <option selected disabled>Pilih barang yang ingin diajukan</option>
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
+                                    <div class="col-sm-3">
+                                        <div>
                                             <label for="req_qty" class="form-label">Kuantitas Permintaan</label>
                                             <input class="form-control" name="req_qty" type="text" id="req_qty">
                                             <div id="qty_warning" class="form-text text-danger" style="display: none;">
                                                 Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
-
+                                    <div class="col-sm-2 d-flex justify-content-end align-items-start w-auto" style="margin-top:2.8rem">
+                                        <button type="button" class="btn btn-info" id="addMoreButton">
+                                            <i class="mdi mdi-plus"></i> <span>Tambah</span>
+                                        </button>
+                                    </div>
+                                    {{-- <button type="button" class="btn btn-info" id="addMoreButton" style="display: inline-block;width: auto; height:auto;">Tambah Lagi</button> --}}
                                 </div>
-
+                        
                                 <!-- Tabel -->
-                                <div class="card-body">
+                               
                                     <form id="mainForm" method="post" action="{{ route('pilihan.store') }}">
                                         @csrf
                                         <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
@@ -164,20 +188,21 @@
                                         </table>
                                         <input type="hidden" name="table_data" id="table_data" value="">
                                         <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
-
+                        
                                         <!-- Navigation Buttons -->
                                         <div class="mt-4">
-                                            <button type="button" class="btn btn-secondary" id="prev_btn" style="display: none;">Previous</button>
-                                            <button type="button" class="btn btn-primary" id="next_btn">Next</button>
-                                            <button type="submit" class="btn btn-info" id="submit_btn" style="display: none;">Submit</button>
-                                            <button type="button" class="btn btn-info" id="addMoreButton" style="display: none;">Tambah Lagi</button>
+                                            <button type="button" class="btn btn-secondary" id="prev_btn">Previous</button>
+                                            <button type="submit" class="btn btn-info" id="submit_btn">Submit</button>
+                                            
                                         </div>
                                     </form>
+                                
+                            </div>
                                 </div>
-                            </div> 
-                        </div>
-                    </div>                 
-                </div>
+                            </div>
+                        </div>                        
+                                     
+                
             </div>
         </div>
     </div>
@@ -338,30 +363,30 @@
         });
 
         // Navigasi antara langkah menggunakan tombol next dan previous
-        $('#next_btn').on('click', function() {
-            navigateToStep(2);
-        });
+    $('#next_btn_step1').on('click', function() {
+        navigateToStep(2);
+    });
 
-        $('#prev_btn').on('click', function() {
-            navigateToStep(1);
-        });
+    $('#prev_btn').on('click', function() {
+        navigateToStep(1);
+    });
 
-        // Navigasi antara langkah menggunakan klik pada circle
-        $('.step .circle').on('click', function() {
-            var step = $(this).parent().data('step');
-            navigateToStep(step);
-        });
+    // Navigasi antara langkah menggunakan klik pada circle
+    $('.step .circle').on('click', function() {
+        var step = $(this).parent().data('step');
+        navigateToStep(step);
+    });
 
-        function navigateToStep(step) {
-            $('.step-content').hide();
-            $('#step' + step).show();
-            $('.step').removeClass('active');
-            $('.step[data-step="' + step + '"]').addClass('active');
-            $('#prev_btn').toggle(step > 1);
-            $('#next_btn').toggle(step < 2);
-            $('#submit_btn').toggle(step == 2);
-            $('#addMoreButton').toggle(step == 2);
-        }
+    function navigateToStep(step) {
+        $('.step-content').hide();
+        $('#step' + step).show();
+        $('.step').removeClass('active');
+        $('.step[data-step="' + step + '"]').addClass('active');
+        $('#prev_btn').toggle(step > 1);
+        $('#next_btn').toggle(step < 2);
+        $('#submit_btn').toggle(step == 2);
+        $('#addMoreButton').toggle(step == 2);
+    }
     });
 </script>
 
