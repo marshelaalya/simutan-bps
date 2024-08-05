@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('description');
             $table->integer('req_qty');
-            $table->integer('created_by')->nullable();
+            $table->string('created_by')->nullable();
             $table->timestamps();
         });
     }

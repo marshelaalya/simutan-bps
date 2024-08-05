@@ -8,7 +8,7 @@ use App\Http\Controllers\Pos\KelompokController;
 use App\Http\Controllers\Pos\BarangController;
 use App\Http\Controllers\Pos\PilihanController;
 use App\Http\Controllers\Pos\DefaultController;
-use App\Http\Controllers\Pos\WizardController;
+use App\Http\Controllers\WizardController;
 
 
 
