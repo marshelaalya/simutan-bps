@@ -23,7 +23,7 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Rute umum yang tidak memerlukan otentikasi
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 Route::get('/index', function () {
