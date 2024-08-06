@@ -132,19 +132,13 @@
                             @foreach($permintaans as $key => $item)
                                 <tr>
                                     <td>
-                                        @foreach($item->pilihan as $pilihan)
-                                            {{ $pilihan->date }}<br>
-                                        @endforeach
+                                        {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
                                     </td>
                                     <td>
-                                        @foreach($item->pilihan as $pilihan)
-                                            {{ $pilihan->created_by }}<br>
-                                        @endforeach
+                                        {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
                                     </td>
                                     <td>
-                                        @foreach($item->pilihan as $pilihan)
-                                            {{ $pilihan->description }}<br>
-                                        @endforeach
+                                        {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
                                     </td>
                                     <td class="text-center align-middle justify-content-center">
                                         @if($item->status == 'pending')

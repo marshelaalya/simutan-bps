@@ -100,6 +100,9 @@
                                         <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-warning btn-sm">
                                             <i class="fas fa-edit" style="color: #ca8a04"></i>
                                         </a>
+                                        <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-warning btn-sm">
+                                            <i class="fas fa-edit" style="color: #ca8a04"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
