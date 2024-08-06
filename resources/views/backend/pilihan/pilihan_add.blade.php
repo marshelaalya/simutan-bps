@@ -68,10 +68,25 @@
 
 <div class="page-content">
     <div class="container-fluid">
+        <!-- start page title -->
+<div class="row">
+    <div class="col-12">
+    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+        <h4 class="mb-sm-0 text-info">Pengajuan Permintaan</h4>
+    
+        <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Permintaan</a></li>
+                <li class="breadcrumb-item active">Ajukan Permintaan</li>
+            </ol>
+        </div>
+    
+    </div>
+    </div>
+    </div>
+    <!-- end page title -->
         <div class="row">
             <div class="col-12">
-                
-                        <h4 class="card-title">Halaman Pengajuan Permintaan</h4><br><br>
 
                         <!-- Wizard Steps -->
                         <div id="wizard">
@@ -80,7 +95,7 @@
                             <div class="step-indicator">
                                 <div class="step active" data-step="1">
                                     <div class="circle">1</div>
-                                    <div class="label ms-2">Informasi Permintaan</div>
+                                    <div class="label ms-2 fw-bold">Informasi Permintaan</div>
                                 </div>
                                 <div>
                                     <i class="mdi mdi-chevron-right mx-3" style="font-size: 30px;"></i>
@@ -100,13 +115,13 @@
                                 <div class="row g-3">
                                     <div class="col-sm-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label">Nama Pengaju</label>
+                                            <label for="name" class="form-label text-info">Nama Pengaju</label>
                                             <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="mb-3">
-                                            <label for="date" class="form-label">Tanggal Permintaan</label>
+                                            <label for="date" class="form-label text-info">Tanggal Permintaan</label>
                                             <input class="form-control" name="date" type="date" id="date">
                                             <div id="date_warning" class="form-text text-danger" style="display: none;">
                                                 Tanggal tidak boleh kurang dari hari ini.
@@ -115,13 +130,13 @@
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="mb-3">
-                                            <label for="textarea" class="form-label mb-1">Catatan</label>
+                                            <label for="textarea" class="form-label mb-1 text-info">Catatan</label>
                                             <textarea id="textarea" class="form-control" maxlength="225" rows="3" placeholder="Penjelasan. (Maksimal 225 Karakter)"></textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mt-4">
-                                    <button type="button" class="btn btn-info" id="next_btn_step1">Next</button>
+                                <div class="mt-4 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-info" id="next_btn_step1">Next&nbsp;&nbsp;<i class=" mdi mdi-arrow-right font-size-16 text-white align-middle"></i></button>
                                 </div>
                             </div>
                         
@@ -130,10 +145,10 @@
                                 {{-- <h5>Langkah 2: Detail Permintaan</h5> --}}
                                 <hr class="border border-secondary" style="border-width: 0.2px;">
                                 
-                                <div class="row g-3 mb-4">
+                                <div class="row g-3 mb-3">
                                     <div class="col-sm-3">
                                         <div>
-                                            <label for="kelompok_id" class="form-label">Kelompok Barang</label>
+                                            <label for="kelompok_id" class="form-label text-info">Kelompok Barang</label>
                                             <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
                                                 <option selected disabled>Kelompok Barang</option>
                                                 @foreach($kelompok as $kel)
@@ -144,7 +159,7 @@
                                     </div>
                                     <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:38%">
                                         <div>
-                                            <label for="barang_id" class="form-label">Nama Barang</label>
+                                            <label for="barang_id" class="form-label text-info">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
                                                 <option selected disabled>Pilih barang yang ingin diajukan</option>
                                             </select>
@@ -152,7 +167,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <div>
-                                            <label for="req_qty" class="form-label">Kuantitas Permintaan</label>
+                                            <label for="req_qty" class="form-label text-info">Kuantitas Permintaan</label>
                                             <input class="form-control" name="req_qty" type="text" id="req_qty">
                                             <div id="qty_warning" class="form-text text-danger" style="display: none;">
                                                 Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
@@ -169,29 +184,34 @@
                                 </div>
                         
                                 <!-- Tabel -->
-                               
+                                <label for="mainForm" class="text-info"> Tabel Permintaan Barang</label>
                                     <form id="mainForm" method="post" action="{{ route('pilihan.store') }}">
                                         @csrf
-                                        <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
-                                            <thead>
-                                                <tr>
+                                        <div class="table-responsive">
+                                            <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                                                <thead class="table-light">
+                                                    <tr>
                                                     <th style="width: 23%;">Kelompok Barang</th>
-                                                    <th style="width: 28%;">Nama Barang</th>
-                                                    <th style="width: 12%;">Kuantitas</th>
-                                                    <th style="width: 10%;">Aksi</th>
-                                                </tr>
-                                            </thead>
+                                                    <th>Nama Barang</th>
+                                                    <th class="text-center" style="width: 1%;">Kuantitas</th>
+                                                    <th class="text-center" style="width: 1%;">Aksi</th>
+                                                    </tr>
+                                                    
+                                                </thead>
                                             <tbody id="table-body">
                                                 <!-- Data tabel di sini -->
+                                                <tr id="no-data-row">
+                                                    <td colspan="4" class="text-center">Tidak ada barang terpilih</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                         <input type="hidden" name="table_data" id="table_data" value="">
                                         <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
-                        
+                                        </div>
                                         <!-- Navigation Buttons -->
-                                        <div class="mt-4">
-                                            <button type="button" class="btn btn-secondary" id="prev_btn">Previous</button>
-                                            <button type="submit" class="btn btn-info" id="submit_btn">Submit</button>
+                                        <div class="mt-4 d-flex justify-content-between">
+                                            <button type="button" class="btn btn-info" id="prev_btn"><i class=" mdi mdi-arrow-left font-size-16 text-white align-middle"></i>&nbsp;&nbsp;Previous</button>
+                                            <button type="submit" class="btn btn-success" id="submit_btn">Submit</button>
                                             
                                         </div>
                                     </form>
@@ -211,9 +231,15 @@
     <tr class="delete_add_more_item" data-date="@{{ date }}" data-description="@{{ description }}">
         <td>@{{ kelompok_nama }}</td>
         <td>@{{ barang_nama }}</td>
-        <td>@{{ qty_req }} @{{ barang_satuan }}</td>
-        <td>
-            <i class="btn btn-danger btn-sm fas fa-window-close removeeventmore"></i>
+        <td class="text-center">@{{ qty_req }} @{{ barang_satuan }}</td>
+        <td style="text-align: center; vertical-align: middle;">
+            
+            <a href="{{ route('dashboard') }}" class="btn bg-warning btn-sm">
+                <i class="fas fa-edit" style="color: #ca8a04"></i>
+            </a>
+            <a href="{{ route('dashboard') }}" class="btn bg-danger btn-sm">
+                <i class="fas fa-trash text-danger"></i>
+            </a>
         </td>
     </tr>
     
@@ -389,5 +415,65 @@
     }
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to check if the table is empty and manage the "No Data" row
+        function checkIfTableIsEmpty() {
+            const tableBody = document.getElementById('table-body');
+            const noDataRow = document.getElementById('no-data-row');
+
+            // Check if there are no rows in the table body (excluding the no-data row)
+            if (tableBody.children.length === 1 && tableBody.children[0].id === 'no-data-row') {
+                noDataRow.style.display = '';
+            } else {
+                noDataRow.style.display = 'none';
+            }
+        }
+
+        // Initial check on page load
+        checkIfTableIsEmpty();
+
+        // Event listener for removing a row
+        document.getElementById('table-body').addEventListener('click', function (e) {
+            if (e.target && e.target.matches('i.removeeventmore')) {
+                e.target.closest('tr').remove();
+                checkIfTableIsEmpty();
+            }
+        });
+
+        // Add row logic
+        $('#addMoreButton').on('click', function() {
+            const source = $("#document-template").html();
+            const template = Handlebars.compile(source);
+
+            const context = {
+                date: $('#date').val(), 
+                barang_nama: $('#barang_id option:selected').text(),
+                kelompok_nama: $('#kelompok_id option:selected').text(),
+                qty_req: $('#req_qty').val(),
+                barang_satuan: $('#barang_id option:selected').data('satuan'),
+                description: $('#textarea').val()
+            };
+
+            const html = template(context);
+
+            $('#table-body').append(html);
+            checkIfTableIsEmpty();
+            
+            // Reset form fields
+            $('#kelompok_id').val('');
+            $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
+            $('#req_qty').val('');
+            $('#current_qty').text('Kuantitas barang sekarang: ');
+
+            validateForm();
+        });
+    });
+</script>
+
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 @endsection

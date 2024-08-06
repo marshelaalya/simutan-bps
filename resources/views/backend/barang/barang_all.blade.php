@@ -3,13 +3,23 @@
 
 <div class="page-content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">List Persediaan Barang</h4>
-                </div>
-            </div>
+        <!-- start page title -->
+<div class="row">
+    <div class="col-12">
+    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+        <h4 class="mb-sm-0 text-info">List Persediaan Barang</h4>
+    
+        <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Barang</a></li>
+                <li class="breadcrumb-item active">Persediaan Barang</li>
+            </ol>
         </div>
+    
+    </div>
+    </div>
+    </div>
+    <!-- end page title -->
 
         <div class="row">
             <div class="col-12">
@@ -18,7 +28,7 @@
                     <div class="card-body">
                         
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h4 class="card-title mb-0">Persediaan Barang</h4>
+                            <h3 class="card-title mb-0">Persediaan Barang</h3>
                             <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">
                                 <i class="mdi mdi-plus-circle"></i> Tambah Barang
                             </a>
@@ -41,11 +51,11 @@
                             <tbody>
                                 @foreach($barangs as $item)
                                     <tr>
-                                        <td class="text-center">{{ $item->id }}</td>
+                                        <td width="1%" class="text-center">{{ $item->id }}</td>
                                         <td>{{ $item->nama }}</td>
-                                        <td>{{ $item->kelompok->nama ?? 'N/A' }}</td>
-                                        <td class="text-center">{{ $item->qty_item }}</td>
-                                        <td class="text-center">{{ $item->satuan }}</td>
+                                        <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
+                                        <td width="1%" class="text-center">{{ $item->qty_item }}</td>
+                                        <td width="1%" class="text-center">{{ $item->satuan }}</td>
                                         
                                             {{-- <a href="{{ route('barang.edit', $item->id) }}" class="btn btn-info sm" title="Edit Data"> <i class="fas fa-edit"></i> </a>
                                             <a href="{{ route('barang.delete', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"> <i class="fas fa-trash-alt"></i> </a> --}}
