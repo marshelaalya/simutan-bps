@@ -2674,6 +2674,7 @@ table.dataTable tbody td.focus,table.dataTable tbody th.focus{
     outline:2px solid #0f9cf3!important;
     outline-offset:-1px;
     background-color:rgba(15,156,243,.15)
+}
 
 table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>td:first-child:before,table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>th:first-child:before{
     -webkit-box-shadow:0 5px 12px rgba(0,0,0,.1);
