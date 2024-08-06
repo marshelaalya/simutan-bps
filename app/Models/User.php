@@ -42,4 +42,43 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Check if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is a supervisor.
+     *
+     * @return bool
+     */
+    public function isSupervisor()
+    {
+        return $this->role === 'supervisor';
+    }
+
+    /**
+     * Check if the user is a pegawai.
+     *
+     * @return bool
+     */
+    public function isPegawai()
+    {
+        return $this->role === 'pegawai';
+    }
+
+    public function hasRole($role)
+    {
+        // Memeriksa apakah role pengguna sesuai dengan peran yang diberikan
+        return $this->role === $role;
+    }
+
+    
+
 }

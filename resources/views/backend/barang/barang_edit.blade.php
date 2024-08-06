@@ -17,7 +17,12 @@
 
                             <input type="hidden" name="id" value="{{ $barang->id }}">
 
-
+                            <div class="row mb-3">
+                                <label for="kode_barang" class="col-sm-2 col-form-label">Kode Barang</label>
+                                <div class="form-group col-sm-10">
+                                    <input name="kode_barang" value="{{ $barang->kode }}" class="form-control" type="text" id="nama">                    
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
                                 <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>

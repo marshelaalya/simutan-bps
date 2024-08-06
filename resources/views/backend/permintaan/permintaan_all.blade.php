@@ -46,20 +46,15 @@
                             @foreach($permintaans as $key => $item)
                                 <tr>
                                     <td>
-                                        @foreach($item->pilihan as $pilihan)
-                                            {{ $pilihan->date }}<br>
-                                        @endforeach
+                                        {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
                                     </td>
                                     <td>
-                                        @foreach($item->pilihan as $pilihan)
-                                            {{ $pilihan->created_by }}<br>
-                                        @endforeach
+                                        {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
                                     </td>
                                     <td>
-                                        @foreach($item->pilihan as $pilihan)
-                                            {{ $pilihan->description }}<br>
-                                        @endforeach
+                                        {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
                                     </td>
+                                    
                                     <td style="text-align: center; vertical-align: middle;">
                                         @if($item->status == 'pending')
                                             <button class="btn btn-secondary bg-warning btn-sm d-flex align-items-center justify-content-center font-size-13" 

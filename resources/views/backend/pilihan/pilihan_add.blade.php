@@ -120,9 +120,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div id="warning_message" class="text-danger" style="display: none;">
+                                    <p>Semua kolom harus diisi. Harap isi tanggal dan deskripsi sebelum melanjutkan.</p>
+                                </div>
                                 <div class="mt-4">
                                     <button type="button" class="btn btn-info" id="next_btn_step1">Next</button>
                                 </div>
+                                
                             </div>
                         
                             <!-- Step 2 -->
@@ -187,21 +191,19 @@
                                         </table>
                                         <input type="hidden" name="table_data" id="table_data" value="">
                                         <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
+                                        <input type="hidden" id="hidden_date" name="hidden_date">
+                                        <input type="hidden" id="hidden_description" name="hidden_description">   
                         
                                         <!-- Navigation Buttons -->
                                         <div class="mt-4">
                                             <button type="button" class="btn btn-secondary" id="prev_btn">Previous</button>
                                             <button type="submit" class="btn btn-info" id="submit_btn">Submit</button>
-                                            
                                         </div>
                                     </form>
-                                
                             </div>
                                 </div>
                             </div>
                         </div>                        
-                                     
-                
             </div>
         </div>
     </div>
@@ -323,8 +325,8 @@
             $('#table-body').append(html);
 
             // Menjadi Read Only setelah Klik Tambah lagi
-            $('#date').prop('readonly', true);
-            $('#textarea').prop('readonly', true);
+            // $('#date').prop('readonly', true);
+            // $('#textarea').prop('readonly', true);
 
             $('#kelompok_id').val('');
             $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
@@ -341,53 +343,111 @@
         $('#mainForm').on('submit', function(e) {
             e.preventDefault(); // Prevent default form submission
 
+            var date = $('#date').val();
+            var description = $('#textarea').val();
+
+            $('#hidden_date').val(date);
+            $('#hidden_description').val(description);
+
             var tableData = [];
             $('#table-body tr').each(function() {
-                var date = $(this).data('date');
-                var description = $(this).data('description');
                 var kelompok_nama = $(this).find('td:eq(0)').text();
                 var barang_nama = $(this).find('td:eq(1)').text();
                 var qty_req = $(this).find('td:eq(2)').text();
 
                 tableData.push({
-                    date: date,
+                    date: $('#hidden_date').val(), // Ambil dari hidden field
                     kelompok_nama: kelompok_nama,
                     barang_nama: barang_nama,
                     qty_req: qty_req,
-                    description: description
+                    description: $('#hidden_description').val() // Ambil dari hidden field
                 });
             });
 
             $('#table_data').val(JSON.stringify(tableData));
-            $(this).off('submit').submit(); // Remove the submit handler and submit the form
+            $(this).off('submit').submit(); 
         });
 
-        // Navigasi antara langkah menggunakan tombol next dan previous
-    $('#next_btn_step1').on('click', function() {
-        navigateToStep(2);
-    });
+    function validateStep1() {
+        var date = $('#date').val();
+        var description = $('#textarea').val();
+        
+        console.log('Validating Step 1:', date, description); // Debugging
+        
+        if (date && description) {
+            $('#next_btn_step1').removeClass('disabled').prop('disabled', false);
+            $('#warning_message').hide(); 
+            return true; // Validasi berhasil
+        } else {
+            $('#warning_message').show(); 
+            return false; // Validasi gagal
+        }
+    }
 
-    $('#prev_btn').on('click', function() {
-        navigateToStep(1);
-    });
+    // Validasi setiap kali input berubah di Step 1
+    $('#date, #textarea').on('input', validateStep1);
 
-    // Navigasi antara langkah menggunakan klik pada circle
-    $('.step .circle').on('click', function() {
-        var step = $(this).parent().data('step');
-        navigateToStep(step);
-    });
-
+    // Fungsi untuk navigasi antar langkah
     function navigateToStep(step) {
         $('.step-content').hide();
         $('#step' + step).show();
         $('.step').removeClass('active');
         $('.step[data-step="' + step + '"]').addClass('active');
+        
+        // Tombol navigasi
         $('#prev_btn').toggle(step > 1);
-        $('#next_btn').toggle(step < 2);
+        $('#next_btn_step1').toggle(step < 2); // Update sesuai dengan ID tombol
         $('#submit_btn').toggle(step == 2);
         $('#addMoreButton').toggle(step == 2);
+
+        // Update circle step state
+        $('.step .circle').each(function() {
+            var circleStep = $(this).parent().data('step');
+            $(this).toggleClass('completed', circleStep < step);
+        });
     }
+
+    // Navigasi menggunakan tombol "Next" di Step 1
+    $('#next_btn_step1').on('click', function() {
+        if (validateStep1()) {
+            navigateToStep(2);
+        } else {
+            console.log('Validation failed on Step 1'); // Debugging
+        }
     });
+
+    // Navigasi menggunakan tombol "Previous"
+    $('#prev_btn').on('click', function() {
+        navigateToStep(1);
+    });
+
+    // Navigasi menggunakan klik pada circle
+    $('.step .circle').on('click', function() {
+        var step = $(this).parent().data('step');
+        
+        console.log('Circle clicked:', step); // Debugging
+
+        // Jika step yang ingin diakses adalah step 1, lakukan validasi
+        if (step === 1) {
+            if (validateStep1()) {
+                navigateToStep(step);
+            }
+        } else {
+            // Jika step yang ingin diakses lebih dari 1, hanya izinkan navigasi jika langkah sebelumnya sudah lengkap
+            var currentStep = $('.step.active').data('step');
+            if (currentStep < step) {
+                if (validateStep1()) {
+                    navigateToStep(step);
+                }
+            } else {
+                navigateToStep(step);
+            }
+        }
+    });
+
+    // Inisialisasi tampilan default
+    navigateToStep(1);
+});
 </script>
 
 @endsection

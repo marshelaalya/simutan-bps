@@ -19,6 +19,7 @@ class BarangController extends Controller
     public function KelompokStore(Request $request){
         Kelompok::insert([
             'nama' => $request->nama,
+            'kode' => $request->kode_barang,
             // 'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -72,6 +73,7 @@ class BarangController extends Controller
     public function barangStore(Request $request){
         Barang::insert([
             'nama' => $request->nama,
+            'kode' => $request->kode_barang,
             'kelompok_id' => $request->kelompok_id,
             'qty_item' => $request->qty_item,
             'satuan' => $request->satuan,
