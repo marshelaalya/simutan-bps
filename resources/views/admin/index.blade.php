@@ -193,7 +193,7 @@
                         </tbody>
                     </table>
         </div>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end fw-bold">
             <a href="{{ route('permintaan.all') }}" class="text-info">Lihat Selengkapnya <i class=" mdi mdi-arrow-right font-size-16 text-info align-middle"></i></a>
         </div>                
     </div><!-- end card -->

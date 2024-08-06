@@ -21,10 +21,16 @@ class DashboardController extends Controller
         return redirect('/'); // Redirect jika role tidak dikenali
     }
 
-    public function dashboard() {
-        $permintaans = Permintaan::all(); // Atau query yang sesuai dengan kebutuhan Anda
+    public function dashboard(){
+        $permintaans = Permintaan::where('status', 'pending')
+                                ->with('pilihan') // Pastikan relasi dimuat
+                                ->orderBy('created_at', 'desc')
+                                ->limit(5)
+                                ->get();
+                                
         return view('admin.index', compact('permintaans'));
     }
+
     
     
 }
