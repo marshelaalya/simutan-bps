@@ -26,7 +26,8 @@
     --bs-gray-900:#212529;
     --bs-primary:#0f9cf3;
     --bs-secondary:#6c757d;
-    --bs-success:#6fd088;
+    /* --bs-success:#6fd088; */
+    --bs-success:#067704;
     --bs-info:rgb(4, 50, 119);
     --bs-warning:#ffbb44;
     --bs-danger:#f32f53;
@@ -52,7 +53,7 @@
     --bs-gradient:linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
     --bs-body-font-family:var(--bs-font-sans-serif);
     --bs-body-font-size:0.9rem;
-    --bs-body-font-weight:400;
+    --bs-body-font-weight:500;
     --bs-body-line-height:1.5;
     --bs-body-color:#505d69;
     --bs-body-bg:#eff3f6
@@ -1945,7 +1946,7 @@ progress{
     width:100%;
     padding:.47rem .75rem;
     font-size:.9rem;
-    font-weight:400;
+    font-weight:500;
     line-height:1.5;
     color:#505d69;
     background-color:#fff;
@@ -2143,7 +2144,7 @@ textarea.form-control-lg{
     padding:.47rem 1.75rem .47rem .75rem;
     -moz-padding-start:calc(.75rem - 3px);
     font-size:.9rem;
-    font-weight:400;
+    font-weight:500;
     line-height:1.5;
     color:#505d69;
     background-color:#fff;
@@ -2530,7 +2531,7 @@ textarea.form-control-lg{
     align-items:center;
     padding:.47rem .75rem;
     font-size:.9rem;
-    font-weight:400;
+    font-weight:500;
     line-height:1.5;
     color:#505d69;
     text-align:center;
@@ -2721,7 +2722,7 @@ textarea.form-control-lg{
 }
 .btn{
     display:inline-block;
-    font-weight:400;
+    font-weight:500;
     line-height:1.5;
     color:#505d69;
     text-align:center;
@@ -2824,8 +2825,8 @@ textarea.form-control-lg{
 }
 .btn-success{
     color:#fff;
-    background-color:#6fd088;
-    border-color:#6fd088
+    background-color:#067704;
+    border-color:#067704
 }
 .btn-success:hover{
     color:#fff;
@@ -3274,7 +3275,7 @@ textarea.form-control-lg{
     background-color:transparent
 }
 .btn-link{
-    font-weight:400;
+    font-weight:500;
     color:#0f9cf3;
     text-decoration:none
 }
@@ -3496,7 +3497,7 @@ textarea.form-control-lg{
     width:100%;
     padding:.35rem 1.5rem;
     clear:both;
-    font-weight:400;
+    font-weight:500;
     color:#212529;
     text-align:inherit;
     white-space:nowrap;
@@ -5627,7 +5628,7 @@ textarea.form-control-lg{
     margin:0;
     font-family:var(--bs-font-sans-serif);
     font-style:normal;
-    font-weight:400;
+    font-weight:500;
     line-height:1.5;
     text-align:left;
     text-align:start;
@@ -5723,7 +5724,7 @@ textarea.form-control-lg{
     max-width:276px;
     font-family:var(--bs-font-sans-serif);
     font-style:normal;
-    font-weight:400;
+    font-weight:500;
     line-height:1.5;
     text-align:left;
     text-align:start;
@@ -7431,7 +7432,7 @@ textarea.form-control-lg{
     font-weight:lighter!important
 }
 .fw-normal{
-    font-weight:400!important
+    font-weight:500!important
 }
 .fw-bold{
     font-weight:600!important
@@ -11196,7 +11197,7 @@ html{
 }
 .h1,.h2,.h3,.h4,.h5,.h6,h1,h2,h3,h4,h5,h6{
     color:#0a1832;
-    font-family:Poppins,sans-serif
+    font-family:Poppins,sans-serif;
 }
 a{
     text-decoration:none!important
@@ -11456,9 +11457,10 @@ a,button{
     color:inherit
 }
 .card-title{
-    font-size:15px;
+    font-size:18px;
     margin:0 0 7px 0;
-    font-weight:500
+    font-weight:600;
+    color: #043277;
 }
 .card-title-desc{
     color:#6c757d;

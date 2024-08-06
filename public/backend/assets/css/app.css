@@ -1,13 +1,5 @@
-@import url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;
-1,700&family=Poppins:ital,wght@0,100;
-0,200;
-0,300;
-0,400;
-0,500;
-0,600;
-0,700;
-0,800;
-0,900&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap);
+
 @font-face{
     font-family:Inter;
     font-style:normal;
@@ -872,7 +864,7 @@ body[data-sidebar=colored] .menu-title{
     position:relative;
     padding:1rem 1.3rem;
     color:#6c757d;
-    font-family:Poppins,sans-serif
+    font-family:Poppins,sans-serif;
 }
 .topnav .navbar-nav .nav-link i{
     font-size:15px;
@@ -1868,7 +1860,7 @@ body[data-layout=horizontal][data-layout-size=boxed] .container-fluid,body[data-
     padding:.25rem .5rem;
     font-size:.71094rem;
     border-radius:.2rem;
-    font-weight:400;
+    font-weight:600;
     color:#0a1832
 }
 .sp-container button.sp-palette-toggle{
@@ -2618,10 +2610,25 @@ div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:first-child
 div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:last-child{
     padding-right:0
 }
-table.dataTable{
-    border-collapse:collapse!important;
-    margin-bottom:15px!important
+table.dataTable {
+    border-collapse: collapse !important; /* Menghilangkan jarak antara border sel */
+    margin-bottom: 15px !important;
 }
+
+table.dataTable thead th {
+    border-bottom: 2px solid #eff2f7; /* Border bawah untuk header */
+}
+
+table.dataTable tbody td {
+    border-bottom: 1px solid #eff2f7; /* Border bawah untuk baris data */
+}
+
+table.dataTable td, table.dataTable th {
+    border-left: none !important;
+    border-right: none; /* Menghilangkan border kanan */
+}
+
+
 table.dataTable thead .sorting:before,table.dataTable thead .sorting_asc:before,table.dataTable thead .sorting_asc_disabled:before,table.dataTable thead .sorting_desc:before,table.dataTable thead .sorting_desc_disabled:before{
     left:auto;
     right:.5rem;
@@ -2642,9 +2649,20 @@ table.dataTable thead tr td.sorting,table.dataTable thead tr td.sorting_asc,tabl
     padding-left:12px;
     padding-right:30px
 }
+
+table.dataTable thead tr th.sorting{
+    font-weight: bold;
+}
+
 table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{
     background-color:rgba(15,156,243,.2)
 }
+/* Menyesuaikan header tabel DataTables */
+table.dataTable thead th {
+    background-color: #f8f9fa; /* Ganti dengan warna yang Anda inginkan */
+    color: #505d69; /* Warna teks */
+}
+
 table.dataTable tbody>tr.selected td,table.dataTable tbody>tr>.selected td{
     border-color:rgba(15,156,243,.2);
     color:#0f9cf3
@@ -2656,10 +2674,7 @@ table.dataTable tbody td.focus,table.dataTable tbody th.focus{
     outline:2px solid #0f9cf3!important;
     outline-offset:-1px;
     background-color:rgba(15,156,243,.15)
-}
-.dataTables_info{
-    font-weight:600
-}
+
 table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>td:first-child:before,table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>th:first-child:before{
     -webkit-box-shadow:0 5px 12px rgba(0,0,0,.1);
     box-shadow:0 5px 12px rgba(0,0,0,.1);
@@ -2888,7 +2903,7 @@ div.dt-button-info h2{
 }
 .table-rep-plugin tbody th{
     font-size:14px;
-    font-weight:400
+    font-weight:600
 }
 .table-rep-plugin .checkbox-row{
     padding-left:40px;
