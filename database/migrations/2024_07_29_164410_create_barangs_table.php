@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('barangs', function (Blueprint $table) {
             $table->id(); // kolom id otomatis
             $table->string('kode');
+            $table->integer('kelompok_id');
             $table->string('nama')->nullable(); // kolom nama
             $table->integer('qty_item')->nullable(); // kolom qty_item
             $table->string('satuan'); // kolom satuan

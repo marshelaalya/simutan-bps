@@ -7,12 +7,12 @@
 <div class="row">
     <div class="col-12">
     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-        <h4 class="mb-sm-0 text-info">List Persediaan Barang</h4>
+        <h4 class="mb-sm-0 text-info">List Pengguna</h4>
     
         <div class="page-title-right">
             <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a href="javascript: void(0);">Barang</a></li>
-                <li class="breadcrumb-item active">Persediaan Barang</li>
+                <li class="breadcrumb-item"><a href="javascript: void(0);">Pengguna</a></li>
+                <li class="breadcrumb-item active">Seluruh Pengguna</li>
             </ol>
         </div>
     
@@ -28,9 +28,9 @@
                     <div class="card-body">
                         
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h3 class="card-title mb-0">Persediaan Barang</h3>
-                            <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">
-                                <i class="mdi mdi-plus-circle"></i> Tambah Barang
+                            <h3 class="card-title mb-0">Seluruh Pengguna</h3>
+                            <a href="{{ route('user.add') }}" class="btn btn-info waves-effect waves-light ml-3">
+                                <i class="mdi mdi-plus-circle"></i> Tambah Pengguna
                             </a>
                         </div>
                                                
@@ -39,35 +39,30 @@
                             
                             <thead>
                                 <tr>
-                                    <th width="10%" class="text-center">Kode</th>
-                                    <th>Nama Barang</th>
-                                    <th width="20%">Kelompok Barang</th>
-                                    <th width="1%" class="text-center">Stok</th>
-                                    <th width="1%" class="text-center">Satuan</th>
+                                    <th>Nama Pengguna</th>
+                                    <th>Role</th>
+                                    <th>Email</th>
+                                    <th>Username</th>
                                     <th width="1%" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($barangs as $item)
+                                @foreach($users as $item)
                                     <tr>
-                                        <td width="1%" class="text-center">{{ $item->id }}</td>
-                                        <td>{{ $item->nama }}</td>
-                                        <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
-                                        <td width="1%" class="text-center">{{ $item->qty_item }}</td>
-                                        <td width="1%" class="text-center">{{ $item->satuan }}</td>
-                                        
-                                            {{-- <a href="{{ route('barang.edit', $item->id) }}" class="btn btn-info sm" title="Edit Data"> <i class="fas fa-edit"></i> </a>
-                                            <a href="{{ route('barang.delete', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"> <i class="fas fa-trash-alt"></i> </a> --}}
-                                        
+                                        <td>{{ $item->name }}</td>
+                                        <td>{{ $item->role }}</td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->username }}</td>
+                                                                                
                                         <td class="table-actions" style="text-align: center; vertical-align: middle;">
                                             <!-- Tombol dengan link route ke halaman view -->
-                                            <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-warning btn-sm">
+                                            <a href="{{ route('user.edit', $item->id) }}" class="btn bg-warning btn-sm">
                                                 <i class="fas fa-edit" style="color: #ca8a04"></i>
                                             </a>
                                             
                                             <!-- Tombol dengan link route ke halaman print -->
-                                            <a href="{{ route('barang.delete', $item->id) }}" class="btn bg-danger btn-sm">
+                                            <a href="{{ route('user.delete', $item->id) }}" class="btn bg-danger btn-sm">
                                                 <i class="fas fa-trash-alt text-danger"></i>
                                             </a>
                                         </td>
