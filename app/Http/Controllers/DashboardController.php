@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Permintaan;
 
 class DashboardController extends Controller
 {
@@ -20,5 +21,10 @@ class DashboardController extends Controller
         return redirect('/'); // Redirect jika role tidak dikenali
     }
 
+    public function dashboard() {
+        $permintaans = Permintaan::all(); // Atau query yang sesuai dengan kebutuhan Anda
+        return view('admin.index', compact('permintaans'));
+    }
+    
     
 }

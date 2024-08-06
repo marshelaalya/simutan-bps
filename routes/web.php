@@ -98,4 +98,7 @@ Route::controller(WizardController::class)->group(function () {
     Route::post('/wizard-submit', [WizardController::class, 'submit'])->name('wizard.submit');
 });
 
+Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+
 require __DIR__.'/auth.php';

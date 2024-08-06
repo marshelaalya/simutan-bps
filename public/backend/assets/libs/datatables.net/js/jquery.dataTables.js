@@ -35,7 +35,7 @@
         c && Fa(c);
         if (a) {
             var d = a.sZeroRecords;
-            !a.sEmptyTable && (d && "No data available in table" === b.sEmptyTable) && F(a, a, "sZeroRecords", "sEmptyTable");
+            !a.sEmptyTable && (d && "Tidak ada data permintaan di tabel" === b.sEmptyTable) && F(a, a, "sZeroRecords", "sEmptyTable");
             !a.sLoadingRecords && (d && "Loading..." === b.sLoadingRecords) && F(a,
                 a, "sZeroRecords", "sLoadingRecords");
             a.sInfoThousands && (a.sThousands = a.sInfoThousands);
