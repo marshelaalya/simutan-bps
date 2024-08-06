@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,114 +15,65 @@ class UserController extends Controller
         return view('backend.user.user_all', compact('users'));
     } // End Method
 
-    // public function KelompokStore(Request $request){
-    //     Kelompok::insert([
-    //         'nama' => $request->nama,
-    //         'kode' => $request->kode_barang,
-    //         // 'created_by' => Auth::user()->id,
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now(),
-    //     ]);
-    
-    //     $notification = array(
-    //         'message' => "Kelompok Barang berhasil ditambahkan.",
-    //         'alert-type' => "Success"
-    //     );
+    public function UserAdd(){
+        return view('backend.user.user_add');
+    } // End Method
 
-    //     return redirect()->route('kelompok.all')->with($notification);
-    // }
+    public function UserStore(Request $request){
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'role' => 'required|in:admin,supervisor,pegawai',
+        ]);
 
-    // public function KelompokEdit($id){
-    //     $kelompok = Kelompok::findOrFail($id);
-    //     return view('backend.kelompok.kelompok_edit', compact('kelompok'));
-    // }
+        // Menyimpan pengguna dengan password default
+        User::create([
+            'name' => $request->name,
+            'role' => $request->role,
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make('password'), // Password default
+        ]);
 
-    // public function KelompokUpdate(Request $request){
-    //     $kelompok_id = $request->id;
+        $notification = array(
+            'message' => "Pengguna berhasil ditambahkan.",
+            'alert-type' => "success"
+        );
 
-    //     Kelompok::findOrFail($kelompok_id)->update([
-    //         'nama'=>$request->nama,
-    //         'updated_at' => Carbon::now()
-    //     ]);
+        return redirect()->route('user.all')->with($notification);
+    }
 
-    //     $notification = array(
-    //         'message' => 'Kelompok Barang berhasil di update',
-    //         'alert-type' => 'success'
-    //     );
+    public function UserEdit($id){
+        $user = User::findOrFail($id);
+        return view('backend.user.user_edit', compact('user'));
+    }
 
-    //     return redirect()->route('kelompok.all')->with($notification);
-    // }
+    public function UserUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
 
-    // public function KelompokDelete($id){
-    //     Kelompok::findOrFail($id)->delete();
+        $user->update([
+            'role' => strtolower($request->role),
+        ]);
 
-    //     $notification = array(
-    //         'message' => 'Kelompok Barang berhasil dihapus',
-    //         'alert-type' => 'success'
-    //     );
+        $notification = array(
+            'message' => 'Role pengguna berhasil diganti.',
+            'alert-type' => 'success'
+        );
 
-    //     return redirect()->back()->with($notification);
-    // }
+        return redirect()->route('user.all')->with($notification);
+    }
 
-    // public function barangAdd(){
-    //     $kelompok = Kelompok::all();
-    //     return view('backend.barang.barang_add', compact('kelompok'));
-    // } // End Method
+    public function UserDelete($id){
+        user::findOrFail($id)->delete();
 
-    // public function barangStore(Request $request){
-    //     Barang::insert([
-    //         'nama' => $request->nama,
-    //         'kode' => $request->kode_barang,
-    //         'kelompok_id' => $request->kelompok_id,
-    //         'qty_item' => $request->qty_item,
-    //         'satuan' => $request->satuan,
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now(),
-    //     ]);
-    
-    //     $notification = array(
-    //         'message' => "Barang berhasil ditambahkan.",
-    //         'alert-type' => "Success"
-    //     );
+        $notification = array(
+            'message' => 'Pengguna berhasil dihapus',
+            'alert-type' => 'success'
+        );
 
-    //     return redirect()->route('barang.all')->with($notification);
-    // }
-
-    // public function barangEdit($id){
-
-    //     $kelompok = Kelompok::all();
-
-    //     $barang = barang::findOrFail($id);
-    //     return view('backend.barang.barang_edit', compact('barang','kelompok'));
-    // }
-
-    // public function barangUpdate(Request $request){
-    //     $barang_id = $request->id;
-
-    //     barang::findOrFail($barang_id)->update([
-    //         'nama' => $request->nama,
-    //         'kelompok_id' => $request->kelompok_id,
-    //         'qty_item' => $request->qty_item,
-    //         'satuan' => $request->satuan,
-    //         'updated_at' => Carbon::now(),
-    //     ]);
-
-    //     $notification = array(
-    //         'message' => 'Barang berhasil di update',
-    //         'alert-type' => 'success'
-    //     );
-
-    //     return redirect()->route('barang.all')->with($notification);
-    // }
-
-    // public function barangDelete($id){
-    //     barang::findOrFail($id)->delete();
-
-    //     $notification = array(
-    //         'message' => 'barang Barang berhasil dihapus',
-    //         'alert-type' => 'success'
-    //     );
-
-    //     return redirect()->back()->with($notification);
-    // }
+        return redirect()->back()->with($notification);
+    }
 }

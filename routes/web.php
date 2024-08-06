@@ -58,11 +58,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(UserController::class)->group(function () {
         Route::get('/user/all', 'UserAll')->name('user.all');
-        // Route::get('/barang/add', 'BarangAdd')->name('barang.add');
-        // Route::post('/barang/store', 'BarangStore')->name('barang.store');
-        // Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
-        // Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update'); 
-        // Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete'); 
+        Route::get('/user/add', 'UserAdd')->name('user.add');
+        Route::post('/user/store', 'UserStore')->name('user.store');
+        Route::get('/user/edit/{id}', 'UserEdit')->name('user.edit');
+        Route::post('/user/update/{id}', 'UserUpdate')->name('user.update'); 
+        Route::get('/user/delete/{id}', 'UserDelete')->name('user.delete'); 
     });
 
     Route::controller(PermintaanController::class)->group(function () {
