@@ -207,6 +207,20 @@ class PilihanController extends Controller
         }
     }
 
+    // public function deleteItem(Request $request)
+    // {
+    // $id = $request->input('id');
+
+    // // Find the item by ID and delete it
+    // $pilihan = Pilihan::findOrFail($id);
+
+    // if ($pilihan) {
+    //     $pilihan->delete();
+    //     return response()->json(['success' => true]);
+    // } else {
+    //     return response()->json(['success' => false, 'message' => 'Item not found.']);
+    // }
+    // }
 
 
 }
