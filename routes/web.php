@@ -5,6 +5,7 @@ use App\Http\Controllers\Demo\DemoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\PermintaanController;
 use App\Http\Controllers\Pos\KelompokController;
 use App\Http\Controllers\Pos\BarangController;
@@ -52,6 +53,16 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/store/profile', 'StoreProfile')->name('store.profile');
         Route::get('/change/password', 'ChangePassword')->name('change.password');
         Route::post('/update/password', 'UpdatePassword')->name('update.password');
+    });
+
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/user/all', 'UserAll')->name('user.all');
+        // Route::get('/barang/add', 'BarangAdd')->name('barang.add');
+        // Route::post('/barang/store', 'BarangStore')->name('barang.store');
+        // Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
+        // Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update'); 
+        // Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete'); 
     });
 
     Route::controller(PermintaanController::class)->group(function () {

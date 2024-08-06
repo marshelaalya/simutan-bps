@@ -43,6 +43,19 @@
                 <li><a href="{{ route('permintaan.all')}}">Semua Permintaan</a></li>
             </ul>
         </li>
+
+        <li>
+            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                <i class="ri-mail-send-line"></i>
+                <span>Pengguna</span>
+            </a>
+            <ul class="sub-menu" aria-expanded="false">
+                <li><a href="{{ route('user.all') }}">Seluruh Pengguna</a></li>
+                {{-- <li><a href="{{ route('pilihan.add') }}">Ajukan Permintaan</a></li>
+                <li><a href="{{ route('permintaan.all')}}">Semua Permintaan</a></li> --}}
+            </ul>
+        </li>
+        
         </div>
     </div>
 </div>
