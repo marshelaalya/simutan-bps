@@ -92,6 +92,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pilihan/all', 'PilihanAll')->name('pilihan.all');
         Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
         Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
+        Route::get('/pilihan/admin-approval', 'PilihanAdminAppr')->name('pilihan.admAppr');
+        // Route::post('/pilihan/delete', 'deleteItem')->name('pilihan.delete'); // New route for delete
     });
 
     Route::controller(DefaultController::class)->group(function () {

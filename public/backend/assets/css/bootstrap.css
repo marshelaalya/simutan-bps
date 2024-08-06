@@ -2862,7 +2862,7 @@ textarea.form-control-lg{
 .btn-info:hover{
     color:#fff;
     background-color:#074cb3;
-    border-color: : #074cb3;
+    border-color: #074cb3;
 }
 .btn-check:focus+.btn-info,.btn-info:focus{
     color:#fff;
@@ -11662,4 +11662,3 @@ a,button{
 
  */
 /*# sourceMappingURL=bootstrap.min.css.map */
- 

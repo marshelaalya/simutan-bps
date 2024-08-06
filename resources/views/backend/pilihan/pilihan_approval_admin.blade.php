@@ -72,12 +72,12 @@
 <div class="row">
     <div class="col-12">
     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-        <h4 class="mb-sm-0 text-info">Pengajuan Permintaan</h4>
+        <h4 class="mb-sm-0 text-info">Approval Permintaan</h4>
     
         <div class="page-title-right">
             <ol class="breadcrumb m-0">
                 <li class="breadcrumb-item"><a href="javascript: void(0);">Permintaan</a></li>
-                <li class="breadcrumb-item active">Ajukan Permintaan</li>
+                <li class="breadcrumb-item active">Approval Permintaan</li>
             </ol>
         </div>
     
@@ -122,7 +122,7 @@
                                     <div class="col-sm-6">
                                         <div class="mb-3">
                                             <label for="date" class="form-label text-info">Tanggal Permintaan</label>
-                                            <input class="form-control" name="date" type="date" id="date">
+                                            <input class="form-control" name="date" type="date" id="date" value="{{ Auth::user()->date }}" readonly>
                                             <div id="date_warning" class="form-text text-danger" style="display: none;">
                                                 Tanggal tidak boleh kurang dari hari ini.
                                             </div>
@@ -131,13 +131,13 @@
                                     <div class="col-sm-12">
                                         <div class="mb-3">
                                             <label for="textarea" class="form-label mb-1 text-info">Catatan</label>
-                                            <textarea id="textarea" class="form-control" maxlength="225" rows="3" placeholder="Penjelasan. (Maksimal 225 Karakter)"></textarea>
+                                            <textarea id="textarea" class="form-control" maxlength="225" rows="3" placeholder="Penjelasan. (Maksimal 225 Karakter)" readonly>{{ Auth::user()->note }}</textarea>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="warning_message" class="text-danger" style="display: none;">
+                                {{-- <div id="warning_message" class="text-danger" style="display: none;">
                                     <p>Semua kolom harus diisi. Harap isi tanggal dan deskripsi sebelum melanjutkan.</p>
-                                </div>
+                                </div> --}}
                                 <div class="mt-4 d-flex justify-content-end">
                                     <button type="button" class="btn btn-info" id="next_btn_step1">Next&nbsp;&nbsp;<i class=" mdi mdi-arrow-right font-size-16 text-white align-middle"></i></button>
                                 </div>
@@ -149,7 +149,7 @@
                                 {{-- <h5>Langkah 2: Detail Permintaan</h5> --}}
                                 <hr class="border border-secondary" style="border-width: 0.2px;">
                                 
-                                <div class="row g-3 mb-3">
+                                {{-- <div class="row g-3 mb-3">
                                     <div class="col-sm-3">
                                         <div>
                                             <label for="kelompok_id" class="form-label text-info">Kelompok Barang</label>
@@ -184,40 +184,55 @@
                                             <i class="mdi mdi-plus"></i> <span>Tambah</span>
                                         </button>
                                     </div>
-                                    {{-- <button type="button" class="btn btn-info" id="addMoreButton" style="display: inline-block;width: auto; height:auto;">Tambah Lagi</button> --}}
-                                </div>
+                                    <button type="button" class="btn btn-info" id="addMoreButton" style="display: inline-block;width: auto; height:auto;">Tambah Lagi</button>
+                                </div> --}}
                         
                                 <!-- Tabel -->
-                                <label for="mainForm" class="text-info"> Tabel Permintaan Barang</label>
-                                    <form id="mainForm" method="post" action="{{ route('pilihan.store') }}">
-                                        @csrf
-                                        <div class="table-responsive">
-                                            <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
-                                                <thead class="table-light">
-                                                    <tr>
+                                <label for="mainForm" class="text-info">Tabel Permintaan Barang</label>
+                                <form id="mainForm" method="post" action="{{ route('pilihan.admAppr') }}">
+                                    @csrf
+                                    <div class="table-responsive">
+                                        <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
+                                            <thead class="table-light">
+                                                <tr>
                                                     <th style="width: 23%;">Kelompok Barang</th>
                                                     <th>Nama Barang</th>
                                                     <th class="text-center" style="width: 1%;">Kuantitas</th>
                                                     <th class="text-center" style="width: 1%;">Aksi</th>
-                                                    </tr>
-                                                    
-                                                </thead>
-                                            <tbody id="table-body">
-                                                <!-- Data tabel di sini -->
-                                                <tr id="no-data-row">
-                                                    <td colspan="4" class="text-center">Tidak ada barang terpilih</td>
                                                 </tr>
+                                            </thead>
+                                            <tbody id="table-body">
+                                                @forelse ($pilihans as $pilihan)
+                                                    <tr>
+                                                        <td>{{ $pilihan->kelompok->nama ?? 'N/A' }}</td>
+                                                        <td>{{ $pilihan->barang->nama ?? 'N/A' }}</td>
+                                                        <td class="text-center">{{ $pilihan->req_qty }} {{ $pilihan->barang->satuan ?? 'N/A' }}</td>
+                                                        <td class="text-center">
+                                                            <!-- Anda bisa menambahkan tombol atau aksi di sini -->
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr id="no-data-row">
+                                                        <td colspan="4" class="text-center">Tidak ada barang terpilih</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                         <input type="hidden" name="table_data" id="table_data" value="">
                                         <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
                                         <input type="hidden" id="hidden_date" name="hidden_date">
-                                        <input type="hidden" id="hidden_description" name="hidden_description">   
+                                        <input type="hidden" id="hidden_description" name="hidden_description">  
+                                    </div>
+   
                         
                                         <!-- Navigation Buttons -->
                                         <div class="mt-4 d-flex justify-content-between">
                                             <button type="button" class="btn btn-info" id="prev_btn"><i class=" mdi mdi-arrow-left font-size-16 text-white align-middle"></i>&nbsp;&nbsp;Previous</button>
-                                            <button type="submit" class="btn btn-success" id="submit_btn">Submit</button>
+                                            <div class="d-flex">
+                                                <button type="submit" class="btn btn-success" id="submit_btn">Reject</button>
+                                                <button type="submit" class="btn btn-success" id="submit_btn">Approve</button>
+                                            </div>
+                                            
                                             
                                         </div>
                                     </form>
