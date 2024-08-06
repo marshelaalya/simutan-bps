@@ -8,30 +8,33 @@
 <style>
     .step-indicator {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
+
     .step-indicator .step {
         display: flex;
-        flex-direction: column;
         align-items: center;
         cursor: pointer;
         position: relative;
     }
+
     .step-indicator .step .circle {
         width: 40px;
         height: 40px;
         background-color: #e9ecef;
-        border-radius: 50%;
+        border-radius: 0.25rem;
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: bold;
+        color: #000; /* Default text color for circle */
     }
+
     .step-indicator .step.active .circle {
-        background-color: #007bff;
+        background-color: #043277;
         color: white;
     }
+
     .step-indicator .step::after {
         content: '';
         position: absolute;
@@ -43,46 +46,65 @@
         background-color: #e9ecef;
         z-index: -1;
     }
+
     .step-indicator .step:first-child::after {
         display: none;
     }
+
     .step-indicator .step.active + .step::after {
         background-color: #007bff;
     }
+
+    .step .label {
+        font-size: 1.125rem;
+        color: #6c757d; /* Default text color for label */
+    }
+
+    .step.active .label {
+        color: black; /* Color for active step label */
+    }
 </style>
+
 
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+                
                         <h4 class="card-title">Halaman Pengajuan Permintaan</h4><br><br>
 
                         <!-- Wizard Steps -->
                         <div id="wizard">
+                            <div class="card">
+                                <div class="card-body">
                             <div class="step-indicator">
                                 <div class="step active" data-step="1">
                                     <div class="circle">1</div>
-                                    <div class="label">Informasi Permintaan</div>
+                                    <div class="label ms-2">Informasi Permintaan</div>
                                 </div>
+                                <div>
+                                    <i class="mdi mdi-chevron-right mx-3" style="font-size: 30px;"></i>
+                                </div>
+                                
                                 <div class="step" data-step="2">
                                     <div class="circle">2</div>
-                                    <div class="label">Detail Permintaan</div>
+                                    <div class="label ms-2">Detail Barang Permintaan</div>
                                 </div>
                             </div>
-
+                        
+                            
                             <!-- Step 1 -->
                             <div id="step1" class="step-content">
-                                <h5>Langkah 1: Informasi Permintaan</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                {{-- <h5 class="mb-4">Langkah 1: Informasi Permintaan</h5> --}}
+                                <hr class="border border-secondary" style="border-width: 0.2px;">
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Nama Pengaju</label>
                                             <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-sm-6">
                                         <div class="mb-3">
                                             <label for="date" class="form-label">Tanggal Permintaan</label>
                                             <input class="form-control" name="date" type="date" id="date">
@@ -91,21 +113,30 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-sm-12">
                                         <div class="mb-3">
                                             <label for="textarea" class="form-label mb-1">Catatan</label>
                                             <textarea id="textarea" class="form-control" maxlength="225" rows="3" placeholder="Penjelasan. (Maksimal 225 Karakter)"></textarea>
                                         </div>
                                     </div>
                                 </div>
+                                <div id="warning_message" class="text-danger" style="display: none;">
+                                    <p>Semua kolom harus diisi. Harap isi tanggal dan deskripsi sebelum melanjutkan.</p>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="button" class="btn btn-info" id="next_btn_step1">Next</button>
+                                </div>
+                                
                             </div>
-
+                        
                             <!-- Step 2 -->
                             <div id="step2" class="step-content" style="display: none;">
-                                <h5>Langkah 2: Detail Permintaan</h5>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
+                                {{-- <h5>Langkah 2: Detail Permintaan</h5> --}}
+                                <hr class="border border-secondary" style="border-width: 0.2px;">
+                                
+                                <div class="row g-3 mb-4">
+                                    <div class="col-sm-3">
+                                        <div>
                                             <label for="kelompok_id" class="form-label">Kelompok Barang</label>
                                             <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
                                                 <option selected disabled>Kelompok Barang</option>
@@ -115,37 +146,34 @@
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:38%">
+                                        <div>
                                             <label for="barang_id" class="form-label">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
                                                 <option selected disabled>Pilih barang yang ingin diajukan</option>
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
+                                    <div class="col-sm-3">
+                                        <div>
                                             <label for="req_qty" class="form-label">Kuantitas Permintaan</label>
                                             <input class="form-control" name="req_qty" type="text" id="req_qty">
                                             <div id="qty_warning" class="form-text text-danger" style="display: none;">
                                                 Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="mb-3">
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
-
+                                    <div class="col-sm-2 d-flex justify-content-end align-items-start w-auto" style="margin-top:2.8rem">
+                                        <button type="button" class="btn btn-info" id="addMoreButton">
+                                            <i class="mdi mdi-plus"></i> <span>Tambah</span>
+                                        </button>
+                                    </div>
+                                    {{-- <button type="button" class="btn btn-info" id="addMoreButton" style="display: inline-block;width: auto; height:auto;">Tambah Lagi</button> --}}
                                 </div>
-
+                        
                                 <!-- Tabel -->
-                                <div class="card-body">
+                               
                                     <form id="mainForm" method="post" action="{{ route('pilihan.store') }}">
                                         @csrf
                                         <table class="table-sm table-bordered" width="100%" style="border-color: #ddd;">
@@ -164,20 +192,19 @@
                                         </table>
                                         <input type="hidden" name="table_data" id="table_data" value="">
                                         <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
-
+                                        <input type="hidden" id="hidden_date" name="hidden_date">
+                                        <input type="hidden" id="hidden_description" name="hidden_description">   
+                        
                                         <!-- Navigation Buttons -->
                                         <div class="mt-4">
-                                            <button type="button" class="btn btn-secondary" id="prev_btn" style="display: none;">Previous</button>
-                                            <button type="button" class="btn btn-primary" id="next_btn">Next</button>
-                                            <button type="submit" class="btn btn-info" id="submit_btn" style="display: none;">Submit</button>
-                                            <button type="button" class="btn btn-info" id="addMoreButton" style="display: none;">Tambah Lagi</button>
+                                            <button type="button" class="btn btn-secondary" id="prev_btn">Previous</button>
+                                            <button type="submit" class="btn btn-info" id="submit_btn">Submit</button>
                                         </div>
                                     </form>
+                            </div>
                                 </div>
-                            </div> 
-                        </div>
-                    </div>                 
-                </div>
+                            </div>
+                        </div>                        
             </div>
         </div>
     </div>
@@ -300,6 +327,10 @@
             $('#table-body').append(html);
 
             // $('#date').val('');
+            // Menjadi Read Only setelah Klik Tambah lagi
+            // $('#date').prop('readonly', true);
+            // $('#textarea').prop('readonly', true);
+
             $('#kelompok_id').val('');
             $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
             $('#req_qty').val('');
@@ -315,54 +346,114 @@
 
         $('#mainForm').on('submit', function(e) {
             e.preventDefault(); // Prevent default form submission
+
+            var date = $('#date').val();
+            var description = $('#textarea').val();
+
+            $('#hidden_date').val(date);
+            $('#hidden_description').val(description);
+
             var tableData = [];
             $('#table-body tr').each(function() {
-                var date = $(this).find('td:eq(0)').text();
+                var kelompok_nama = $(this).find('td:eq(0)').text();
                 var barang_nama = $(this).find('td:eq(1)').text();
                 var kelompok_nama = $(this).find('td:eq(2)').text();
                 var qty_req = $(this).find('td:eq(3)').text();
                 var description = $(this).find('td:eq(4)').text();
 
                 tableData.push({
-                    date: date,
-                    barang_nama: barang_nama,
+                    date: $('#hidden_date').val(), // Ambil dari hidden field
                     kelompok_nama: kelompok_nama,
                     qty_req: qty_req,
-                    description: description
+                    description: $('#hidden_description').val() // Ambil dari hidden field
                 });
             });
             $('#table_data').val(JSON.stringify(tableData)); // Menyimpan data dalam format JSON
 
-            // Optionally submit the form if you want to submit it programmatically
-            this.submit(); 
+            $('#table_data').val(JSON.stringify(tableData));
+            $(this).off('submit').submit(); 
         });
 
-        // Navigasi antara langkah menggunakan tombol next dan previous
-        $('#next_btn').on('click', function() {
+    function validateStep1() {
+        var date = $('#date').val();
+        var description = $('#textarea').val();
+        
+        console.log('Validating Step 1:', date, description); // Debugging
+        
+        if (date && description) {
+            $('#next_btn_step1').removeClass('disabled').prop('disabled', false);
+            $('#warning_message').hide(); 
+            return true; // Validasi berhasil
+        } else {
+            $('#warning_message').show(); 
+            return false; // Validasi gagal
+        }
+    }
+
+    // Validasi setiap kali input berubah di Step 1
+    $('#date, #textarea').on('input', validateStep1);
+
+    // Fungsi untuk navigasi antar langkah
+    function navigateToStep(step) {
+        $('.step-content').hide();
+        $('#step' + step).show();
+        $('.step').removeClass('active');
+        $('.step[data-step="' + step + '"]').addClass('active');
+        
+        // Tombol navigasi
+        $('#prev_btn').toggle(step > 1);
+        $('#next_btn_step1').toggle(step < 2); // Update sesuai dengan ID tombol
+        $('#submit_btn').toggle(step == 2);
+        $('#addMoreButton').toggle(step == 2);
+
+        // Update circle step state
+        $('.step .circle').each(function() {
+            var circleStep = $(this).parent().data('step');
+            $(this).toggleClass('completed', circleStep < step);
+        });
+    }
+
+    // Navigasi menggunakan tombol "Next" di Step 1
+    $('#next_btn_step1').on('click', function() {
+        if (validateStep1()) {
             navigateToStep(2);
-        });
-
-        $('#prev_btn').on('click', function() {
-            navigateToStep(1);
-        });
-
-        // Navigasi antara langkah menggunakan klik pada circle
-        $('.step .circle').on('click', function() {
-            var step = $(this).parent().data('step');
-            navigateToStep(step);
-        });
-
-        function navigateToStep(step) {
-            $('.step-content').hide();
-            $('#step' + step).show();
-            $('.step').removeClass('active');
-            $('.step[data-step="' + step + '"]').addClass('active');
-            $('#prev_btn').toggle(step > 1);
-            $('#next_btn').toggle(step < 2);
-            $('#submit_btn').toggle(step == 2);
-            $('#addMoreButton').toggle(step == 2);
+        } else {
+            console.log('Validation failed on Step 1'); // Debugging
         }
     });
+
+    // Navigasi menggunakan tombol "Previous"
+    $('#prev_btn').on('click', function() {
+        navigateToStep(1);
+    });
+
+    // Navigasi menggunakan klik pada circle
+    $('.step .circle').on('click', function() {
+        var step = $(this).parent().data('step');
+        
+        console.log('Circle clicked:', step); // Debugging
+
+        // Jika step yang ingin diakses adalah step 1, lakukan validasi
+        if (step === 1) {
+            if (validateStep1()) {
+                navigateToStep(step);
+            }
+        } else {
+            // Jika step yang ingin diakses lebih dari 1, hanya izinkan navigasi jika langkah sebelumnya sudah lengkap
+            var currentStep = $('.step.active').data('step');
+            if (currentStep < step) {
+                if (validateStep1()) {
+                    navigateToStep(step);
+                }
+            } else {
+                navigateToStep(step);
+            }
+        }
+    });
+
+    // Inisialisasi tampilan default
+    navigateToStep(1);
+});
 </script>
 
 @endsection

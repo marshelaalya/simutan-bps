@@ -131,8 +131,10 @@ class PilihanController extends Controller
     
     public function PilihanStore(Request $request)
     {
-        // Ambil data dari input hidden
+        // Ambil data dari input tersembunyi
         $tableData = $request->input('table_data');
+        $date = $request->input('hidden_date');
+        $description = $request->input('hidden_description');
 
         // Log data untuk debugging
         Log::info('Table Data:', ['data' => $tableData]);
@@ -151,10 +153,8 @@ class PilihanController extends Controller
 
         $permintaanId = $this->PermintaanStore($request);
 
-        // Periksa apakah $tableData adalah array dan tidak kosong
+        // Proses data
         if (is_array($tableData) && !empty($tableData)) {
-            // Simpan permintaan terlebih dahulu
-
             // Validasi permintaan ID
             if (!$permintaanId) {
                 $notification = array(
@@ -164,13 +164,13 @@ class PilihanController extends Controller
                 return redirect()->back()->with($notification);
             }
 
-            // Proses data
             foreach ($tableData as $index => $item) {
                 // Validasi data
-                if (isset($item['date'], $item['kelompok_nama'], $item['barang_nama'], $item['qty_req'], $item['description'])) {
+                if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
                     $pilihan = new Pilihan();
                     $pilihan->permintaan_id = $permintaanId; // Gunakan ID permintaan yang baru dibuat
-                    $pilihan->date = $item['date'];
+                    $pilihan->date = $date; // Gunakan date dari input tersembunyi
+                    $pilihan->description = $description; // Gunakan description dari input tersembunyi
                     // Ambil ID barang dan kelompok dari nama
                     $barang = Barang::where('nama', $item['barang_nama'])->first();
                     $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
@@ -178,19 +178,22 @@ class PilihanController extends Controller
                         $pilihan->barang_id = $barang->id;
                         // $pilihan->kelompok_id = $kelompok->id;
                         $pilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
-                        $pilihan->description = $item['description'];
                         $pilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur pilihan_no sesuai dengan kebutuhan
                         $pilihan->created_by = Auth::user()->name;
                         $pilihan->created_at = Carbon::now();
                         $pilihan->updated_at = Carbon::now();
                         $pilihan->save(); // Simpan ke database
+
+                        // Kurangi kuantitas barang
+                        $barang->qty_item -= $pilihan->req_qty;
+                        $barang->save();
                     }
                 }
             }
 
             // Kirimkan notifikasi sukses dan redirect
             $notification = array(
-                'message' => 'Data berhasil disimpan',
+                'message' => 'Data berhasil disimpan dan kuantitas barang berhasil diperbarui',
                 'alert-type' => 'success'
             );
             return redirect()->back()->with($notification);
@@ -203,5 +206,7 @@ class PilihanController extends Controller
             return redirect()->back()->with($notification);
         }
     }
+
+
 
 }

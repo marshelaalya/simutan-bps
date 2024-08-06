@@ -19,7 +19,7 @@ return new class extends Migration
             // $table->unsignedBigInteger('pilihan_id');
             $table->string('no_permintaan');
             $table->date('tgl_request');
-            $table->enum('status', ['pending', 'approved by admin', 'approved by supervisor', 'rejected by admin', 'rejected by admin']);
+            $table->enum('status', ['pending', 'approved by admin', 'approved by supervisor', 'rejected by admin', 'rejected by supervisor']);
             $table->text('ctt_adm')->nullable();
             $table->text('ctt_spv')->nullable();
             $table->timestamps();

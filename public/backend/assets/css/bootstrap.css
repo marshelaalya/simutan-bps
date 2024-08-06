@@ -2880,9 +2880,9 @@ textarea.form-control-lg{
     box-shadow:0 0 0 .15rem rgba(4, 50, 119, .5)
 }
 .btn-info.disabled,.btn-info:disabled{
-    color:#fff;
-    background-color:#0097a7;
-    border-color:#0097a7
+    color:#505d69;
+    background-color:#b3b3b3;
+    border-color:#b3b3b3;
 }
 .btn-warning{
     color:#000;

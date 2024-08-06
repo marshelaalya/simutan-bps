@@ -19,7 +19,7 @@
                         
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h4 class="card-title mb-0">Kelompok Barang</h4>
-                            <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">
+                            <a href="{{ route('kelompok.add') }}" class="btn btn-info waves-effect waves-light ml-3">
                                 <i class="mdi mdi-plus-circle"></i> Tambah Kelompok Barang
                             </a>
                         </div>
