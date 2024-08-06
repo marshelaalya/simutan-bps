@@ -178,7 +178,7 @@ class PilihanController extends Controller
                         $pilihan->barang_id = $barang->id;
                         // $pilihan->kelompok_id = $kelompok->id;
                         $pilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
-                        $pilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur pilihan_no sesuai dengan kebutuhan
+                        $pilihan->pilihan_no = sprintf('P-%04d', $index); // Atur pilihan_no sesuai dengan kebutuhan
                         $pilihan->created_by = Auth::user()->name;
                         $pilihan->created_at = Carbon::now();
                         $pilihan->updated_at = Carbon::now();

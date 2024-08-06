@@ -232,8 +232,6 @@
 
 <script id="document-template" type="text/x-handlebars-template">
     <tr class="delete_add_more_item">
-        <td>@{{ date }}</td>
-        <td>@{{ barang_nama }}</td>
         <td>@{{ kelompok_nama }}</td>
         <td>@{{ barang_nama }}</td>
         <td class="text-center">@{{ qty_req }} @{{ barang_satuan }}</td>
@@ -383,18 +381,16 @@
             $('#table-body tr').each(function() {
                 var kelompok_nama = $(this).find('td:eq(0)').text();
                 var barang_nama = $(this).find('td:eq(1)').text();
-                var kelompok_nama = $(this).find('td:eq(2)').text();
-                var qty_req = $(this).find('td:eq(3)').text();
-                var description = $(this).find('td:eq(4)').text();
+                var qty_req = $(this).find('td:eq(2)').text();
 
                 tableData.push({
                     date: $('#hidden_date').val(), // Ambil dari hidden field
                     kelompok_nama: kelompok_nama,
+                    barang_nama: barang_nama,
                     qty_req: qty_req,
                     description: $('#hidden_description').val() // Ambil dari hidden field
                 });
             });
-            $('#table_data').val(JSON.stringify(tableData)); // Menyimpan data dalam format JSON
 
             $('#table_data').val(JSON.stringify(tableData));
             $(this).off('submit').submit(); 
