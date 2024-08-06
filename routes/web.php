@@ -68,6 +68,11 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(PermintaanController::class)->group(function () {
         Route::get('/permintaan/all', 'PermintaanAll')->name('permintaan.all');
         Route::get('/permintaan/add', 'PermintaanAdd')->name('permintaan.add');
+        Route::get('/permintaan/view/{id}', 'PermintaanView')->name('permintaan.view');
+        Route::get('permintaan/approve/{id}', 'PermintaanApprove')->name('permintaan.approve');
+        Route::patch('permintaan/update-status/{id}', 'PermintaanUpdateStatus')->name('permintaan.updateStatus');
+
+
     });
 
     Route::controller(KelompokController::class)->group(function () {
@@ -93,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
         Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
         Route::get('/pilihan/admin-approval', 'PilihanAdminAppr')->name('pilihan.admAppr');
+        
         // Route::post('/pilihan/delete', 'deleteItem')->name('pilihan.delete'); // New route for delete
     });
 

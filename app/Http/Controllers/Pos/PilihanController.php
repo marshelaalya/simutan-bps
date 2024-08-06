@@ -207,6 +207,26 @@ class PilihanController extends Controller
         }
     }
 
+    public function updateStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:approved,rejected',
+    ]);
+
+    $permintaan = Permintaan::find($id);
+
+    if (!$permintaan) {
+        return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
+    }
+
+    // Update status permintaan
+    $permintaan->status = $request->input('status');
+    $permintaan->save();
+
+    return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
+}
+
+
     // public function deleteItem(Request $request)
     // {
     // $id = $request->input('id');
