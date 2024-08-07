@@ -38,8 +38,8 @@
                 <span>Permintaan</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
-                <li><a href="{{ route('permintaan.all') }}">Permintaan Saya</a></li>
                 <li><a href="{{ route('pilihan.add') }}">Ajukan Permintaan</a></li>
+                <li><a href="{{ route('permintaan.saya') }}">Permintaan Saya</a></li>
                 <li><a href="{{ route('permintaan.all')}}">Semua Permintaan</a></li>
             </ul>
         </li>
