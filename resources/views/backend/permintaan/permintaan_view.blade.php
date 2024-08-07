@@ -44,6 +44,7 @@
 
                         <!-- Display Pilihan Details -->
                         <h5 class="card-title">Detail Barang Permintaan</h5>
+                        <hr>
                         <div class="table-responsive">
                             <table class="table table-centered mb-0 align-middle table-hover">
                                 <thead class="table-light">
@@ -69,8 +70,8 @@
 
                         <!-- Approval Actions -->
                         <div class="mt-4">
-                            {{-- <a href="{{ route('permintaan.approve', $permintaan->id) }}" class="btn btn-success">Approve</a>
-                            <a href="{{ route('permintaan.all') }}" class="btn btn-secondary">Kembali</a> --}}
+                            
+                            <a href="{{ route('permintaan.all') }}" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </div>
