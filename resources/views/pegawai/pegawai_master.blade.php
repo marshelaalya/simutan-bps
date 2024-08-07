@@ -161,8 +161,6 @@
         <!-- App js -->
         <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 
-        <!-- Handle Bars js -->
-        <script src="{{ asset('backend/assets/js/handlebars.js') }}"></script>
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 

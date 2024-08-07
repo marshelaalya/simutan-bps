@@ -4,8 +4,18 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/app.js') }}"></script>
+
 
 <style>
+    .select2-results__options {
+        max-height: 200px; /* Adjust height as needed */
+        overflow-y: auto;
+    }
+    .select2-container--default .select2-results__options {
+        max-height: 200px; /* Sesuaikan tinggi sesuai kebutuhan */
+        overflow-y: auto;  /* Aktifkan scroll jika opsi melebihi tinggi */
+    }
     .step-indicator {
         display: flex;
         margin-bottom: 10px;
@@ -115,7 +125,7 @@
                                 <div class="row g-3">
                                     <div class="col-sm-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label text-info">Nama Pengaju</label>
+                                            <label for="name" class="form-label text-info">Nama Pegawai</label>
                                             <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
@@ -169,6 +179,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-sm-3">
                                         <div>
                                             <label for="req_qty" class="form-label text-info">Kuantitas Permintaan</label>
@@ -289,27 +300,28 @@ $(document).on('click', '.delete-button', function() {
         });
 
         $('#kelompok_id').on('change', function() {
-            var kelompok_id = $(this).val();
-            $.ajax({
-                url: "{{ route('get-category') }}",
-                type: "GET",
-                data: { kelompok_id: kelompok_id },
-                success: function(data) {
-                    var html = '<option value="">Pilih barang yang ingin diajukan</option>';
-                    $.each(data, function(key, item) {
-                        html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
-                    });
-                    $('#barang_id').html(html);
-                    $('#req_qty').val('');
-                    $('#current_qty').text('Kuantitas barang sekarang: ');
-                    $('#qty_warning').hide();
-                    validateForm();
-                },
-                error: function(xhr) {
-                    console.error('An error occurred:', xhr.responseText);
-                }
+    var kelompok_id = $(this).val();
+    $.ajax({
+        url: "{{ route('get-category') }}",
+        type: "GET",
+        data: { kelompok_id: kelompok_id },
+        success: function(data) {
+            var html = '<option value="">Pilih barang yang ingin diajukan</option>';
+            $.each(data, function(key, item) {
+                html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
             });
-        });
+            $('#barang_id').html(html).trigger('change'); // Use trigger to update Select2
+            $('#req_qty').val('');
+            $('#current_qty').text('Kuantitas barang sekarang: ');
+            $('#qty_warning').hide();
+            validateForm();
+        },
+        error: function(xhr) {
+            console.error('An error occurred:', xhr.responseText);
+        }
+    });
+});
+
 
         $('#barang_id').on('change', function() {
             var selectedOption = $(this).find('option:selected');
@@ -544,7 +556,197 @@ $(document).on('click', '.delete-button', function() {
     });
 </script>
 
+<script>
+    $(document).ready(function() {
+    $('#barang_id').select2({
+        placeholder: "Pilih barang yang ingin diajukan",
+        width: '100%',
+        maximumSelectionLength: 5,
+        dropdownCssClass: 'bigdrop', // Class for custom dropdown styling
+    });
 
+    var availableQty = 0; // Variabel untuk menyimpan kuantitas barang yang tersedia
+    var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
+    var today = new Date().toISOString().split('T')[0];
+    $('#date').attr('min', today);
+
+    // Function to validate form
+    function validateForm() {
+        var date = $('#date').val();
+        var kelompok_id = $('#kelompok_id').val();
+        var barang_id = $('#barang_id').val();
+        var req_qty = $('#req_qty').val();
+
+        if (date && kelompok_id && barang_id && req_qty && req_qty <= availableQty) {
+            $('#addMoreButton').prop('disabled', false);
+        } else {
+            $('#addMoreButton').prop('disabled', true);
+        }
+    }
+
+    $('#date').on('input', function() {
+        var selectedDate = $(this).val();
+        if (selectedDate < today) {
+            $('#date_warning').show();
+            $('#addMoreButton').prop('disabled', true);
+        } else {
+            $('#date_warning').hide();
+            validateForm();
+        }
+    });
+
+    // Event handlers and other logic here...
+
+    // Example AJAX call to populate barang_id options
+    $('#kelompok_id').on('change', function() {
+        var kelompok_id = $(this).val();
+        $.ajax({
+            url: "{{ route('get-category') }}",
+            type: "GET",
+            data: { kelompok_id: kelompok_id },
+            success: function(data) {
+                var html = '<option value="">Pilih barang yang ingin diajukan</option>';
+                $.each(data, function(key, item) {
+                    html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
+                });
+                $('#barang_id').html(html).trigger('change'); // Use trigger to update Select2
+                $('#req_qty').val('');
+                $('#current_qty').text('Kuantitas barang sekarang: ');
+                $('#qty_warning').hide();
+                validateForm();
+            },
+            error: function(xhr) {
+                console.error('An error occurred:', xhr.responseText);
+            }
+        });
+    });
+});
+
+</script>
+<!-- Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+    $('#barang_id').select2({
+        placeholder: "Pilih barang yang ingin diajukan",
+        width: '100%',
+        minimumResultsForSearch: 0 // Menampilkan search box
+    });
+});
+
+    </script>
+
+    <script>
+        $(document).ready(function() {
+    $('.js-example-basic-single').select2();
+    });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2 pada elemen #barang_id
+            $('#barang_id').select2();
+        
+            // Event handler untuk perubahan pada #kelompok_id
+            $('#kelompok_id').on('change', function() {
+                var kelompok_id = $(this).val();
+                $.ajax({
+                    url: "{{ route('get-category') }}", // Sesuaikan URL dengan rute yang benar
+                    type: "GET",
+                    data: { kelompok_id: kelompok_id },
+                    success: function(data) {
+                        var html = '<option value="">Pilih barang yang ingin diajukan</option>';
+                        $.each(data, function(key, item) {
+                            html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
+                        });
+                        $('#barang_id').html(html).trigger('change'); // Gunakan trigger untuk memperbarui Select2
+                    },
+                    error: function(xhr) {
+                        console.error('An error occurred:', xhr.responseText);
+                    }
+                });
+            });
+        
+            // Event handler untuk perubahan pada #barang_id
+            $('#barang_id').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var availableQty = selectedOption.data('qty');
+                var barang_satuan = selectedOption.data('satuan');
+                $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
+                $('#req_qty').val('');
+                $('#qty_warning').hide();
+                validateForm();
+            });
+        
+            // Fungsi untuk memvalidasi form
+            function validateForm() {
+                var date = $('#date').val();
+                var kelompok_id = $('#kelompok_id').val();
+                var barang_id = $('#barang_id').val();
+                var req_qty = $('#req_qty').val();
+        
+                if (date && kelompok_id && barang_id && req_qty && req_qty <= availableQty) {
+                    $('#addMoreButton').prop('disabled', false);
+                } else {
+                    $('#addMoreButton').prop('disabled', true);
+                }
+            }
+        
+            // Validasi form saat input berubah
+            $('#req_qty').on('input', function() {
+                var requestedQty = $(this).val();
+                if (requestedQty > availableQty) {
+                    $('#qty_warning').show();
+                    $('#addMoreButton').prop('disabled', true);
+                } else {
+                    $('#qty_warning').hide();
+                    validateForm();
+                }
+            });
+        
+            // Tombol Tambah Barang
+            $('#addMoreButton').on('click', function() {
+                var date = $('#date').val();
+                var kelompok_id = $('#kelompok_id').val();
+                var kelompok_nama = $('#kelompok_id').find('option:selected').text();
+                var barang_id = $('#barang_id').val();
+                var barang_nama = $('#barang_id').find('option:selected').text();
+                var qty_req = $('#req_qty').val();
+                var description = $('#textarea').val();
+        
+                if (date == '' || kelompok_id == '' || barang_id == '' || qty_req == '') {
+                    $.notify("Semua kolom harus diisi.", { globalPosition: 'top right', className: 'error' });
+                    return false;
+                }
+        
+                var source = $("#document-template").html();
+                var template = Handlebars.compile(source);
+                var context = {
+                    date: date, // Menampilkan tanggal yang diinput pengguna
+                    barang_nama: barang_nama,
+                    kelompok_nama: kelompok_nama,
+                    qty_req: qty_req,
+                    barang_satuan: barang_satuan,
+                    description: description
+                };
+                var html = template(context);
+        
+                $('#table-body').append(html);
+        
+                // Reset form fields
+                $('#kelompok_id').val('');
+                $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
+                $('#req_qty').val('');
+                $('#current_qty').text('Kuantitas barang sekarang: ');
+                validateForm();
+            });
+        });
+        </script>
+        
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 

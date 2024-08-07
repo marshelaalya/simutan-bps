@@ -23,7 +23,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Pengaju</th>
+                                <th>Pegawai</th>
                                 <th>Pilihan</th>
                                 <th>ID Permintaan</th>
                                 <th>Barang</th>

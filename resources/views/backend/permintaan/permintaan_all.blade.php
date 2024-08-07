@@ -39,7 +39,7 @@
                         <thead>
                             <tr>
                                 <th width=1%>Tanggal</th> {{-- Tanggal Permintaan --}}
-                                <th width=1%>Nama Pengaju</th>
+                                <th width=1%>Nama Pegawai</th>
                                 <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
                                 <th width=1% class="text-center">Approval Admin</th>
                                 <th width=1% class="text-center">Approval Supervisor</th>

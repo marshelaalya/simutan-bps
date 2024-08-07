@@ -115,7 +115,7 @@
                                 <div class="row g-3">
                                     <div class="col-sm-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label text-info">Nama Pengaju</label>
+                                            <label for="name" class="form-label text-info">Nama Pegawai</label>
                                             <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
