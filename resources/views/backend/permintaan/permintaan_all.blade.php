@@ -35,16 +35,16 @@
                     </div>
 
                     <table id="datatable" class="table table-bordered dt-responsive nowrap" 
-                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th width=1%>Tanggal</th> {{-- Tanggal Permintaan --}}
-                                <th width=1%>Nama Pegawai</th>
-                                <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
-                                <th width=1% class="text-center">Approval Admin</th>
-                                <th width=1% class="text-center">Approval Supervisor</th>
-                                <th width=1% class="text-center">Aksi</th>
-                            </tr>
+                    style="border-collapse: collapse; border-spacing: 0; width: 100%; table-layout: auto;">
+                 <thead>
+                     <tr>
+                         <th width="6%">Tanggal</th>
+                         <th width="12%">Nama Pegawai</th>
+                         <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
+                         <th width="10%" class="text-center">Approval Admin</th>
+                         <th width="12.5%" class="text-center">Approval Supervisor</th>
+                         <th width="5%" class="text-center">Aksi</th>
+                     </tr>
                         </thead>
 
                         <tbody>
