@@ -47,8 +47,46 @@
                                 <td>{{ $permintaan->tgl_request }}</td>
                             </tr>
                             <tr>
-                                <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Status</strong></td>
-                                <td>{{ $permintaan->status }}</td>
+                                <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Approval Admin</strong></td>
+                                <td style="white-space: nowrap;">
+                                    @if($permintaan->status == 'pending')
+                                        <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
+                                                style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
+                                            Pending
+                                        </button>
+                                    @elseif($permintaan->status == 'rejected by admin')
+                                        <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
+                                                style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                            Rejected
+                                        </button>
+                                    @elseif($permintaan->status == 'approved by admin' || $permintaan->status == 'rejected by supervisor')
+                                        <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                            Approved
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Approval Supervisor</strong></td>
+                                <td style="white-space: nowrap;">
+                                        @if($permintaan->status == 'approved by admin' || $permintaan->status == 'pending')
+                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
+                                                    style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
+                                                Pending
+                                            </button>
+                                        @elseif($permintaan->status == 'rejected by supervisor' || $permintaan->status == 'rejected by admin')
+                                            <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Rejected
+                                            </button>
+                                        @elseif($permintaan->status == 'approved by supervisor')
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Approved
+                                            </button>
+                                        @endif
+                                    </td>
                             </tr>
                             <tr>
                                 <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Deskripsi</strong></td>
