@@ -115,4 +115,19 @@ class PermintaanController extends Controller
 
         return view('backend.permintaan.permintaan_saya', compact('permintaans'));
     }
+
+    public function permintaanDelete($id)
+    {
+        $permintaan = Permintaan::findOrFail($id);
+        $permintaan->pilihan()->delete();
+        $permintaan->delete();
+
+        $notification = array(
+            'message' => 'Permintaan berhasil dibatalkan',
+            'alert-type' => 'success'
+        );
+
+        // Redirect kembali dengan notifikasi
+        return redirect()->back()->with($notification);
+    }
 }

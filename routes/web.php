@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('permintaan/approve/{id}', 'PermintaanApprove')->name('permintaan.approve');
         Route::patch('permintaan/update-status/{id}', 'PermintaanUpdateStatus')->name('permintaan.updateStatus');
         Route::get('/permintaan/saya', 'PermintaanSaya')->name('permintaan.saya');
+        Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
     });
 
     Route::controller(KelompokController::class)->group(function () {
@@ -99,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pilihan/edit/{id}', 'PilihanEdit')->name('pilihan.edit');
         Route::put('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update');
         Route::get('/pilihan/admin-approval', 'PilihanAdminAppr')->name('pilihan.admAppr');
+        Route::get('/pilihan/delete/{id}', 'PilihanDelete')->name('pilihan.delete');
     });
 
     Route::controller(DefaultController::class)->group(function () {
