@@ -98,7 +98,7 @@
                                                 <a href="{{ route('pilihan.edit', $item->pilihan->first()->id) }}" class="btn bg-warning btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                     <i class="fas fa-edit" style="color: #ca8a04"></i>
                                                 </a>
-                                                <a href="{{ route('permintaan.delete', $item->id) }}" class="btn btn-danger btn-sm me-2 btn-delete" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <a href="{{ route('permintaan.delete', $item->id) }}" class="btn bg-danger btn-sm me-2 btn-delete" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                     <i class="fas fa-trash-alt text-danger"></i>
                                                 </a>                                                                                              
                                             @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'finished' || $item->status == 'rejected by admin')

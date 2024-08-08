@@ -141,7 +141,7 @@
                         <!-- Approval Actions -->
                         <div class="mt-4 d-flex justify-content-end">
                             
-                            <a href="{{ route('permintaan.all') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route(auth()->user()->role === 'admin' ? 'permintaan.all' : 'permintaan.saya') }}" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </div>

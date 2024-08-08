@@ -40,8 +40,8 @@
                             <thead>
                                 <tr>
                                     <th width="10%" class="text-center">Kode</th>
-                                    <th>Nama Barang</th>
                                     <th width="20%">Kelompok Barang</th>
+                                    <th>Nama Barang</th>
                                     <th width="1%" class="text-center">Stok</th>
                                     <th width="1%" class="text-center">Satuan</th>
                                     <th width="1%" class="text-center">Aksi</th>
@@ -52,8 +52,8 @@
                                 @foreach($barangs as $item)
                                     <tr>
                                         <td width="1%" class="text-center">{{ $item->kode }}</td>
-                                        <td>{{ $item->nama }}</td>
                                         <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
+                                        <td>{{ $item->nama }}</td>
                                         <td width="1%" class="text-center">{{ $item->qty_item }}</td>
                                         <td width="1%" class="text-center">{{ $item->satuan }}</td>
                                         
