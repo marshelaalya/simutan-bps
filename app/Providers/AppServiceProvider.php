@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\Permintaan;
 
@@ -33,28 +34,54 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(){
+    public function boot()
+    {
         View::composer('*', function ($view) {
             // Mendapatkan tanggal awal dan akhir bulan ini
             $startOfMonth = Carbon::now()->startOfMonth();
             $endOfMonth = Carbon::now()->endOfMonth();
 
-            // Menghitung total permintaan bulan ini
-            $totalPermintaanBulanIni = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])->count();
+            // Mendapatkan pengguna yang sedang login
+            $user = Auth::user();
 
-            // Menghitung total permintaan selesai (status = 'accepted')
-            $totalPermintaanSelesai = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                ->where('status', 'approved by supervisor')
-                ->count();
+            // Inisialisasi variabel untuk jumlah permintaan
+            $totalPermintaanBulanIni = 0;
+            $totalPermintaanSelesai = 0;
+            $totalPermintaanPending = 0;
+            $totalPermintaanRejected = 0;
 
-            // Menghitung total permintaan pending (status = 'pending' atau 'approved by admin')
-            $totalPermintaanPending = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                ->whereIn('status', ['pending', 'approved by admin'])
-                ->count();
-            
-            $totalPermintaanRejected = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                ->whereIn('status', ['rejected by admin', 'rejected by supervisor'])
-                ->count();
+            if ($user) {
+                if ($user->role === 'admin') {
+                    // Admin melihat semua permintaan
+                    $totalPermintaanBulanIni = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])->count();
+                    $totalPermintaanSelesai = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->where('status', 'approved by supervisor')
+                        ->count();
+                    $totalPermintaanPending = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->whereIn('status', ['pending', 'approved by admin'])
+                        ->count();
+                    $totalPermintaanRejected = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->whereIn('status', ['rejected by admin', 'rejected by supervisor'])
+                        ->count();
+                } elseif ($user->role === 'pegawai') {
+                    // Pegawai melihat hanya permintaan mereka sendiri
+                    $totalPermintaanBulanIni = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->where('id', $user->id)
+                        ->count();
+                    $totalPermintaanSelesai = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->where('id', $user->id)
+                        ->where('status', 'approved by supervisor')
+                        ->count();
+                    $totalPermintaanPending = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->where('id', $user->id)
+                        ->whereIn('status', ['pending', 'approved by admin'])
+                        ->count();
+                    $totalPermintaanRejected = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
+                        ->where('id', $user->id)
+                        ->whereIn('status', ['rejected by admin', 'rejected by supervisor'])
+                        ->count();
+                }
+            }
 
             // Menyuntikkan data ke view
             $view->with([

@@ -18,7 +18,7 @@ class DashboardController extends Controller
             return view('pegawai.index'); // Tampilan untuk dashboard pegawai
         }
 
-        return redirect('/'); // Redirect jika role tidak dikenali
+        return view('admin.index'); // Redirect jika role tidak dikenali
     }
 
     public function dashboard(){

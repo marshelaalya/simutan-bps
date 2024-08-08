@@ -33,8 +33,8 @@ Route::get('/index', function () {
     return view('index', ['totalPermintaanBulanIni' => $totalPermintaanBulanIni]);
 });
 
+// Routes that require authentication
 Route::middleware(['auth'])->group(function () {
-    // Rute untuk admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::controller(AdminController::class)->group(function () {
@@ -55,14 +55,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/update/password', 'UpdatePassword')->name('update.password');
     });
 
-
     Route::controller(UserController::class)->group(function () {
         Route::get('/user/all', 'UserAll')->name('user.all');
         Route::get('/user/add', 'UserAdd')->name('user.add');
         Route::post('/user/store', 'UserStore')->name('user.store');
         Route::get('/user/edit/{id}', 'UserEdit')->name('user.edit');
-        Route::post('/user/update/{id}', 'UserUpdate')->name('user.update'); 
-        Route::get('/user/delete/{id}', 'UserDelete')->name('user.delete'); 
+        Route::post('/user/update/{id}', 'UserUpdate')->name('user.update');
+        Route::get('/user/delete/{id}', 'UserDelete')->name('user.delete');
     });
 
     Route::controller(PermintaanController::class)->group(function () {
@@ -71,8 +70,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/permintaan/view/{id}', 'PermintaanView')->name('permintaan.view');
         Route::get('permintaan/approve/{id}', 'PermintaanApprove')->name('permintaan.approve');
         Route::patch('permintaan/update-status/{id}', 'PermintaanUpdateStatus')->name('permintaan.updateStatus');
-
-
+        Route::get('/permintaan/saya', 'PermintaanSaya')->name('permintaan.saya');
     });
 
     Route::controller(KelompokController::class)->group(function () {
@@ -80,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelompok/add', 'KelompokAdd')->name('kelompok.add');
         Route::post('/kelompok/store', 'KelompokStore')->name('kelompok.store');
         Route::get('/kelompok/edit/{id}', 'KelompokEdit')->name('kelompok.edit');
-        Route::post('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update'); 
+        Route::post('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update');
         Route::get('/kelompok/delete/{id}', 'KelompokDelete')->name('kelompok.delete');
     });
 
@@ -89,17 +87,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/add', 'BarangAdd')->name('barang.add');
         Route::post('/barang/store', 'BarangStore')->name('barang.store');
         Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
-        Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update'); 
-        Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete'); 
+        Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
+        Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
     });
 
     Route::controller(PilihanController::class)->group(function () {
         Route::get('/pilihan/all', 'PilihanAll')->name('pilihan.all');
         Route::get('/pilihan/add', 'PilihanAdd')->name('pilihan.add');
         Route::post('/pilihan/store', 'PilihanStore')->name('pilihan.store');
+        Route::get('/pilihan/edit/{id}', 'PilihanEdit')->name('pilihan.edit');
+        Route::put('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update');
         Route::get('/pilihan/admin-approval', 'PilihanAdminAppr')->name('pilihan.admAppr');
-        
-        // Route::post('/pilihan/delete', 'deleteItem')->name('pilihan.delete'); // New route for delete
     });
 
     Route::controller(DefaultController::class)->group(function () {
@@ -116,8 +114,5 @@ Route::controller(WizardController::class)->group(function () {
     Route::get('/wizard', [WizardController::class, 'index'])->name('wizard.index');
     Route::post('/wizard-submit', [WizardController::class, 'submit'])->name('wizard.submit');
 });
-
-Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-
 
 require __DIR__.'/auth.php';

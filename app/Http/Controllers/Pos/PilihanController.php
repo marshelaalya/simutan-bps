@@ -207,24 +207,107 @@ class PilihanController extends Controller
         }
     }
 
-    public function updateStatus(Request $request, $id)
-{
-    $request->validate([
-        'status' => 'required|in:approved,rejected',
-    ]);
+    public function PilihanEdit($id)
+    {
+        $pilihan = Pilihan::findOrFail($id);
+        $barang = Barang::all();
+        $kelompok = Kelompok::all();
 
-    $permintaan = Permintaan::find($id);
-
-    if (!$permintaan) {
-        return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
+        return view('backend.pilihan.pilihan_edit', compact('pilihan', 'barang', 'kelompok'));
     }
 
-    // Update status permintaan
-    $permintaan->status = $request->input('status');
-    $permintaan->save();
+    public function PilihanUpdate(Request $request)
+{
+    $tableData = json_decode($request->input('table_data'), true);
+    dd($tableData);
+    // Fetch the existing Pilihan
+    $pilihan = Pilihan::findOrFail($request->id);
 
-    return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
+    // Update the Pilihan model with the new data
+    $pilihan->date = $request->input('date');
+    $pilihan->description = $request->input('description');
+    $pilihan->save();
+
+    // Process the table data
+    
+
+    if (is_array($tableData) && !empty($tableData)) {
+        foreach ($tableData as $index => $item) {
+            // Validate data
+            if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
+                // Find the Barang and Kelompok by name
+                $barang = Barang::where('nama', $item['barang_nama'])->first();
+                $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
+
+                if ($barang && $kelompok) {
+                    // Find or create a Pilihan record based on the Barang ID and Permintaan ID
+                    $existingPilihan = Pilihan::where('barang_id', $barang->id)
+                                              ->where('permintaan_id', $pilihan->id)
+                                              ->first();
+
+                    if ($existingPilihan) {
+                        // Update existing Pilihan
+                        $existingPilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
+                        $existingPilihan->save();
+                    } else {
+                        // Create a new Pilihan if not found
+                        $newPilihan = new Pilihan();
+                        $newPilihan->permintaan_id = $pilihan->id;
+                        $newPilihan->date = $pilihan->date;
+                        $newPilihan->description = $pilihan->description;
+                        $newPilihan->barang_id = $barang->id;
+                        $newPilihan->kelompok_id = $kelompok->id;
+                        $newPilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
+                        $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Adjust according to your needs
+                        $newPilihan->created_by = Auth::user()->name;
+                        $newPilihan->save(); // Save new Pilihan
+                    }
+
+                    // Adjust the barang quantity
+                    $barang->qty_item -= (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
+                    $barang->save();
+                }
+            }
+        }
+    } else {
+        // If table data is invalid
+        $notification = array(
+            'message' => 'Data tabel tidak valid',
+            'alert-type' => 'error'
+        );
+        return redirect()->back()->with($notification);
+    }
+
+    // Success notification and redirect
+    $notification = array(
+        'message' => 'Data berhasil diperbarui dan kuantitas barang diperbarui',
+        'alert-type' => 'success'
+    );
+    return redirect()->route('permintaan.all')->with($notification);
 }
+
+
+
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+        ]);
+
+        $permintaan = Permintaan::find($id);
+
+        if (!$permintaan) {
+            return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
+        }
+
+        // Update status permintaan
+        $permintaan->status = $request->input('status');
+        $permintaan->save();
+
+        return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
+    }
 
 
     // public function deleteItem(Request $request)

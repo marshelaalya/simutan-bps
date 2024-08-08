@@ -101,6 +101,7 @@ class BarangController extends Controller
         $barang_id = $request->id;
 
         barang::findOrFail($barang_id)->update([
+            'kode' => $request->kode_barang,
             'nama' => $request->nama,
             'kelompok_id' => $request->kelompok_id,
             'qty_item' => $request->qty_item,

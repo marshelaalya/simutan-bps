@@ -95,17 +95,7 @@
                                             </button>
                                         @endif
                                     </td>
-                                    
-                                    {{-- <td class="text-center">
-                                        <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-primary btn-sm">
-                                            <i class="ri-eye-fill align-middle text-primary"></i>
-                                        </a>
-                                        <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-success btn-sm">
-                                            <i class="fas fa-clipboard-check text-success"></i>
-                                        </a>
-                                        
-                                    </td> --}}
-                                    
+                                                                     
                                     <td class="text-center d-flex justify-content-center align-items-center"> 
                                         @if($item->status == 'pending')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">

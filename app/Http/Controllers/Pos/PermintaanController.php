@@ -93,25 +93,36 @@ class PermintaanController extends Controller
     }
     
     public function PermintaanUpdateStatus(Request $request, $id)
-{
-    $permintaan = Permintaan::find($id);
+    {
+        $permintaan = Permintaan::find($id);
 
-    if (!$permintaan) {
-        return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
+        if (!$permintaan) {
+            return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
+        }
+
+        // Update status permintaan
+        $permintaan->status = $request->input('status');
+        
+        // Jika status adalah rejected, simpan alasan
+        if ($request->input('status') === 'rejected by admin') {
+            $permintaan->ctt_adm = $request->input('reason', ''); // Simpan alasan jika ada
+        }
+
+        $permintaan->save();
+
+        return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
 
-    // Update status permintaan
-    $permintaan->status = $request->input('status');
+    public function PermintaanSaya()
+    {
+        $userId = auth()->user()->id;
+        $permintaans = Permintaan::where('user_id', $userId)->get();
+
+        return view('backend.permintaan.permintaan_saya', compact('permintaans'));
+    }
+
+
     
-    // Jika status adalah rejected, simpan alasan
-    if ($request->input('status') === 'rejected by admin') {
-        $permintaan->ctt_adm = $request->input('reason', ''); // Simpan alasan jika ada
-    }
-
-    $permintaan->save();
-
-    return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
-}
 
 
 

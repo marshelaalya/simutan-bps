@@ -115,7 +115,7 @@
                                 <div class="row g-3">
                                     <div class="col-sm-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label text-info">Nama Pengaju</label>
+                                            <label for="name" class="form-label text-info">Nama Pegawai</label>
                                             <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}" readonly>
                                         </div>
                                     </div>
@@ -123,9 +123,6 @@
                                         <div class="mb-3">
                                             <label for="date" class="form-label text-info">Tanggal Permintaan</label>
                                             <input class="form-control" name="date" type="date" id="date">
-                                            <div id="date_warning" class="form-text text-danger" style="display: none;">
-                                                Tanggal tidak boleh kurang dari hari ini.
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -262,7 +259,6 @@ $(document).on('click', '.delete-button', function() {
         var availableQty = 0; // Variabel untuk menyimpan kuantitas barang yang tersedia
         var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
         var today = new Date().toISOString().split('T')[0];
-        $('#date').attr('min', today);
 
         function validateForm() {
             var date = $('#date').val();
@@ -278,14 +274,15 @@ $(document).on('click', '.delete-button', function() {
         }
 
         $('#date').on('input', function() {
+            // Ambil tanggal yang dipilih dari input
             var selectedDate = $(this).val();
-            if (selectedDate < today) {
-                $('#date_warning').show();
-                $('#addMoreButton').prop('disabled', true);
-            } else {
-                $('#date_warning').hide();
-                validateForm();
-            }
+            
+            // Hapus validasi tanggal sebelum hari ini
+            $('#date_warning').hide(); // Pastikan peringatan tanggal tidak ditampilkan
+            $('#addMoreButton').prop('disabled', false); // Aktifkan tombol
+
+            // Opsional: Jika ada validasi tambahan atau logika lain, tempatkan di sini
+            validateForm();
         });
 
         $('#kelompok_id').on('change', function() {

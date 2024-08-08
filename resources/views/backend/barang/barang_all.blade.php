@@ -51,7 +51,7 @@
                             <tbody>
                                 @foreach($barangs as $item)
                                     <tr>
-                                        <td width="1%" class="text-center">{{ $item->id }}</td>
+                                        <td width="1%" class="text-center">{{ $item->kode }}</td>
                                         <td>{{ $item->nama }}</td>
                                         <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
                                         <td width="1%" class="text-center">{{ $item->qty_item }}</td>
