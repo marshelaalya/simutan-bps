@@ -1,4 +1,4 @@
-@extends('admin.admin_master')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
 @section('admin')
 
 

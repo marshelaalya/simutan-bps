@@ -1,5 +1,6 @@
-@extends('admin.admin_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
+
+@section(auth()->user()->role === 'admin' ? 'admin' : 'pegawai')
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
