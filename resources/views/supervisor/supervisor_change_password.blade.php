@@ -1,5 +1,5 @@
-@extends('pegawai.pegawai_master')
-@section('pegawai')
+@extends('supervisor.supervisor_master')
+@section('supervisor')
  
 
 <div class="page-content">

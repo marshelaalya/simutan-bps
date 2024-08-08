@@ -1,5 +1,5 @@
-@extends('pegawai.pegawai_master')
-@section('pegawai')
+@extends('supervisor.supervisor_master')
+@section('supervisor')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div class="page-content">

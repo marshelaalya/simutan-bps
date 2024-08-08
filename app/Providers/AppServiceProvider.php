@@ -38,18 +38,18 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             // Mendapatkan tanggal awal dan akhir bulan ini
-            $startOfMonth = Carbon::now()->startOfMonth();
-            $endOfMonth = Carbon::now()->endOfMonth();
-
+            $startOfMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endOfMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
+        
             // Mendapatkan pengguna yang sedang login
             $user = Auth::user();
-
+        
             // Inisialisasi variabel untuk jumlah permintaan
             $totalPermintaanBulanIni = 0;
             $totalPermintaanSelesai = 0;
             $totalPermintaanPending = 0;
             $totalPermintaanRejected = 0;
-
+        
             if ($user) {
                 if ($user->role === 'admin') {
                     // Admin melihat semua permintaan
@@ -66,23 +66,23 @@ class AppServiceProvider extends ServiceProvider
                 } elseif ($user->role === 'pegawai') {
                     // Pegawai melihat hanya permintaan mereka sendiri
                     $totalPermintaanBulanIni = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                        ->where('id', $user->id)
+                        ->where('user_id', $user->id)
                         ->count();
                     $totalPermintaanSelesai = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                        ->where('id', $user->id)
+                        ->where('user_id', $user->id)
                         ->where('status', 'approved by supervisor')
                         ->count();
                     $totalPermintaanPending = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                        ->where('id', $user->id)
+                        ->where('user_id', $user->id)
                         ->whereIn('status', ['pending', 'approved by admin'])
                         ->count();
                     $totalPermintaanRejected = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
-                        ->where('id', $user->id)
+                        ->where('user_id', $user->id)
                         ->whereIn('status', ['rejected by admin', 'rejected by supervisor'])
                         ->count();
                 }
             }
-
+        
             // Menyuntikkan data ke view
             $view->with([
                 'totalPermintaanBulanIni' => $totalPermintaanBulanIni,

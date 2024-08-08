@@ -217,74 +217,74 @@ class PilihanController extends Controller
     }
 
     public function PilihanUpdate(Request $request)
-{
-    $tableData = json_decode($request->input('table_data'), true);
-    dd($tableData);
-    // Fetch the existing Pilihan
-    $pilihan = Pilihan::findOrFail($request->id);
+    {
+        $tableData = json_decode($request->input('table_data'), true);
+        dd($tableData);
+        // Fetch the existing Pilihan
+        $pilihan = Pilihan::findOrFail($request->id);
 
-    // Update the Pilihan model with the new data
-    $pilihan->date = $request->input('date');
-    $pilihan->description = $request->input('description');
-    $pilihan->save();
+        // Update the Pilihan model with the new data
+        $pilihan->date = $request->input('date');
+        $pilihan->description = $request->input('description');
+        $pilihan->save();
 
-    // Process the table data
-    
+        // Process the table data
+        
 
-    if (is_array($tableData) && !empty($tableData)) {
-        foreach ($tableData as $index => $item) {
-            // Validate data
-            if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
-                // Find the Barang and Kelompok by name
-                $barang = Barang::where('nama', $item['barang_nama'])->first();
-                $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
+        if (is_array($tableData) && !empty($tableData)) {
+            foreach ($tableData as $index => $item) {
+                // Validate data
+                if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
+                    // Find the Barang and Kelompok by name
+                    $barang = Barang::where('nama', $item['barang_nama'])->first();
+                    $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
 
-                if ($barang && $kelompok) {
-                    // Find or create a Pilihan record based on the Barang ID and Permintaan ID
-                    $existingPilihan = Pilihan::where('barang_id', $barang->id)
-                                              ->where('permintaan_id', $pilihan->id)
-                                              ->first();
+                    if ($barang && $kelompok) {
+                        // Find or create a Pilihan record based on the Barang ID and Permintaan ID
+                        $existingPilihan = Pilihan::where('barang_id', $barang->id)
+                                                ->where('permintaan_id', $pilihan->id)
+                                                ->first();
 
-                    if ($existingPilihan) {
-                        // Update existing Pilihan
-                        $existingPilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
-                        $existingPilihan->save();
-                    } else {
-                        // Create a new Pilihan if not found
-                        $newPilihan = new Pilihan();
-                        $newPilihan->permintaan_id = $pilihan->id;
-                        $newPilihan->date = $pilihan->date;
-                        $newPilihan->description = $pilihan->description;
-                        $newPilihan->barang_id = $barang->id;
-                        $newPilihan->kelompok_id = $kelompok->id;
-                        $newPilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
-                        $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Adjust according to your needs
-                        $newPilihan->created_by = Auth::user()->name;
-                        $newPilihan->save(); // Save new Pilihan
+                        if ($existingPilihan) {
+                            // Update existing Pilihan
+                            $existingPilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
+                            $existingPilihan->save();
+                        } else {
+                            // Create a new Pilihan if not found
+                            $newPilihan = new Pilihan();
+                            $newPilihan->permintaan_id = $pilihan->id;
+                            $newPilihan->date = $pilihan->date;
+                            $newPilihan->description = $pilihan->description;
+                            $newPilihan->barang_id = $barang->id;
+                            $newPilihan->kelompok_id = $kelompok->id;
+                            $newPilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
+                            $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Adjust according to your needs
+                            $newPilihan->created_by = Auth::user()->name;
+                            $newPilihan->save(); // Save new Pilihan
+                        }
+
+                        // Adjust the barang quantity
+                        $barang->qty_item -= (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
+                        $barang->save();
                     }
-
-                    // Adjust the barang quantity
-                    $barang->qty_item -= (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
-                    $barang->save();
                 }
             }
+        } else {
+            // If table data is invalid
+            $notification = array(
+                'message' => 'Data tabel tidak valid',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
         }
-    } else {
-        // If table data is invalid
-        $notification = array(
-            'message' => 'Data tabel tidak valid',
-            'alert-type' => 'error'
-        );
-        return redirect()->back()->with($notification);
-    }
 
-    // Success notification and redirect
-    $notification = array(
-        'message' => 'Data berhasil diperbarui dan kuantitas barang diperbarui',
-        'alert-type' => 'success'
-    );
-    return redirect()->route('permintaan.all')->with($notification);
-}
+        // Success notification and redirect
+        $notification = array(
+            'message' => 'Data berhasil diperbarui dan kuantitas barang diperbarui',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('permintaan.all')->with($notification);
+    }
 
 
 
@@ -308,22 +308,5 @@ class PilihanController extends Controller
 
         return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
-
-
-    // public function deleteItem(Request $request)
-    // {
-    // $id = $request->input('id');
-
-    // // Find the item by ID and delete it
-    // $pilihan = Pilihan::findOrFail($id);
-
-    // if ($pilihan) {
-    //     $pilihan->delete();
-    //     return response()->json(['success' => true]);
-    // } else {
-    //     return response()->json(['success' => false, 'message' => 'Item not found.']);
-    // }
-    // }
-
 
 }
