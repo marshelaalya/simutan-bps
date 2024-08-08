@@ -13,14 +13,13 @@ use App\Models\Pilihan;
 class PermintaanController extends Controller
 {
     public function PermintaanAll(){
-        //  $permintaans = Permintaan::all();
         $permintaans = Permintaan::latest()->get();
         return view('backend.permintaan.permintaan_all', compact('permintaans'));
-    } // End Method
+    }
 
     public function PermintaanAdd(){
         return view('backend.permintaan.permintaan_add');
-    } // End Method
+    }
    
     public function PermintaanStore(Request $request){
         // Ambil data terakhir dari tabel untuk menentukan digit pertama
@@ -43,10 +42,10 @@ class PermintaanController extends Controller
     
         // Simpan data permintaan
         $permintaan = Permintaan::create([
-            'user_id' => Auth::user()->id, // ID user yang sedang login
+            'user_id' => Auth::user()->id,
             'no_permintaan' => $noPermintaan,
             'tgl_request' => Carbon::now()->format('Y-m-d'),
-            'status' => 'pending', // Status default
+            'status' => 'pending',
             'ctt_adm' => null,
             'ctt_spv' => null, 
             'created_at' => Carbon::now(),
@@ -57,16 +56,13 @@ class PermintaanController extends Controller
         return $permintaan->id;
     }
 
-    public function ViewPermintaan()
-    {
+    public function ViewPermintaan(){
         // Ambil semua permintaan dengan relasi pilihan
         $permintaans = Permintaan::with('pilihan')->get();
-
         return view('your-view', ['permintaans' => $permintaans]);
     }
     
-    public function PermintaanView($id)
-    {
+    public function PermintaanView($id){
         // Mengambil data permintaan berdasarkan ID
         $permintaan = Permintaan::findOrFail($id);
 
@@ -77,8 +73,7 @@ class PermintaanController extends Controller
         return view('backend.permintaan.permintaan_view', compact('permintaan', 'pilihan'));
     }
 
-    public function PermintaanApprove($id)
-    {
+    public function PermintaanApprove($id){
         // Temukan permintaan berdasarkan ID
         $permintaan = Permintaan::find($id);
     
@@ -120,12 +115,4 @@ class PermintaanController extends Controller
 
         return view('backend.permintaan.permintaan_saya', compact('permintaans'));
     }
-
-
-    
-
-
-
 }
-
-

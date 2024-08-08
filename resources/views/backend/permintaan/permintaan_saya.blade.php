@@ -1,7 +1,9 @@
 @extends('admin.admin_master')
 
+
 @section('admin')
 
+<div class="page-content">
 <div class="page-content">
     <div class="container-fluid">
 
@@ -9,6 +11,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0">Permintaan Saya</h4>
+                    <div class="page-title-right">
+                        <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light">
+                            <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
+                        </a>
+                    </div>
                     <h4 class="mb-sm-0">Permintaan Saya</h4>
                     <div class="page-title-right">
                         <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light">
@@ -27,7 +35,17 @@
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h4 class="card-title mb-0">Daftar Permintaan Barang</h4>
                         </div>
+        <!-- end page title -->
 
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h4 class="card-title mb-0">Daftar Permintaan Barang</h4>
+                        </div>
+
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap" 
                         <table id="datatable" class="table table-bordered dt-responsive nowrap" 
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
@@ -35,6 +53,9 @@
                                 <th width = 1%>Tanggal</th> {{-- Tanggal Permintaan --}}
                                 <th width = 1%>Nama Pengaju</th>
                                 <th>Catatan</th>
+                                <th width = 1% class="text-center">Approval Admin</th>
+                                <th width = 1% class="text-center">Approval Supervisor</th>
+                                <th width = 1% class="text-center">Aksi</th>
                                 <th width = 1% class="text-center">Approval Admin</th>
                                 <th width = 1% class="text-center">Approval Supervisor</th>
                                 <th width = 1% class="text-center">Aksi</th>
@@ -46,20 +67,27 @@
                                 <tr>
                                     <td>
                                         {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
+                                        {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
                                     </td>
                                     <td>
+                                        {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
                                         {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
                                     </td>
                                     <td>
                                         {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
+                                        {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
                                     </td>
                                     <td class="text-center align-middle justify-content-center">
+                                    <td class="text-center align-middle justify-content-center">
                                         @if($item->status == 'pending')
+                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                             <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                                     style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
                                                 Pending
                                             </button>
                                         @elseif($item->status == 'rejected by admin')
+                                            <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
                                             <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
                                                     style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                 Rejected
@@ -68,9 +96,16 @@
                                             <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
                                                     style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                 Approved
+                                        @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor')
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Approved
                                             </button>
                                         @endif
                                     </td>
+                                    <td class="text-center align-middle justify-content-center">
+                                        @if($item->status == 'approved by admin' || $item->status == 'pending')
+                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                     <td class="text-center align-middle justify-content-center">
                                         @if($item->status == 'approved by admin' || $item->status == 'pending')
                                             <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
@@ -82,6 +117,10 @@
                                                     style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                 Rejected
                                             </button>
+                                        @elseif($item->status == 'approved by supervisor')
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Approved
                                         @elseif($item->status == 'approved by supervisor')
                                             <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
                                                     style="border: 0; pointer-events: none; cursor: not-allowed;">
@@ -116,6 +155,8 @@
                                             </a>
                                         @endif
                                     </td>
+                                    
+                                    
                                 </tr>
                             @endforeach
                         </tbody>
@@ -124,7 +165,13 @@
                 </div>
             </div>
         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
 </div>
 
 @endsection

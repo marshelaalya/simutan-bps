@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('kelompok_id');
             $table->string('nama')->nullable(); // kolom nama
             $table->integer('qty_item')->nullable(); // kolom qty_item
-            $table->string('satuan'); // kolom satuan
+            $table->enum('satuan', ['buah', 'set', 'kotak', 'rim', 'pad', 'tube']); // kolom satuan
             $table->timestamps(); // kolom timestamps (created_at dan updated_at)
         });
        

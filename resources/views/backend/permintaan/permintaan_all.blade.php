@@ -38,28 +38,28 @@
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
-                                <th width = 1%>Tanggal</th> {{-- Tanggal Permintaan --}}
-                                <th width = 1%>Nama Pengaju</th>
-                                <th>Catatan</th>
-                                <th width = 1% class="text-center">Approval Admin</th>
-                                <th width = 1% class="text-center">Approval Supervisor</th>
-                                <th width = 1% class="text-center">Aksi</th>
+                                <th width=1%>Tanggal</th> {{-- Tanggal Permintaan --}}
+                                <th width=1%>Nama Pegawai</th>
+                                <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
+                                <th width=1% class="text-center">Approval Admin</th>
+                                <th width=1% class="text-center">Approval Supervisor</th>
+                                <th width=1% class="text-center">Aksi</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach($permintaans as $key => $item)
                                 <tr>
-                                    <td>
+                                    <td style="white-space: nowrap;">
                                         {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
                                     </td>
-                                    <td>
+                                    <td style="white-space: nowrap;">
                                         {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
                                     </td>
-                                    <td>
+                                    <td style="word-wrap: break-word; word-break: break-all; white-space: normal;">
                                         {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
                                     </td>
-                                    <td class="text-center align-middle justify-content-center">
+                                    <td class="text-center align-middle justify-content-center" style="white-space: nowrap;">
                                         @if($item->status == 'pending')
                                             <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                                     style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
@@ -77,7 +77,7 @@
                                             </button>
                                         @endif
                                     </td>
-                                    <td class="text-center align-middle justify-content-center">
+                                    <td class="text-center align-middle justify-content-center" style="white-space: nowrap;">
                                         @if($item->status == 'approved by admin' || $item->status == 'pending')
                                             <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                                     style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">

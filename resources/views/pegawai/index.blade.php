@@ -121,7 +121,7 @@
                     <tr>
                         {{-- <th>No Permintaan</th> --}}
                         <th>Tanggal</th>
-                        <th>Nama Pengaju</th>
+                        <th>Nama Pegawai</th>
                         <th>Catatan</th>
                         <th class="text-center">Approval Admin</th>
                         <th class="text-center">Approval Supervisor</th>
