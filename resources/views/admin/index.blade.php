@@ -1,5 +1,6 @@
-@extends('admin.admin_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
+
+@section(auth()->user()->role === 'admin' ? 'admin' : 'pegawai')
 
 
 <div class="page-content">

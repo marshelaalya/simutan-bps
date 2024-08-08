@@ -12,10 +12,22 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
+        // Mengambil data permintaan berdasarkan peran pengguna
         if ($user->role === 'admin') {
-            return view('admin.index'); // Tampilan untuk dashboard admin
+            // Untuk admin, ambil permintaan dengan status 'pending'
+            $permintaans = Permintaan::where('status', 'pending')
+                                    ->with('pilihan') // Pastikan relasi dimuat
+                                    ->orderBy('created_at', 'desc')
+                                    ->limit(5)
+                                    ->get();
+            return view('admin.index', compact('permintaans')); // Tampilan untuk dashboard admin
         } elseif ($user->role === 'pegawai') {
-            return view('pegawai.index'); // Tampilan untuk dashboard pegawai
+            // Untuk pegawai, ambil permintaan milik pengguna tersebut
+            $permintaans = Permintaan::where('user_id', $user->id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->limit(5)
+                                    ->get();
+            return view('pegawai.index', compact('permintaans')); // Tampilan untuk dashboard pegawai
         }
 
         return view('admin.index'); // Redirect jika role tidak dikenali
@@ -29,6 +41,11 @@ class DashboardController extends Controller
                                 ->get();
                                 
         return view('admin.index', compact('permintaans'));
+    }
+
+    public function PermintaanAll(){
+        $permintaans = Permintaan::latest()->get();
+        return view('backend.permintaan.permintaan_all', compact('permintaans'));
     }
 
     

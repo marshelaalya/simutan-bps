@@ -1,7 +1,6 @@
-<!-- resources/views/permintaan/approve.blade.php -->
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
 
-@extends('admin.admin_master')
-@section('admin')
+@section(auth()->user()->role === 'admin' ? 'admin' : 'pegawai')
 
 <div class="page-content">
     <div class="container-fluid">
