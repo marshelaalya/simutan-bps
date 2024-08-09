@@ -131,7 +131,7 @@
                                     @forelse($pilihan as $item)
                                         <tr>
                                             <td>{{ $item->barang->nama }}</td>
-                                            <td style="white-space: nowrap; width: 1%; min-width: 400px;">{{ $item->req_qty }} {{ $item->barang->satuan }}</td>
+                                            <td style="white-space: nowrap; width: 1%; min-width: 400px;">{{ $item->req_qty }} {{ $item->satuan->nama ?? 'N/A' }}</td>
                                         </tr>
                                     @empty
                                         <tr>

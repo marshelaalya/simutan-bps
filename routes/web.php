@@ -93,6 +93,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
         Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
         Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
+        // web.php
+
     });
 
     Route::controller(PilihanController::class)->group(function () {

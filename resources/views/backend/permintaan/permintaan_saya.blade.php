@@ -35,25 +35,25 @@
                         </div>
 
                         <table id="datatable" class="table table-bordered dt-responsive nowrap" 
-                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th width="1%">Tanggal</th>
-                                    <th width="1%">Nama Pengaju</th>
-                                    <th>Catatan</th>
-                                    <th width="1%" class="text-center">Approval Admin</th>
-                                    <th width="1%" class="text-center">Approval Supervisor</th>
-                                    <th width="1%" class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
+                    style="border-collapse: collapse; border-spacing: 0; width: 100%; table-layout: auto;">
+                 <thead>
+                     <tr>
+                         <th width="6%">Tanggal</th>
+                         <th width="12%">Nama Pegawai</th>
+                         <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
+                         <th width="10%" class="text-center">Approval Admin</th>
+                         <th width="12.5%" class="text-center">Approval Supervisor</th>
+                         <th width="5%" class="text-center">Aksi</th>
+                     </tr>
+                        </thead>
 
                             <tbody>
                                 @foreach($permintaans as $item)
                                     <tr>
-                                        <td>{{ $item->pilihan->first()->date ?? 'Tidak ada data' }}</td>
-                                        <td>{{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}</td>
-                                        <td>{{ $item->pilihan->first()->description ?? 'Tidak ada data' }}</td>
-                                        <td class="text-center">
+                                        <td style="white-space: nowrap;">{{ $item->pilihan->first()->date ?? 'Tidak ada data' }}</td>
+                                        <td style="white-space: nowrap;">{{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}</td>
+                                        <td style="word-wrap: break-word; word-break: break-all; white-space: normal;">{{ $item->pilihan->first()->description ?? 'Tidak ada data' }}</td>
+                                        <td class="text-center" style="white-space: nowrap;">
                                             @if($item->status == 'pending')
                                                 <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                                         style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
@@ -71,7 +71,7 @@
                                                 </button>
                                             @endif
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="white-space: nowrap;">
                                             @if($item->status == 'approved by admin' || $item->status == 'pending')
                                                 <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
                                                         style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
@@ -94,10 +94,10 @@
                                                 </button>
                                             @endif
                                         </td>
-                                        <td class="text-center d-flex justify-content-center align-items-center"> 
+                                        <td class="text-center d-flex justify-content-center align-items-center" style="white-space: nowrap;"> 
                                             @if($item->status == 'pending')
                                                 <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                                    <i class="ri-eye-fill font-size-16 align-middle text-primary"></i>
                                                 </a>
                                                 <a href="{{ route('permintaan.edit', $item->id) }}" class="btn bg-warning btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                     <i class="fas fa-edit align-middle" style="color: #ca8a04"></i>
@@ -107,7 +107,7 @@
                                                 </a>                                                                                              
                                             @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'finished' || $item->status == 'rejected by admin')
                                                 <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                                    <i class="ri-eye-fill font-size-16 align-middle text-primary"></i>
                                                 </a>
                                             @endif
                                         </td>

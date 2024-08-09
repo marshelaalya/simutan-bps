@@ -17,6 +17,62 @@ class BarangController extends Controller
         return view('backend.barang.barang_all', compact('barangs'));
     } // End Method
 
+    public function barangStore(Request $request)
+{
+    $validated = $request->validate([
+        'nama' => 'required|string|max:255',
+        'kode_barang' => 'required|string|max:255',
+        'kelompok_id' => 'required|integer|exists:kelompoks,id',
+        'qty_item' => 'nullable|integer',
+        'satuan_id' => 'required|string',
+        'satuanBaru' => 'nullable|string', // Validate satuanBaru
+    ]);
+
+    $satuan_id = $request->satuan_id;
+    $satuanBaru = $request->satuanBaru; // Get satuanBaru from the request
+
+    // If satuan_id is 'lainnya' and satuanBaru is not empty, add new satuan
+    if ($satuan_id === 'lainnya' && !empty($satuanBaru)) {
+        // Check if the new satuan already exists
+        $existingSatuan = Satuan::whereRaw('LOWER(nama) = ?', [strtolower($satuanBaru)])->first();
+        
+        if ($existingSatuan) {
+            // If it exists, use its ID
+            $satuan_id = $existingSatuan->satuan_id;
+        } else {
+            // If it doesn't exist, create a new satuan
+            $satuan = new Satuan();
+            $satuan->nama = $satuanBaru;
+            $satuan->save();
+            
+            $satuan_id = $satuan->satuan_id; // Use the newly created satuan's ID
+        }
+    }
+
+    // Create a new Barang instance and save it
+    $barang = new Barang();
+    $barang->nama = $request->nama;
+    $barang->kode = $request->kode_barang;
+    $barang->kelompok_id = $request->kelompok_id;
+    $barang->qty_item = $request->qty_item; // Correctly assign qty_item
+    $barang->satuan_id = $satuan_id;
+    $barang->created_at = Carbon::now();
+    $barang->updated_at = Carbon::now();
+    $barang->save();
+
+    $notification = array(
+        'message' => "Barang berhasil ditambahkan.",
+        'alert-type' => "success"
+    );
+
+    return redirect()->route('barang.all')->with($notification);
+}
+
+    
+
+
+
+
     public function KelompokStore(Request $request){
         Kelompok::insert([
             'nama' => $request->nama,
@@ -72,24 +128,24 @@ class BarangController extends Controller
         return view('backend.barang.barang_add', compact('kelompok', 'satuans'));
     } // End Method
 
-    public function barangStore(Request $request){
-        Barang::insert([
-            'nama' => $request->nama,
-            'kode' => $request->kode_barang,
-            'kelompok_id' => $request->kelompok_id,
-            'qty_item' => $request->qty_item,
-            'satuan_id' => $request->satuan_id,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+    // public function barangStore(Request $request){
+    //     Barang::insert([
+    //         'nama' => $request->nama,
+    //         'kode' => $request->kode_barang,
+    //         'kelompok_id' => $request->kelompok_id,
+    //         'qty_item' => $request->qty_item,
+    //         'satuan_id' => $request->satuan_id,
+    //         'created_at' => Carbon::now(),
+    //         'updated_at' => Carbon::now(),
+    //     ]);
     
-        $notification = array(
-            'message' => "Barang berhasil ditambahkan.",
-            'alert-type' => "Success"
-        );
+    //     $notification = array(
+    //         'message' => "Barang berhasil ditambahkan.",
+    //         'alert-type' => "Success"
+    //     );
 
-        return redirect()->route('barang.all')->with($notification);
-    }
+    //     return redirect()->route('barang.all')->with($notification);
+    // }
 
     public function barangEdit($id){
 
