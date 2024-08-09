@@ -98,6 +98,7 @@ class PilihanController extends Controller
         // Ambil data terakhir dari tabel untuk menentukan digit pertama
         $lastPermintaan = Permintaan::orderBy('id', 'desc')->first();
         $lastNoPermintaan = $lastPermintaan ? $lastPermintaan->no_permintaan : null;
+        
 
         // Tentukan digit pertama
         if ($lastNoPermintaan) {
@@ -137,6 +138,7 @@ class PilihanController extends Controller
         $tableData = $request->input('table_data');
         $date = $request->input('hidden_date');
         $description = $request->input('hidden_description');
+        dd($tableData);
 
         // Log data untuk debugging
         Log::info('Table Data:', ['data' => $tableData]);
