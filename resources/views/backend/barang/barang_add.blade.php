@@ -41,7 +41,7 @@
 
                             <div class="row mb-3">
                                 <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>
-                                <div class="form-group col-sm-4">
+                                <div class="form-group col-sm-10">
                                     <input name="nama" class="form-control" type="text" id="nama">                    
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
 
                             <div class="row mb-3">
                                 <label for="satuan_id" class="col-sm-2 col-form-label">Satuan Barang</label>
-                                <div class="form-group col-sm-2">
+                                <div class="form-group col-sm-10">
                                     <select name="satuan_id" class="form-select" id="satuan_id">
                                         <option selected disabled>Pilih satuan barang</option>
                                         @foreach($satuans as $satuan)
@@ -78,9 +78,11 @@
                                         <option value="lainnya">Lainnya</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-sm-2" id="satuanBaruContainer" style="display: none;">
-                                    <label for="satuanBaru" class="col-form-label ms-3" style="width:100%">Masukkan Satuan Baru</label>
-                                    <input name="satuanBaru" class="form-control" type="text" id="satuanBaru">
+                                <div class="form-group col-sm-7" id="satuanBaruContainer" style="display: none;">
+                                    <div class="d-flex">
+                                        <label for="satuanBaru" class="col-form-label ms-3 me-2" style="width: 38%">Masukkan Satuan Baru</label>
+                                        <input name="satuanBaru" class="form-control" type="text" id="satuanBaru">
+                                    </div>
                                 </div>
                             </div>
                                                         
@@ -98,6 +100,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const satuanSelect = document.getElementById('satuan_id');
+        const satuanBaruContainer = document.getElementById('satuanBaruContainer');
+    
+        satuanSelect.addEventListener('change', function() {
+            if (satuanSelect.value === 'lainnya') {
+                // Mengubah lebar dropdown menjadi col-sm-2
+                satuanSelect.parentElement.classList.remove('col-sm-10');
+                satuanSelect.parentElement.classList.add('col-sm-3');
+                // Menampilkan container untuk satuan baru
+                satuanBaruContainer.style.display = 'block';
+            } else {
+                // Mengubah lebar dropdown menjadi col-sm-6
+                satuanSelect.parentElement.classList.remove('col-sm-2');
+                satuanSelect.parentElement.classList.add('col-sm-10');
+                // Menyembunyikan container untuk satuan baru
+                satuanBaruContainer.style.display = 'none';
+            }
+        });
+    });
+    </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
