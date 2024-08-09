@@ -1,6 +1,10 @@
-@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
+         'pegawai.pegawai_master'))
 
-@section(auth()->user()->role === 'admin' ? 'admin' : 'pegawai')
+@section(auth()->user()->role === 'admin' ? 'admin' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
+
 
 <script src="{{ mix('js/app.js') }}" defer></script>
 
@@ -93,17 +97,17 @@
                                         <td class="text-center d-flex justify-content-center align-items-center"> 
                                             @if($item->status == 'pending')
                                                 <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="ri-eye-fill align-middle text-primary"></i>
+                                                    <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
                                                 </a>
-                                                <a href="{{ route('pilihan.edit', $item->pilihan->first()->id) }}" class="btn bg-warning btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="fas fa-edit" style="color: #ca8a04"></i>
+                                                <a href="{{ route('permintaan.edit', $item->id) }}" class="btn bg-warning btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                    <i class="fas fa-edit align-middle" style="color: #ca8a04"></i>
                                                 </a>
-                                                <a href="{{ route('permintaan.delete', $item->id) }}" class="btn btn-danger btn-sm me-2 btn-delete" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <a href="{{ route('permintaan.delete', $item->id) }}" class="btn bg-danger btn-sm me-2 btn-delete" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                     <i class="fas fa-trash-alt text-danger"></i>
                                                 </a>                                                                                              
                                             @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'finished' || $item->status == 'rejected by admin')
                                                 <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="ri-eye-fill align-middle text-primary"></i>
+                                                    <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
                                                 </a>
                                             @endif
                                         </td>

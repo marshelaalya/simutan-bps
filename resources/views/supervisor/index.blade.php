@@ -1,5 +1,10 @@
-@extends('supervisor.supervisor_master')
-@section('supervisor')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
+         'pegawai.pegawai_master'))
+
+@section(auth()->user()->role === 'admin' ? 'admin' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
+
 
 
 <div class="page-content">
@@ -30,7 +35,7 @@
     <div class="card-body">
         <div class="d-flex">
             <div class="flex-grow-1">
-                <h5 class="font-size-14 mb-1">Total Permintaan Diajukan</h5>
+                <h5 class="font-size-14 mb-1">Total Permintaan<br>Diajukan</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
                 <h4 class="mb-2 mt-2">{{ $totalPermintaanBulanIni ?? 'Tidak ada data' }}</h4>
             </div>
@@ -48,7 +53,7 @@
     <div class="card-body">
         <div class="d-flex">
             <div class="flex-grow-1">
-                <h5 class="font-size-14 mb-1">Total Permintaan Selesai</h5>
+                <h5 class="font-size-14 mb-1">Total Permintaan<br>Selesai</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
                 <h4 class="mb-2 mt-2">{{ $totalPermintaanSelesai ?? 'Tidak ada data' }}</h4>
             </div>
@@ -66,7 +71,7 @@
     <div class="card-body">
         <div class="d-flex">
             <div class="flex-grow-1">
-                <h5 class="font-size-14 mb-1">Total Permintaan Pending</h5>
+                <h5 class="font-size-14 mb-1">Total Permintaan<br>Pending</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
                 <h4 class="mb-2 mt-2">{{ $totalPermintaanPending ?? 'Tidak ada data' }}</h4>
             </div>
@@ -84,7 +89,7 @@
     <div class="card-body">
         <div class="d-flex">
             <div class="flex-grow-1">
-                <h5 class="font-size-14 mb-1">Total Permintaan Ditolak</h5>
+                <h5 class="font-size-14 mb-1">Total Permintaan<br>Ditolak</h5>
                 <h6 class="mb-0 text-muted small">Bulan Ini</h6>
                 <h4 class="mb-2 mt-2">{{ $totalPermintaanRejected ?? 'Tidak ada data' }}</h4>
             </div>
@@ -104,6 +109,8 @@
 
 <div class="row">
 <div class="col-xl-12">
+    <h4 class="card-title mb-3 text-info">Permintaan Terbaru</h4>
+    {{-- <hr style="border: 1px solid #043277"> --}}
 <div class="card">
     <div class="card-body">
         {{-- <div class="dropdown float-end">
@@ -113,251 +120,82 @@
          
         </div> --}}
 
-        <h4 class="card-title mb-4 text-info">Permintaan Terbaru</h4>
-
+        
         <div class="table-responsive">
-            <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
-                <thead class="table-light">
-                    <tr>
-                        {{-- <th>No Permintaan</th> --}}
-                        <th>Tanggal</th>
-                        <th>Nama Pegawai</th>
-                        <th>Catatan</th>
-                        <th class="text-center">Approval Admin</th>
-                        <th class="text-center">Approval Supervisor</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
-                </thead><!-- end thead -->
-                <tbody>
-                    <tr>
-                        {{-- <td><h6 class="mb-0">B-120/31751/PL.711/1/2024</h6></td> --}}
-                        <td>2024-08-01</td>
-                        <td>Fia</td>
-                        <td>Permintaan Barang</td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn btn-secondary bg-success btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                    style=" border: 0px; color: #16a34a;
-                                           pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block;">
-                                Approved
-                            </button>                         
-                        </td> 
-                            {{-- <div class="d-flex align-items-center justify-content-center font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-warning me-2"></i> 
-                                Pending
-                            </div> --}}
-                            
-                            <td style="text-align: center; vertical-align: middle;">
-                                <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                        style=" border: 0px solid #ffc107; color: #ca8a04;
-                                               pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block; ">
-                                    Pending
-                                </button>                         
-                            </td>                            
-                        
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn bg-warning btn-sm">
-                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #ca8a04"></i>
-                            </button>
-                            <button class="btn bg-danger btn-sm">
-                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                            </button>
-                        </td>
-                    </tr>
-                     <!-- end -->
-                     <tr>
-                        {{-- <td><h6 class="mb-0">B-120/31751/PL.711/1/2024</h6></td> --}}
-                        <td>2024-07-29</td>
-                        <td>Fia</td>
-                        <td>Permintaan Barang</td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                    style=" border: 0px solid #ffc107; color: #ca8a04;
-                                           pointer-events: none; cursor: not-allowed; 
-                                           display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                            display: block; ">
-                                Pending
-                            </button>                         
-                        </td>  
-                            {{-- <div class="d-flex align-items-center justify-content-center font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-warning me-2"></i> 
-                                Pending
-                            </div> --}}
-                            
-                            <td style="text-align: center; vertical-align: middle;">
-                                <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                        style=" border: 0px solid #ffc107; color: #ca8a04;
-                                               pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block; ">
-                                    Pending
-                                </button>                         
-                            </td>                            
-                        
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn bg-warning btn-sm">
-                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #ca8a04"></i>
-                            </button>
-                            <button class="btn bg-danger btn-sm">
-                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        {{-- <td><h6 class="mb-0">B-120/31751/PL.711/1/2024</h6></td> --}}
-                        <td>2024-07-29</td>
-                        <td>Fia</td>
-                        <td>Permintaan Barang</td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                    style=" border: 0px solid #ffc107; color: #ca8a04;
-                                           pointer-events: none; cursor: not-allowed; 
-                                           display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                            display: block; ">
-                                Pending
-                            </button>                         
-                        </td>  
-                            {{-- <div class="d-flex align-items-center justify-content-center font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-warning me-2"></i> 
-                                Pending
-                            </div> --}}
-                            
-                            <td style="text-align: center; vertical-align: middle;">
-                                <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                        style=" border: 0px solid #ffc107; color: #ca8a04;
-                                               pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block; ">
-                                    Pending
-                                </button>                         
-                            </td>                            
-                        
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn bg-warning btn-sm">
-                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #ca8a04"></i>
-                            </button>
-                            <button class="btn bg-danger btn-sm">
-                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                            </button>
-                        </td>
-                    </tr>
-                     <!-- end -->
-                     <tr>
-                        {{-- <td><h6 class="mb-0">B-120/31751/PL.711/1/2024</h6></td> --}}
-                        <td>2024-07-29</td>
-                        <td>Fia</td>
-                        <td>Permintaan Barang</td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn btn-secondary bg-success btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                    style=" border: 0px; color: #16a34a;
-                                           pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block;">
-                                Approved
-                            </button>                         
-                        </td>  
-                            {{-- <div class="d-flex align-items-center justify-content-center font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-warning me-2"></i> 
-                                Pending
-                            </div> --}}
-                            
-                            <td style="text-align: center; vertical-align: middle;">
-                                <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                        style=" border: 0px solid #ffc107; color: #ca8a04;
-                                               pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block; ">
-                                    Pending
-                                </button>                         
-                            </td>                            
-                        
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn bg-warning btn-sm">
-                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #ca8a04"></i>
-                            </button>
-                            <button class="btn bg-danger btn-sm">
-                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                            </button>
-                        </td>
-                    </tr>
-                     <!-- end -->
-                     <tr>
-                        {{-- <td><h6 class="mb-0">B-120/31751/PL.711/1/2024</h6></td> --}}
-                        <td>2024-07-29</td>
-                        <td>Fia</td>
-                        <td>Permintaan Barang</td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                    style=" border: 0px solid #ffc107; color: #ca8a04;
-                                           pointer-events: none; cursor: not-allowed; 
-                                           display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                            display: block; ">
-                                Pending
-                            </button>                         
-                        </td>  
-                            {{-- <div class="d-flex align-items-center justify-content-center font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-warning me-2"></i> 
-                                Pending
-                            </div> --}}
-                            
-                            <td style="text-align: center; vertical-align: middle;">
-                                <button class="btn btn-secondary bg-warning btn-sm btn-disabled d-flex align-items-center justify-content-center font-size-13" 
-                                        style=" border: 0px solid #ffc107; color: #ca8a04;
-                                               pointer-events: none; cursor: not-allowed; 
-                                               display: flex; align-items: center; justify-content: center !important; margin: 0 auto;
-                                                display: block; ">
-                                    Pending
-                                </button>                         
-                            </td>                            
-                        
-                        <td style="text-align: center; vertical-align: middle;">
-                            <button class="btn bg-warning btn-sm">
-                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #ca8a04"></i>
-                            </button>
-                            <button class="btn bg-danger btn-sm">
-                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                            </button>
-                        </td>
-                    </tr>
-                     <!-- end -->
-                     {{-- <tr> --}}
-                        {{-- <td><h6 class="mb-0">B-120/31751/PL.711/1/2024</h6></td> --}}
-                        {{-- <td>2024-08-01</td>
-                        <td>Fia</td>
-                        <td>Permintaan Barang</td>
-                        <td style="text-align: center; vertical-align: middle;">
-                            <div class="font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-success align-middle me-2"></i>
-                                Approved
-                            </div>
-                        </td>                        
-                            
-                        <td style="text-align: center; vertical-align: middle;">
-                            <div class="font-size-13">
-                                <i class="ri-checkbox-blank-circle-fill font-size-10 text-danger align-middle me-2"></i>
-                                Rejected
-                            </div>
-                        </td>                            
-                        
-                        <td>
-                            <button class="btn bg-warning btn-sm">
-                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #ca8a04"></i>
-                            </button>
-                            <button class="btn bg-danger btn-sm">
-                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                            </button>
-                        </td>
-                    </tr> --}}
-                     
-                     <!-- end -->
-                </tbody><!-- end tbody -->
-            </table> <!-- end table -->
+            <table id="datatable" class="table table-bordered dt-responsive nowrap" 
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th width = 1%>Tanggal</th> {{-- Tanggal Permintaan --}}
+                                <th width = 1%>Nama Pegawai</th>
+                                <th>Catatan</th>
+                                <th width = 1% class="text-center">Approval Admin</th>
+                                <th width = 1% class="text-center">Approval Supervisor</th>
+                                <th width = 1% class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach($permintaans as $key => $item)
+                                <tr>
+                                    <td>
+                                        {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
+                                    </td>
+                                    <td>
+                                        {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
+                                    </td>
+                                    <td>
+                                        {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
+                                    </td>
+                                    <td class="text-center align-middle justify-content-center">
+                                        @if($item->status == 'pending')
+                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
+                                                    style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
+                                                Pending
+                                            </button>
+                                        @elseif($item->status == 'rejected by admin')
+                                            <button class="btn btn-secondary bg-danger btn-sm font-size-13" 
+                                                    style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
+                                                Rejected
+                                            </button>
+                                        @elseif($item->status == 'approved by admin')
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Approved
+                                            </button>
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle justify-content-center">
+                                        @if($item->status == 'approved by admin' || $item->status == 'pending')
+                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
+                                                    style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
+                                                Pending
+                                            </button>
+                                        @elseif($item->status == 'rejected by supervisor')
+                                            <button class="btn btn-secondary bg-danger btn-sm font-size-13" 
+                                                    style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
+                                                Rejected
+                                            </button>
+                                        @elseif($item->status == 'approved by supervisor')
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Approved
+                                            </button>
+                                        @endif
+                                    </td>
+                                    
+                                    <td class="text-center">
+                                        <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                            <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
         </div>
-        <div class="d-flex justify-content-end mt-4">
-            <a href="#" class="text-info">Lihat Selengkapnya <i class=" mdi mdi-arrow-right font-size-16 text-info align-middle"></i></a>
+        <div class="d-flex justify-content-end fw-bold">
+            <a href="{{ route('permintaan.all') }}" class="text-info">Lihat Selengkapnya <i class=" mdi mdi-arrow-right font-size-16 text-info align-middle"></i></a>
         </div>                
     </div><!-- end card -->
 </div><!-- end card -->
@@ -371,5 +209,16 @@
 </div>
 
 </div>
+
+<script>
+    $(document).ready(function() {
+    $('#datatable').DataTable({
+        initComplete: function() {
+            $('#datatable thead').css('background-color', '#043277').css('color', 'white');
+        }
+    });
+});
+
+</script>
 
 @endsection

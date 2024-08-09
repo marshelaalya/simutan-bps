@@ -11,29 +11,30 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+        $query = Permintaan::whereIn('status', ['pending', 'approved by admin'])
+        ->orderBy('created_at', 'desc')
+        ->limit(5);
+
         // Mengambil data permintaan berdasarkan peran pengguna
         if ($user->role === 'admin') {
-            // Untuk admin, ambil permintaan dengan status 'pending'
-            $permintaans = Permintaan::where('status', 'pending')
-                                    ->with('pilihan') // Pastikan relasi dimuat
-                                    ->orderBy('created_at', 'desc')
-                                    ->limit(5)
-                                    ->get();
+            // Untuk admin, ambil semua permintaan yang pending
+            $permintaans = $query->get();
             return view('admin.index', compact('permintaans')); // Tampilan untuk dashboard admin
-        } elseif ($user->role === 'pegawai') {
-            // Untuk pegawai, ambil permintaan milik pengguna tersebut
-            $permintaans = Permintaan::where('user_id', $user->id)
-                                    ->orderBy('created_at', 'desc')
-                                    ->limit(5)
-                                    ->get();
-            return view('pegawai.index', compact('permintaans')); // Tampilan untuk dashboard pegawai
+        } elseif ($user->role === 'pegawai' || $user->role === 'supervisor') {
+            // Untuk pegawai dan supervisor, ambil permintaan milik pengguna tersebut
+            $permintaans = $query->where('user_id', $user->id)->get();
+            $view = ($user->role === 'pegawai') ? 'pegawai.index' : 'supervisor.index';
+            return view($view, compact('permintaans')); // Tampilan untuk dashboard pegawai dan supervisor
         }
 
-        return view('admin.index'); // Redirect jika role tidak dikenali
+        // Redirect jika role tidak dikenali
+        return redirect()->route('home');
     }
 
+
+
     public function dashboard(){
+        
         $permintaans = Permintaan::where('status', 'pending')
                                 ->with('pilihan') // Pastikan relasi dimuat
                                 ->orderBy('created_at', 'desc')

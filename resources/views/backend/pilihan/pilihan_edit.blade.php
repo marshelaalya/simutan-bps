@@ -46,7 +46,7 @@
         background-color: #e9ecef;
         z-index: -1;
     }
-
+    
     .step-indicator .step:first-child::after {
         display: none;
     }
@@ -187,6 +187,8 @@
                                     <!-- Hidden Fields -->
                                     <input type="hidden" name="date" id="hidden_date">
                                     <input type="hidden" name="description" id="hidden_description">
+                                    <input type="hidden" name="table_data" id="table_data" value="">
+                                    <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
 
                                     <div class="table-responsive">
                                         <table class="table table-centered mb-0 align-middle table-hover table-nowrap">

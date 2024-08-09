@@ -1,5 +1,5 @@
-@extends('admin.admin_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
+@section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
 <div class="page-content">
     <div class="container-fluid">

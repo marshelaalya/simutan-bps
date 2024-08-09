@@ -1,5 +1,5 @@
-@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
+@section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
 
  <div class="page-content">
@@ -75,6 +75,11 @@
                                                     style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                 Approved
                                             </button>
+                                        @elseif($item->status == 'approved by supervisor')
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                Approved
+                                            </button>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle justify-content-center" style="white-space: nowrap;">
@@ -99,21 +104,24 @@
                                     <td class="text-center d-flex justify-content-center align-items-center"> 
                                         @if($item->status == 'pending')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill align-middle text-primary"></i>
+                                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
                                             </a>
                                             <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="fas fa-clipboard-check text-success align-middle"></i>
+                                                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
                                             </a>
                                         @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'rejected by admin')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill align-middle text-primary"></i>
+                                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
                                             </a>
-                                        @elseif($item->status == 'finished')
+                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
+                                            </a>
+                                        @elseif($item->status == 'approved by supervisor')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill align-middle text-primary"></i>
+                                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
                                             </a>
-                                            <a href="{{ route('permintaan.all', $item->id) }}" class="btn bg-secondary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="fas fa-print text-white align-middle"></i>
+                                            <a href="{{ route('permintaan.all', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
                                             </a>
                                         {{-- @elseif($item->status == 'rejected by admin')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">

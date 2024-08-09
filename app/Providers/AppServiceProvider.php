@@ -63,7 +63,7 @@ class AppServiceProvider extends ServiceProvider
                     $totalPermintaanRejected = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
                         ->whereIn('status', ['rejected by admin', 'rejected by supervisor'])
                         ->count();
-                } elseif ($user->role === 'pegawai') {
+                } elseif ($user->role === 'pegawai' || 'supervisor') {
                     // Pegawai melihat hanya permintaan mereka sendiri
                     $totalPermintaanBulanIni = Permintaan::whereBetween('tgl_request', [$startOfMonth, $endOfMonth])
                         ->where('user_id', $user->id)

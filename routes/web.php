@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('permintaan/approve/{id}', 'PermintaanApprove')->name('permintaan.approve');
         Route::patch('permintaan/update-status/{id}', 'PermintaanUpdateStatus')->name('permintaan.updateStatus');
         Route::get('/permintaan/saya', 'PermintaanSaya')->name('permintaan.saya');
+        Route::get('/permintaan/edit/{id}', 'PermintaanEdit')->name('permintaan.edit');
+        Route::put('/permintaan/update/{id}', 'PermintaanUpdate')->name('permintaan.update');
         Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
     });
 

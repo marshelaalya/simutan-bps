@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pilihan;
+use App\Models\Barang;
+use App\Models\Kelompok;
+use Illuminate\Support\Facades\Log; // Import Log Facade
 
 class PermintaanController extends Controller
 {
@@ -25,12 +28,14 @@ class PermintaanController extends Controller
         // Ambil data terakhir dari tabel untuk menentukan digit pertama
         $lastPermintaan = Permintaan::orderBy('id', 'desc')->first();
         $lastNoPermintaan = $lastPermintaan ? $lastPermintaan->no_permintaan : null;
-    
+
         // Tentukan digit pertama
-        $digitPertama = '0000';
         if ($lastNoPermintaan) {
+            // Ambil digit terakhir dari nomor permintaan terakhir
             $lastDigit = (int) substr($lastNoPermintaan, 2, 4);
-            $digitPertama = str_pad($lastDigit + 1, 4, '0', STR_PAD_LEFT);
+            $digitPertama = $lastDigit + 1; // Digit berikutnya
+        } else {
+            $digitPertama = 1; // Mulai dari 1 jika tidak ada nomor permintaan sebelumnya
         }
     
         // Format untuk bulan dan tahun
@@ -95,12 +100,47 @@ class PermintaanController extends Controller
             return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
         }
 
-        // Update status permintaan
-        $permintaan->status = $request->input('status');
-        
+        $user = Auth::user();
+        $newStatus = $request->input('status');
+        $validStatus = false;
+
+        // Tentukan status valid berdasarkan peran pengguna
+        if ($user->role === 'admin') {
+            if (in_array($newStatus, ['approved', 'rejected'])) {
+                $validStatus = true;
+            }
+        } elseif ($user->role === 'supervisor') {
+            if (in_array($newStatus, ['approved', 'rejected'])) {
+                $validStatus = true;
+            }
+        }
+
+        // Jika status tidak valid, kembalikan dengan pesan error
+        if (!$validStatus) {
+            return redirect()->route('permintaan.all')->with('error', 'Status tidak valid untuk peran Anda');
+        }
+
+        // Update status permintaan dengan penyesuaian berdasarkan peran pengguna
+        if ($user->role === 'admin') {
+            $permintaan->status = $newStatus . ' by admin';
+        } elseif ($user->role === 'supervisor') {
+            $permintaan->status = $newStatus . ' by supervisor';
+        }
+
         // Jika status adalah rejected, simpan alasan
-        if ($request->input('status') === 'rejected by admin') {
-            $permintaan->ctt_adm = $request->input('reason', ''); // Simpan alasan jika ada
+        if ($newStatus === 'rejected') {
+            if ($user->role === 'admin') {
+                $permintaan->ctt_adm = $request->input('reason', ''); // Simpan alasan di ctt_adm untuk admin
+            } elseif ($user->role === 'supervisor') {
+                $permintaan->ctt_supervisor = $request->input('reason', ''); // Simpan alasan di ctt_supervisor untuk supervisor
+            }
+        } else {
+            // Kosongkan alasan jika status tidak rejected
+            if ($user->role === 'admin') {
+                $permintaan->ctt_adm = null;
+            } elseif ($user->role === 'supervisor') {
+                $permintaan->ctt_supervisor = null;
+            }
         }
 
         $permintaan->save();
@@ -108,13 +148,18 @@ class PermintaanController extends Controller
         return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
 
+
+
     public function PermintaanSaya()
     {
         $userId = auth()->user()->id;
+    
+        // Mengambil permintaan berdasarkan user_id
         $permintaans = Permintaan::where('user_id', $userId)->get();
-
+    
         return view('backend.permintaan.permintaan_saya', compact('permintaans'));
     }
+
 
     public function permintaanDelete($id)
     {
@@ -129,5 +174,88 @@ class PermintaanController extends Controller
 
         // Redirect kembali dengan notifikasi
         return redirect()->back()->with($notification);
+    }
+
+    public function PermintaanEdit($id)
+    {
+        // Ambil semua Pilihan berdasarkan permintaan_id
+        $pilihan = Pilihan::where('permintaan_id', $id)->get();
+        $barang = Barang::all();
+        $kelompok = Kelompok::all();
+
+        // Kirim data Pilihan, Barang, dan Kelompok ke view
+        return view('backend.permintaan.permintaan_edit', compact('pilihan', 'barang', 'kelompok', 'id'));
+    }
+
+
+    public function PermintaanUpdate(Request $request)
+    {
+        $permintaan_id = $request->input('permintaan_id');
+        $tableData = $request->input('table_data');
+
+        // Hapus entri lama berdasarkan permintaan_id
+        Pilihan::where('permintaan_id', $permintaan_id)->delete();
+
+        $tableData = json_decode($request->input('table_data'), true); // Decode JSON jika perlu
+
+    if (is_array($tableData) && !empty($tableData)) {
+        foreach ($tableData as $index => $item) {
+            // Validasi data
+            if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
+                // Temukan Barang dan Kelompok berdasarkan nama
+                $barang = Barang::where('nama', $item['barang_nama'])->first();
+                $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
+
+                if ($barang && $kelompok) {
+                    // Ekstrak angka dari qty_req
+                    $qty_req_str = $item['qty_req'];
+                    $qty_req = filter_var($qty_req_str, FILTER_SANITIZE_NUMBER_INT);
+                    
+                    // Validasi apakah qty_req adalah angka yang valid
+                    if ($qty_req === false || !is_numeric($qty_req)) {
+                        return redirect()->route('permintaan.saya')->with([
+                            'message' => 'Kuantitas tidak valid',
+                            'alert-type' => 'error'
+                        ]);
+                    }
+
+                    // Buat entri Pilihan baru
+                    $newPilihan = new Pilihan();
+                    $newPilihan->permintaan_id = $permintaan_id;
+                    $newPilihan->date = $item['date'] ?? null;
+                    $newPilihan->description = $item['description'] ?? null;
+                    $newPilihan->barang_id = $barang->id;
+                    $newPilihan->req_qty = (int)$qty_req;
+                    $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur sesuai kebutuhan
+                    $newPilihan->created_by = Auth::user()->name;
+                    $newPilihan->save(); // Simpan ke database
+
+                    // Sesuaikan kuantitas barang
+                    $barang->qty_item -= (int)$qty_req;
+                    $barang->save();
+                } else {
+                    Log::info('Barang atau Kelompok tidak ditemukan:', ['barang' => $item['barang_nama'], 'kelompok' => $item['kelompok_nama']]);
+                }
+            } else {
+                Log::info('Data item tidak valid:', ['item' => $item]);
+            }
+        }
+    } else {
+        // Jika data tabel tidak valid
+        Log::info('Data tabel tidak valid:', ['data' => $tableData]);
+
+        return redirect()->route('permintaan.saya')->with([
+            'message' => 'Data tabel tidak valid',
+            'alert-type' => 'error'
+        ]);
+    }
+
+            
+
+        // Notifikasi sukses dan redirect
+        return redirect()->route('permintaan.saya')->with([
+            'message' => 'Data berhasil diperbarui dan kuantitas barang diperbarui',
+            'alert-type' => 'success'
+        ]);
     }
 }

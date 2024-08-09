@@ -1,5 +1,10 @@
-@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
-@section(auth()->user()->role === 'admin' ? 'admin' : 'pegawai')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
+         'pegawai.pegawai_master'))
+
+@section(auth()->user()->role === 'admin' ? 'admin' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
+
 
 
 <div class="page-content">
@@ -154,8 +159,8 @@
                                                 Rejected
                                             </button>
                                         @elseif($item->status == 'approved by admin')
-                                            <button class="btn btn-secondary bg-success btn-sm font-size-13" 
-                                                    style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                 Approved
                                             </button>
                                         @endif
@@ -172,16 +177,16 @@
                                                 Rejected
                                             </button>
                                         @elseif($item->status == 'approved by supervisor')
-                                            <button class="btn btn-secondary bg-success btn-sm font-size-13" 
-                                                    style="border: 0; color: #fff; pointer-events: none; cursor: not-allowed;">
+                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                 Approved
                                             </button>
                                         @endif
                                     </td>
                                     
                                     <td class="text-center">
-                                        <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-warning btn-sm">
-                                            <i class="fas fa-edit" style="color: #ca8a04"></i>
+                                        <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                            <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
                                         </a>
                                     </td>
                                 </tr>

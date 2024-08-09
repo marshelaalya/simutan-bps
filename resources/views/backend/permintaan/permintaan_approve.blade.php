@@ -1,5 +1,6 @@
-@extends('admin.admin_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
+@section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
+
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
@@ -133,21 +134,16 @@
 
                         <!-- Approval Actions -->
                         <div class="mt-4 d-flex justify-content-end">
-                            <!-- Form Reject -->
-                            <form id="rejectFormPlaceholder" style="display: none;">
-                                @csrf
-                                @method('PATCH')
-                                <input type="hidden" name="status" value="rejected">
-                            </form>
-                            <button type="button" id="rejectButton" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>                            
-
                             <!-- Form Approval -->
                             <form action="{{ route('permintaan.updateStatus', $permintaan->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('PATCH')
-                                <input type="hidden" name="status" value="approved by admin">
-                                <button type="submit" class="btn btn-success">Approve</button>
+                                <input type="hidden" name="status" value="approved">
+                                <button type="submit" class="btn btn-success me-2">Approve</button>
                             </form>
+
+                            <!-- Button to trigger reject modal -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>
 
                             <!-- Modal HTML -->
                             <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
@@ -161,7 +157,7 @@
                                             <form action="{{ route('permintaan.updateStatus', $permintaan->id) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
-                                                <input type="hidden" name="status" value="rejected by admin">
+                                                <input type="hidden" name="status" value="rejected">
                                                 <div class="mb-3">
                                                     <label for="rejectReason" class="form-label">Masukkan alasan penolakan:</label>
                                                     <textarea id="rejectReason" name="reason" class="form-control" rows="3" required></textarea>
@@ -175,7 +171,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
