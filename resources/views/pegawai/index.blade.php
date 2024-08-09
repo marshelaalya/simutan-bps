@@ -209,7 +209,7 @@
 
         <!-- Sliders for Each Kelompok Barang -->
         @foreach($kelompoks as $kelompok)
-            <h4 class="card-title mb-3 text-info">Barang Kelompok: {{ $kelompok->nama }}</h4>
+            <h4 class="card-title mb-3 text-info">{{ $kelompok->nama }}</h4>
             <div class="swiper-container-wrapper mb-4">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
@@ -248,8 +248,9 @@
                                 <thead>
                                     <tr>
                                         <th width="10%" class="text-center">Kode</th>
-                                        <th>Nama Barang</th>
                                         <th width="20%">Kelompok Barang</th>
+                                        <th>Nama Barang</th>
+                                        
                                         <th width="1%" class="text-center">Stok</th>
                                         <th width="1%" class="text-center">Satuan</th>
                                     </tr>
@@ -258,8 +259,9 @@
                                     @foreach($barangs as $item)
                                         <tr>
                                             <td width="1%" class="text-center">{{ $item->kode }}</td>
-                                            <td>{{ $item->nama }}</td>
                                             <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
+                                            <td>{{ $item->nama }}</td>
+                                            
                                             <td width="1%" class="text-center">{{ $item->qty_item }}</td>
                                             <td width="1%" class="text-center">{{ $item->satuan }}</td>
                                         </tr>

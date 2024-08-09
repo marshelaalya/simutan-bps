@@ -55,7 +55,7 @@
                                         <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
                                         <td>{{ $item->nama }}</td>
                                         <td width="1%" class="text-center">{{ $item->qty_item }}</td>
-                                        <td width="1%" class="text-center">{{ $item->satuan }}</td>
+                                        <td width="1%" class="text-center">{{ $item->satuan->nama ?? 'N/A' }}</td>
                                         
                                             {{-- <a href="{{ route('barang.edit', $item->id) }}" class="btn btn-info sm" title="Edit Data"> <i class="fas fa-edit"></i> </a>
                                             <a href="{{ route('barang.delete', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"> <i class="fas fa-trash-alt"></i> </a> --}}

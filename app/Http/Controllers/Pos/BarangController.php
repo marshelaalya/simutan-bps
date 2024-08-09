@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kelompok;
+use App\Models\Satuan;
 use App\Models\Barang;
 use Auth;
 use Illuminate\Support\Carbon;
@@ -67,7 +68,8 @@ class BarangController extends Controller
 
     public function barangAdd(){
         $kelompok = Kelompok::all();
-        return view('backend.barang.barang_add', compact('kelompok'));
+        $satuans = Satuan::all();
+        return view('backend.barang.barang_add', compact('kelompok', 'satuans'));
     } // End Method
 
     public function barangStore(Request $request){
@@ -76,7 +78,7 @@ class BarangController extends Controller
             'kode' => $request->kode_barang,
             'kelompok_id' => $request->kelompok_id,
             'qty_item' => $request->qty_item,
-            'satuan' => $request->satuan,
+            'satuan_id' => $request->satuan_id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
@@ -105,7 +107,7 @@ class BarangController extends Controller
             'nama' => $request->nama,
             'kelompok_id' => $request->kelompok_id,
             'qty_item' => $request->qty_item,
-            'satuan' => $request->satuan,
+            'satuan_id' => $request->satuan_id,
             'updated_at' => Carbon::now(),
         ]);
 
