@@ -68,11 +68,18 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="nama" class="col-sm-2 col-form-label">Satuan Barang</label>
+                                <label for="satuan_id" class="col-sm-2 col-form-label">Satuan Barang</label>
                                 <div class="form-group col-sm-10">
-                                    <input name="satuan" class="form-control" type="text" id="nama">                    
+                                    <select name="satuan_id" class="form-select" id="satuan_id">
+                                        <option selected="" disabled>Pilih satuan barang</option>
+                                        @foreach($satuans as $satuan)
+                                            <option value="{{ $satuan->satuan_id }}">{{ $satuan->nama }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
+                            
+                            
                             
                             <div class="d-flex justify-content-end">
                                 <input type="submit" class="btn btn-info waves-effect waves-light" value="Tambahkan Barang">

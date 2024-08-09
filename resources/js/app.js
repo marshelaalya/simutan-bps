@@ -2,6 +2,9 @@ require('./bootstrap');
 
 import Alpine from 'alpinejs';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import Swiper from 'swiper/bundle';
+import 'swiper/swiper-bundle.min.css';
+
 
 window.Alpine = Alpine;
 
