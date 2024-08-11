@@ -2,13 +2,22 @@ require('./bootstrap');
 
 import Alpine from 'alpinejs';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import Swiper from 'swiper/bundle';
-import 'swiper/swiper-bundle.min.css';
+import Swiper from 'swiper';
+import 'swiper/css';
+import 'swiper/css/bundle';
 
+// Import jQuery dan DataTables
+import $ from 'jquery';
+import 'datatables.net-dt';
 
+// Inisialisasi Alpine.js
 window.Alpine = Alpine;
-
 Alpine.start();
+
+// Inisialisasi DataTables ketika dokumen siap
+$(document).ready(function() {
+    $('#example').DataTable(); // Ganti '#example' dengan ID tabel Anda
+});
 
 // Fungsi untuk menampilkan konfirmasi sebelum menghapus
 document.addEventListener('DOMContentLoaded', function () {

@@ -5,15 +5,46 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Carbon;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function UserAll(){
-        $users = User::latest()->get();
-        return view('backend.user.user_all', compact('users'));
-    } // End Method
+    public function UserAll(Request $request)
+{
+    if ($request->ajax()) {
+        // Apply filtering based on the role if it's provided in the request
+        $query = User::query();
+
+        if ($request->has('role') && !empty($request->role)) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->latest()->get();
+
+        return DataTables::of($users)
+            ->addIndexColumn()
+            ->addColumn('action', function($row){
+                $editUrl = route('user.edit', $row->id);
+                $deleteUrl = route('user.delete', $row->id);
+                return '
+                    <a href="' . $editUrl . '" class="btn bg-warning btn-sm">
+                        <i class="fas fa-edit" style="color: #ca8a04"></i>
+                    </a>
+                    <a href="' . $deleteUrl . '" class="btn bg-danger btn-sm">
+                        <i class="fas fa-trash-alt text-danger"></i>
+                    </a>
+                ';
+            })
+            ->make(true);
+    }
+
+    // Fetch distinct roles from the users table for filtering options
+    $roles = User::select('role')->distinct()->get();
+
+    return view('backend.user.user_all', compact('roles'));
+}
+
 
     public function UserAdd(){
         return view('backend.user.user_add');
