@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Permintaan;
+use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +14,8 @@ use App\Models\Pilihan;
 use App\Models\Barang;
 use App\Models\Kelompok;
 use Illuminate\Support\Facades\Log; // Import Log Facade
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PermintaanController extends Controller
 {
@@ -95,61 +99,70 @@ class PermintaanController extends Controller
     public function PermintaanUpdateStatus(Request $request, $id)
     {
         $permintaan = Permintaan::find($id);
-
+        
         if (!$permintaan) {
             return redirect()->route('permintaan.all')->with('error', 'Permintaan tidak ditemukan');
         }
-
+        
         $user = Auth::user();
         $newStatus = $request->input('status');
         $validStatus = false;
-
-        // Tentukan status valid berdasarkan peran pengguna
-        if ($user->role === 'admin') {
-            if (in_array($newStatus, ['approved', 'rejected'])) {
-                $validStatus = true;
-            }
-        } elseif ($user->role === 'supervisor') {
-            if (in_array($newStatus, ['approved', 'rejected'])) {
-                $validStatus = true;
-            }
+    
+        // Validasi status berdasarkan peran pengguna
+        if (in_array($user->role, ['admin', 'supervisor']) && in_array($newStatus, ['approved', 'rejected'])) {
+            $validStatus = true;
         }
-
-        // Jika status tidak valid, kembalikan dengan pesan error
+        
         if (!$validStatus) {
             return redirect()->route('permintaan.all')->with('error', 'Status tidak valid untuk peran Anda');
         }
-
+    
         // Update status permintaan dengan penyesuaian berdasarkan peran pengguna
         if ($user->role === 'admin') {
-            $permintaan->status = $newStatus . ' by admin';
+            $permintaan->status = $newStatus === 'rejected' ? 'rejected by admin' : 'approved by admin';
         } elseif ($user->role === 'supervisor') {
-            $permintaan->status = $newStatus . ' by supervisor';
+            $permintaan->status = $newStatus === 'rejected' ? 'rejected by supervisor' : 'approved by supervisor';
         }
-
-        // Jika status adalah rejected, simpan alasan
+        
+        // Simpan alasan jika status adalah rejected
         if ($newStatus === 'rejected') {
             if ($user->role === 'admin') {
-                $permintaan->ctt_adm = $request->input('reason', ''); // Simpan alasan di ctt_adm untuk admin
+                $permintaan->ctt_adm = $request->input('reason', '');
             } elseif ($user->role === 'supervisor') {
-                $permintaan->ctt_supervisor = $request->input('reason', ''); // Simpan alasan di ctt_supervisor untuk supervisor
+                $permintaan->ctt_spv = $request->input('reason', '');
             }
         } else {
-            // Kosongkan alasan jika status tidak rejected
             if ($user->role === 'admin') {
                 $permintaan->ctt_adm = null;
             } elseif ($user->role === 'supervisor') {
-                $permintaan->ctt_supervisor = null;
+                $permintaan->ctt_spv = null;
             }
         }
-
+        
         $permintaan->save();
-
+        
+        // Kirim notifikasi kepada pengguna yang membuat permintaan
+        $requestUser = User::find($permintaan->user_id);
+        
+        if ($requestUser) {
+            $notificationMessage = '';
+            
+            if ($user->role === 'admin') {
+                $notificationMessage = $newStatus === 'rejected' ? 'Permintaan ' . $permintaan->no_permintaan . ' telah ditolak oleh admin.' : 'Permintaan ' . $permintaan->no_permintaan . ' telah disetujui oleh admin.';
+            } elseif ($user->role === 'supervisor') {
+                $notificationMessage = $newStatus === 'rejected' ? 'Permintaan ' . $permintaan->no_permintaan . ' telah ditolak oleh supervisor.' : 'Permintaan ' . $permintaan->no_permintaan . ' telah disetujui oleh supervisor.';
+            }
+            
+            Notification::create([
+                'user_id' => $requestUser->id,
+                'permintaan_id' => $permintaan->id,
+                'message' => $notificationMessage,
+            ]);
+        }
+    
         return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
-
-
-
+    
     public function PermintaanSaya()
     {
         $userId = auth()->user()->id;
@@ -257,5 +270,34 @@ class PermintaanController extends Controller
             'message' => 'Data berhasil diperbarui dan kuantitas barang diperbarui',
             'alert-type' => 'success'
         ]);
+    }
+    public function PermintaanPrint($id)
+    {
+        // Ambil data permintaan dan pilihan
+        $permintaan = Permintaan::findOrFail($id);
+        $pilihan = Pilihan::where('permintaan_id', $id)->get();
+        
+        // Load view sebagai HTML
+        $view = view('backend.permintaan.permintaan_print', compact('permintaan', 'pilihan'))->render();
+        
+        // Inisialisasi Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true); // Jika Anda memerlukan PHP dalam HTML
+        // $options->set('defaultFont', 'Poppins'); // Atur font default
+    
+        $dompdf = new Dompdf($options);
+        
+        // Load HTML ke Dompdf
+        $dompdf->loadHtml($view);
+        
+        // (Optional) Atur ukuran kertas dan orientasi
+        $dompdf->setPaper('A4', 'landscape');
+        
+        // Render PDF
+        $dompdf->render();
+        
+        // Output PDF
+        return $dompdf->stream('permintaan_'.$permintaan->no_permintaan.'.pdf', array('Attachment' => 0));
     }
 }

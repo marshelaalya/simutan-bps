@@ -120,7 +120,7 @@
                                         <tr>
                                             <td>{{ $item->barang->nama }}</td>
                                             <td class="text-center" style="white-space: nowrap; width: 1%; min-width: 400px;">
-                                                {{ $item->req_qty }} {{ $item->barang->satuan }}
+                                                {{ $item->req_qty }} {{ $item->barang->satuan->nama }}
                                             </td>
                                         </tr>
                                     @empty
