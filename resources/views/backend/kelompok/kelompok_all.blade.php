@@ -41,7 +41,7 @@
                             <tr>
                                 <th width="1%">ID</th>
                                 <th>Nama</th>
-                                <th width="1%">Action</th>
+                                <th width="1%" class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

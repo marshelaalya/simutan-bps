@@ -166,7 +166,7 @@
                                     <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%"">
                                         <div>
                                             <label for="kelompok_id" class="form-label text-info">Kelompok Barang</label>
-                                            <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
+                                            <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang" required>
                                                 <option selected disabled>Kelompok Barang</option>
                                                 @foreach($kelompok as $kel)
                                                     <option value="{{ $kel->id }}">{{ $kel->nama }}</option>
@@ -177,7 +177,7 @@
                                     <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:25%">
                                         <div>
                                             <label for="barang_id" class="form-label text-info">Nama Barang</label>
-                                            <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
+                                            <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang" required>
                                                 <option selected disabled>Pilih barang yang ingin diajukan</option>
                                             </select>
                                         </div>
@@ -186,7 +186,7 @@
                                     <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
                                         <div>
                                             <label for="req_qty" class="form-label text-info">Kuantitas Permintaan</label>
-                                            <input class="form-control" name="req_qty" type="text" id="req_qty">
+                                            <input class="form-control" name="req_qty" type="text" id="req_qty" required>
                                             <div id="qty_warning" class="form-text text-danger" style="display: none;">
                                                 Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
                                             </div>
@@ -222,6 +222,7 @@
                                                     <th style="width: 23%;">Kelompok Barang</th>
                                                     <th>Nama Barang</th>
                                                     <th class="text-center" style="width: 1%;">Kuantitas</th>
+                                                    <th class="text-center" style="width: 1%;">Satuan</th>
                                                     <th class="text-center" style="width: 1%;">Satuan</th>
                                                     <th class="text-center" style="width: 1%;">Aksi</th>
                                                     </tr>

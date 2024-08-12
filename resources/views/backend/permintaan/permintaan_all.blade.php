@@ -103,22 +103,22 @@
                                                                      
                                     <td class="text-center d-flex justify-content-center align-items-center"> 
                                         @if($item->status == 'pending')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
                                             </a>
                                             <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                 <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
                                             </a>
                                         @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'rejected by admin')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
                                             </a>
                                             <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                 <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
                                             </a>
                                         @elseif($item->status == 'approved by supervisor')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
                                             </a>
                                             <a href="{{ route('permintaan.print', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                 <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
