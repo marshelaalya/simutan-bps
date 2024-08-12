@@ -38,6 +38,17 @@ Route::get('/index', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Tambahkan di dalam grup middleware auth
+
+    // Rute untuk menandai semua notifikasi sebagai dibaca
+    Route::post('/notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
+    
+
+    // Rute untuk melihat semua notifikasi (opsional)
+    Route::get('/notifications', [DashboardController::class, 'viewAllNotifications'])->name('notifications.viewAll');
+
+    
+
     Route::controller(AdminController::class)->group(function () {
         Route::get('/admin/logout', 'destroy')->name('admin.logout');
         Route::get('/admin/profile', 'Profile')->name('admin.profile');
@@ -76,6 +87,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/permintaan/update/{id}', 'PermintaanUpdate')->name('permintaan.update');
         Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
         Route::get('/permintaan/print/{id}', 'PermintaanPrint')->name('permintaan.print');
+        
     });
 
     Route::controller(KelompokController::class)->group(function () {

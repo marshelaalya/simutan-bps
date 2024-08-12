@@ -13,18 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pilihans', function (Blueprint $table) {
+        // Migration for notifications table
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->integer('barang_id');
-            $table->integer('permintaan_id');
-            $table->string('pilihan_no');
-            $table->date('date');
-            $table->string('description');
-            $table->integer('req_qty');
-            $table->integer('satuan_id');
-            $table->string('created_by')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('permintaan_id')->constrained()->onDelete('cascade');
+            $table->text('message');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
+
     }
 
     /**
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pilihans');
+        Schema::dropIfExists('notifications');
     }
 };
