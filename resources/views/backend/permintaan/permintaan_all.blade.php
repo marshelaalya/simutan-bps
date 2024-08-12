@@ -120,7 +120,7 @@
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                 <i class="ri-eye-fill font-size-16 align-middle"></i>
                                             </a>
-                                            <a href="{{ route('permintaan.all', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                            <a href="{{ route('permintaan.print', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                 <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
                                             </a>
                                         {{-- @elseif($item->status == 'rejected by admin')

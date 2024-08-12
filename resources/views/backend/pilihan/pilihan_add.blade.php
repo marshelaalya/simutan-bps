@@ -1,10 +1,15 @@
-@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'pegawai.pegawai_master')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
+         'pegawai.pegawai_master'))
 
-@section(auth()->user()->role === 'admin' ? 'admin' : 'pegawai')
+@section(auth()->user()->role === 'admin' ? 'admin' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 
 
@@ -158,7 +163,7 @@
                                 <hr class="border border-secondary" style="border-width: 0.2px;">
                                 
                                 <div class="row g-3 mb-3">
-                                    <div class="col-sm-3">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%"">
                                         <div>
                                             <label for="kelompok_id" class="form-label text-info">Kelompok Barang</label>
                                             <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang" required>
@@ -169,7 +174,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:29%">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:25%">
                                         <div>
                                             <label for="barang_id" class="form-label text-info">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang" required>
@@ -188,14 +193,16 @@
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
-                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:14%">
+
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
                                         <div>
                                             <label for="satuan_id" class="form-label text-info">Satuan</label>
-                                            <select name="satuan_id" class="form-select" id="satuan_id" aria-label="Pilih Satuan" required>
-                                                <option selected disabled>Pilih satuan</option>
+                                            <select name="satuan_id" class="form-select" id="satuan_id" aria-label="Pilih Satuan">
+                                                <option selected disabled>Pilih Satuan</option>
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-2 d-flex justify-content-end align-items-start w-auto" style="margin-top:2.8rem">
                                         <button type="button" class="btn btn-info" id="addMoreButton">
                                             <i class="mdi mdi-plus"></i> <span>Tambah</span>
@@ -215,6 +222,7 @@
                                                     <th style="width: 23%;">Kelompok Barang</th>
                                                     <th>Nama Barang</th>
                                                     <th class="text-center" style="width: 1%;">Kuantitas</th>
+                                                    <th class="text-center" style="width: 1%;">Satuan</th>
                                                     <th class="text-center" style="width: 1%;">Satuan</th>
                                                     <th class="text-center" style="width: 1%;">Aksi</th>
                                                     </tr>
@@ -252,7 +260,8 @@
     <tr class="delete_add_more_item">
         <td>@{{ kelompok_nama }}</td>
         <td>@{{ barang_nama }}</td>
-        <td class="text-center">@{{ qty_req }} @{{ barang_satuan }}</td>
+        <td class="text-center">@{{ qty_req }}</td>
+        <td class="text-center">@{{ barang_satuan }}</td>
         <td style="text-align: center; vertical-align: middle;">
             <a href="{{ route('dashboard') }}" class="btn bg-warning btn-sm">
                 <i class="fas fa-edit" style="color: #ca8a04"></i>
@@ -267,40 +276,45 @@
 
 <script>
 // Event delegation to handle dynamically added rows
-$(document).ready(function() {
-    var availableQty = 0; // Variable to store available quantity
-    var barang_satuan = ''; // Variable to store item unit
-    var today = new Date().toISOString().split('T')[0];
-    $('#date').attr('min', today);
+$(document).on('click', '.delete-button', function() {
+    // Remove the table row that contains the clicked delete button
+    $(this).closest('tr').remove();
+    
+    // Optionally, you can handle additional actions such as updating the backend or notifying the user
+});
+</script>
 
-    // Function to validate the form
+<script type="text/javascript">
+    $(document).ready(function() {
+    var availableQty = 0; // Variabel untuk menyimpan kuantitas barang yang tersedia
+    var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
+    var today = new Date().toISOString().split('T')[0];
+
     function validateForm() {
         var date = $('#date').val();
         var kelompok_id = $('#kelompok_id').val();
         var barang_id = $('#barang_id').val();
         var req_qty = $('#req_qty').val();
-        var satuan_id = $('#satuan_id').val();
+        var satuan_id = $('#satuan_id').val(); // Ambil nilai satuan_id
 
-        if (date && kelompok_id && barang_id && req_qty && req_qty && satuan_id <= availableQty) {
+        if (date && kelompok_id && barang_id && req_qty && satuan_id && req_qty <= availableQty) {
             $('#addMoreButton').prop('disabled', false);
         } else {
             $('#addMoreButton').prop('disabled', true);
         }
     }
 
-    // Handle date input changes
-    $('#date').on('input', function() {
-        var selectedDate = $(this).val();
-        if (selectedDate < today) {
-            $('#date_warning').show();
-            $('#addMoreButton').prop('disabled', true);
-        } else {
-            $('#date_warning').hide();
-            validateForm();
-        }
+    $('#satuan_id').on('change', function() {
+        validateForm();
     });
 
-    // Handle kelompok_id changes
+    $('#date').on('input', function() {
+        var selectedDate = $(this).val();
+        $('#date_warning').hide();
+        $('#addMoreButton').prop('disabled', false);
+        validateForm();
+    });
+
     $('#kelompok_id').on('change', function() {
         var kelompok_id = $(this).val();
         $.ajax({
@@ -310,12 +324,12 @@ $(document).ready(function() {
             success: function(data) {
                 var html = '<option value="">Pilih barang yang ingin diajukan</option>';
                 $.each(data, function(key, item) {
-                    html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan + '">' + item.nama + '</option>';
+                    html += '<option value="' + item.id + '" data-qty="' + item.qty_item + '" data-satuan="' + item.satuan_id + '">' + item.nama + '</option>';
                 });
                 $('#barang_id').html(html).trigger('change'); // Use trigger to update Select2
-                $('#req_qty').val('');
-                $('#current_qty').text('Kuantitas barang sekarang: ');
-                $('#qty_warning').hide();
+                // $('#req_qty').val('');
+                // $('#current_qty').text('Kuantitas barang sekarang: ');
+                // $('#qty_warning').hide();
                 validateForm();
             },
             error: function(xhr) {
@@ -324,38 +338,46 @@ $(document).ready(function() {
         });
     });
 
-    // Handle barang_id changes
     $('#barang_id').on('change', function() {
         var selectedOption = $(this).find('option:selected');
-        availableQty = selectedOption.data('qty');
-        barang_satuan = selectedOption.data('satuan');
+        var barang_id = $(this).val();
+        var kelompok_id = $('#kelompok_id').val(); // Ambil kelompok_id dari dropdown kelompok_id
+        availableQty = parseFloat(selectedOption.data('qty')) || 0; // Pastikan availableQty adalah angka
+        // barang_satuan = selectedOption.data('satuan_id'); // Pastikan data atribut sesuai
 
-        // Update satuan_id based on the selected barang_id
-        $.ajax({
-            url: "{{ route('get-satuan') }}",
-            type: "GET",
-            data: { barang_id: $(this).val() },
-            success: function(data) {
-                var html = '<option selected disabled>Pilih satuan</option>';
-                $.each(data, function(key, item) {
-                    html += '<option value="' + item.id + '">' + item.nama + '</option>';
-                });
-                $('#satuan_id').html(html).val(barang_satuan); // Set the default selected unit
-                $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
-                $('#req_qty').val('');
-                $('#qty_warning').hide();
-                validateForm();
-            },
-            error: function(xhr) {
-                console.error('An error occurred:', xhr.responseText);
-            }
-        });
+        $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
+        $('#req_qty').val('');
+        $('#qty_warning').hide();
+
+        if (barang_id && kelompok_id) {
+            $.ajax({
+                url: "{{ route('get-satuan') }}",
+                type: "GET",
+                data: { kelompok_id: kelompok_id, barang_id: barang_id }, // Kirim kelompok_id dan barang_id
+                success: function(data) {
+                    var html = '<option value="">Pilih Satuan</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.satuan_id + '">' + item.nama + '</option>'; // Pastikan field 'id' dan 'nama' ada di response
+                    });
+                    $('#satuan_id').html(html);
+                },
+                error: function(xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        } else {
+            $('#satuan_id').html('<option value="">Pilih Satuan</option>');
+        }
+
+        validateForm();
     });
 
-    // Handle req_qty input changes
+
     $('#req_qty').on('input', function() {
-        var requestedQty = $(this).val();
-        if (requestedQty > availableQty) {
+        var requestedQty = parseFloat($(this).val()) || 0; // Pastikan requestedQty adalah angka
+        var currentQty = parseFloat($('#current_qty').text().replace('Kuantitas barang sekarang: ', '')) || 0;
+
+        if (requestedQty > currentQty) {
             $('#qty_warning').show();
             $('#addMoreButton').prop('disabled', true);
         } else {
@@ -364,52 +386,11 @@ $(document).ready(function() {
         }
     });
 
-    // Handle addMoreButton click
-    // Handle addMoreButton click
-$('#addMoreButton').on('click', function() {
-    var date = $('#date').val();
-    var kelompok_id = $('#kelompok_id').val();
-    var kelompok_nama = $('#kelompok_id').find('option:selected').text();
-    var barang_id = $('#barang_id').val();
-    var barang_nama = $('#barang_id').find('option:selected').text();
-    var qty_req = $('#req_qty').val();
-    var description = $('#textarea').val();
+    $(document).on("click", ".removeeventmore", function() {
+        $(this).closest("tr").remove();
+        validateForm();
+    });
 
-    if (date == '' || kelompok_id == '' || barang_id == '' || qty_req == '' || satuan_id == '') {
-        $.notify("Semua kolom harus diisi.", { globalPosition: 'top right', className: 'error' });
-        return false;
-    }
-
-    var source = $("#document-template").html();
-    var template = Handlebars.compile(source);
-    var context = {
-        date: date,
-        barang_nama: barang_nama,
-        kelompok_nama: kelompok_nama,
-        qty_req: qty_req,
-        barang_satuan: barang_satuan,
-        description: description
-    };
-    var html = template(context);
-
-    // Cek dan hilangkan baris "Tidak ada barang terpilih" jika ada
-    if ($('#table-body').find('#no-data-row').length) {
-        $('#no-data-row').remove();
-    }
-
-    $('#table-body').append(html);
-
-    // Reset form fields
-    $('#kelompok_id').html('<option selected disabled>Kelompok Barang</option>');;
-    $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
-    $('#req_qty').val('');
-    $('#current_qty').text('Kuantitas barang sekarang: ');
-
-    validateForm();
-});
-
-
-    // Handle form submission
     $('#mainForm').on('submit', function(e) {
         e.preventDefault(); // Prevent default form submission
 
@@ -424,81 +405,76 @@ $('#addMoreButton').on('click', function() {
             var kelompok_nama = $(this).find('td:eq(0)').text();
             var barang_nama = $(this).find('td:eq(1)').text();
             var qty_req = $(this).find('td:eq(2)').text();
-            var barang_satuan = $(this).find('td:eq(3)').text();
+            var barang_satuan = $(this).find('td:eq(3)').text().trim(); // Pastikan ini adalah kolom yang benar
 
             tableData.push({
-                date: $('#hidden_date').val(), // Get from hidden field
+                date: $('#hidden_date').val(),
                 kelompok_nama: kelompok_nama,
                 barang_nama: barang_nama,
                 qty_req: qty_req,
                 barang_satuan: barang_satuan,
-                description: $('#hidden_description').val() // Get from hidden field
+                description: $('#hidden_description').val()
             });
         });
+
 
         $('#table_data').val(JSON.stringify(tableData));
         $(this).off('submit').submit();
     });
 
-    // Validate Step 1
+
     function validateStep1() {
         var date = $('#date').val();
         var description = $('#textarea').val();
-
+        
         console.log('Validating Step 1:', date, description); // Debugging
-
+        
         if (date && description) {
             $('#next_btn_step1').removeClass('disabled').prop('disabled', false);
-            $('#warning_message').hide();
-            return true; // Validation successful
+            $('#warning_message').hide(); 
+            return true;
         } else {
-            $('#warning_message').show();
-            return false; // Validation failed
+            $('#next_btn_step1').addClass('disabled').prop('disabled', true);
+            $('#warning_message').show(); 
+            return false;
         }
     }
 
-    // Validate on input change in Step 1
     $('#date, #textarea').on('input', validateStep1);
 
-    // Navigate between steps
     function navigateToStep(step) {
         $('.step-content').hide();
         $('#step' + step).show();
         $('.step').removeClass('active');
         $('.step[data-step="' + step + '"]').addClass('active');
-
-        // Navigation buttons
+        
         $('#prev_btn').toggle(step > 1);
         $('#next_btn_step1').toggle(step < 2);
         $('#submit_btn').toggle(step == 2);
         $('#addMoreButton').toggle(step == 2);
 
-        // Update circle step state
         $('.step .circle').each(function() {
             var circleStep = $(this).parent().data('step');
             $(this).toggleClass('completed', circleStep < step);
         });
     }
 
-    // Navigate using "Next" button in Step 1
     $('#next_btn_step1').on('click', function() {
         if (validateStep1()) {
             navigateToStep(2);
         } else {
-            console.log('Validation failed on Step 1'); // Debugging
+            console.log('Validation failed on Step 1');
         }
     });
 
-    // Navigate using "Previous" button
     $('#prev_btn').on('click', function() {
         navigateToStep(1);
     });
 
-    // Navigate using click on circle
     $('.step .circle').on('click', function() {
         var step = $(this).parent().data('step');
-
-        console.log('Circle clicked:', step); // Debugging
+        
+        console.log('Circle clicked:', step);
 
         if (step === 1) {
             if (validateStep1()) {
@@ -516,59 +492,75 @@ $('#addMoreButton').on('click', function() {
         }
     });
 
-    // Initial display setup
     navigateToStep(1);
 });
+</script>
 
-        </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to check if the table is empty and manage the "No Data" row
+        function checkIfTableIsEmpty() {
+            const tableBody = document.getElementById('table-body');
+            const noDataRow = document.getElementById('no-data-row');
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-    const nextBtnStep1 = document.getElementById('next_btn_step1');
-    const prevBtn = document.getElementById('prev_btn');
-    const submitBtn = document.getElementById('submit_btn');
-    const warningMessage = document.getElementById('warning_message');
-
-    const dateInput = document.getElementById('date');
-    const textarea = document.getElementById('textarea');
-
-    nextBtnStep1.addEventListener('click', function () {
-        if (!dateInput.value || !textarea.value.trim()) {
-            warningMessage.style.display = 'block';
-        } else {
-            warningMessage.style.display = 'none';
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
+            // Check if there are no rows in the table body (excluding the no-data row)
+            if (tableBody.children.length === 1 && tableBody.children[0].id === 'no-data-row') {
+                noDataRow.style.display = '';
+            } else {
+                noDataRow.style.display = 'none';
+            }
         }
+
+        // Initial check on page load
+        checkIfTableIsEmpty();
+
+        // Event listener for removing a row
+        document.getElementById('table-body').addEventListener('click', function (e) {
+            if (e.target && e.target.matches('i.removeeventmore')) {
+                e.target.closest('tr').remove();
+                checkIfTableIsEmpty();
+            }
+        });
+
+        // Add row logic
+        $('#addMoreButton').on('click', function() {
+            var date = $('#date').val();
+            var kelompok_id = $('#kelompok_id').val();
+            var kelompok_nama = $('#kelompok_id').find('option:selected').text();
+            var barang_id = $('#barang_id').val();
+            var barang_nama = $('#barang_id').find('option:selected').text();
+            var qty_req = $('#req_qty').val();
+            var description = $('#textarea').val();
+            var barang_satuan = $('#satuan_id').find('option:selected').text();
+
+            if (date == '' || kelompok_id == '' || barang_id == '' || qty_req == '') {
+                $.notify("Semua kolom harus diisi.", { globalPosition: 'top right', className: 'error' });
+                return false;
+            }
+
+            var source = $("#document-template").html();
+            var template = Handlebars.compile(source);
+            var context = {
+                date: date,
+                barang_nama: barang_nama,
+                kelompok_nama: kelompok_nama,
+                qty_req: qty_req,
+                barang_satuan: barang_satuan,
+                description: description
+            };
+            var html = template(context);
+
+            $('#table-body').append(html);
+            checkIfTableIsEmpty();
+            
+            $('#kelompok_id').val('');
+            $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
+            $('#req_qty').val('');
+            $('#current_qty').text('Kuantitas barang sekarang: ');
+
+            validateForm();
+        });
     });
-
-    prevBtn.addEventListener('click', function () {
-        document.getElementById('step1').style.display = 'block';
-        document.getElementById('step2').style.display = 'none';
-    });
-
-    // Check if all required fields in step 2 are filled before enabling submit
-    function checkFields() {
-        const kelompokId = document.getElementById('kelompok_id').value;
-        const barangId = document.getElementById('barang_id').value;
-        const reqQty = document.getElementById('req_qty').value;
-        const satuanId = document.getElementById('satuan_id').value;
-
-        if (kelompokId && barangId && reqQty && satuanId) {
-            submitBtn.disabled = false;
-        } else {
-            submitBtn.disabled = true;
-        }
-    }
-
-    document.getElementById('kelompok_id').addEventListener('change', checkFields);
-    document.getElementById('barang_id').addEventListener('change', checkFields);
-    document.getElementById('req_qty').addEventListener('input', checkFields);
-    document.getElementById('satuan_id').addEventListener('change', checkFields);
-});
-        </script>
-        
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
+</script>
+       
 @endsection

@@ -1,79 +1,144 @@
-  <header id="page-topbar">
-                <div class="navbar-header">
-                    <div class="d-flex">
-                        <!-- LOGO -->
-                        <div class="navbar-brand-box">
-                            <a href="index.html" class="logo logo-dark">
-                                <span class="logo-sm">
-                                    <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm" height="22">
-                                </span>
-                                <span class="logo-lg">
-                                    <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-dark" height="40">
-                                </span>
-                            </a>
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="index.html" class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-dark" height="40">
+                    </span>
+                </a>
 
-                            <a href="index.html" class="logo logo-light">
-                                <span class="logo-sm">
-                                    <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm-light" height="22">
-                                </span>
-                                <span class="logo-lg">
-                                    <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-light" height="40">
-                                </span>
-                            </a>
-                        </div>
+                <a href="index.html" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm-light" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-light" height="40">
+                    </span>
+                </a>
+            </div>
 
-    <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
-        <i class="ri-menu-2-line align-middle"></i>
-    </button>
+            <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
+                <i class="ri-menu-2-line align-middle"></i>
+            </button>
 
-    <!-- App Search-->
-    <form class="app-search d-none d-lg-block">
-        <div class="position-relative">
-            <input type="text" class="form-control" placeholder="Search...">
-            <span class="ri-search-line"></span>
-        </div>
-    </form>
-
-    
-</div>
-
-<div class="d-flex">
-
-
-
-    <div class="dropdown d-none d-lg-inline-block ms-1">
-        <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
-            <i class="ri-fullscreen-line"></i>
-        </button>
-    </div>
-
-    @php
-    $id = Auth::user()->id;
-    $adminData = App\Models\User::find($id);
-    @endphp
-
-    <div class="dropdown d-inline-block user-dropdown">
-        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
-            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img class="rounded-circle header-profile-user" src="{{ (!empty($adminData->profile_image))? url('upload/admin_images/'.$adminData->profile_image):url('upload/no_image.jpg') }}"
-                alt="Header Avatar">
-            <span class="d-none d-xl-inline-block ms-1">{{ $adminData->name }}</span>
-            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end">
-            <!-- item-->
-            <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
-            <a class="dropdown-item" href="{{ route('change.password') }}"><i class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
-            <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-            <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
-            <div class="dropdown-divider"></div>
-
-            <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
-        </div>
-    </div>
-
-                        
-            
-                    </div>
+            <!-- App Search-->
+            <form class="app-search d-none d-lg-block">
+                <div class="position-relative">
+                    <input type="text" class="form-control" placeholder="Search...">
+                    <span class="ri-search-line"></span>
                 </div>
-            </header>
+            </form>
+        </div>
+
+        <div class="d-flex">
+            <!-- Notification Dropdown -->
+            <div class="dropdown d-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="notification-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ri-notification-3-line"></i>
+                    <span class="badge bg-danger">{{ session('unreadCount', 0) }}</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <h6 class="dropdown-header">Notifications</h6>
+                    <div class="notification-list">
+                        @forelse (session('notifications', []) as $notification)
+                            <a class="dropdown-item" href="#">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <div class="avatar-sm">
+                                            <span class="avatar-title bg-primary rounded-circle text-white">
+                                                <i class="ri-check-line"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h6 class="mt-0 mb-1">{{ $notification->message }}</h6>
+                                        <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                    </div>
+                                </div>
+                            </a>
+                        @empty
+                            <p class="text-center">No new notifications</p>
+                        @endforelse
+                    </div>
+                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">View All</a>
+                </div>
+            </div>
+
+            <!-- Fullscreen Button -->
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
+                    <i class="ri-fullscreen-line"></i>
+                </button>
+            </div>
+
+            @php
+            $id = Auth::user()->id;
+            $adminData = App\Models\User::find($id);
+            @endphp
+
+            <div class="dropdown d-inline-block user-dropdown">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="{{ (!empty($adminData->profile_image))? url('upload/admin_images/'.$adminData->profile_image):url('upload/no_image.jpg') }}"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1">{{ $adminData->name }}</span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
+                    <a class="dropdown-item" href="{{ route('change.password') }}"><i class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
+                    <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
+                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Styles for Notification Dropdown -->
+<style>
+    .notification-list a {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .notification-list a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+    }
+
+    .avatar-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const notificationDropdown = document.getElementById('notification-dropdown');
+        notificationDropdown.addEventListener('click', function () {
+            fetch('{{ route('notifications.markAllRead') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+        });
+    });
+</script>

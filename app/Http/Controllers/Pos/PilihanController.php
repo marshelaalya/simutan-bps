@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pilihan;
+use App\Models\Satuan;
 use App\Models\Barang;
 use App\Models\Kelompok;
+use App\Models\User;
+use App\Models\Notification;
 use App\Models\Permintaan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
@@ -94,11 +97,12 @@ class PilihanController extends Controller
         return view('backend.pilihan.pilihan_add', compact('barang','permintaan','kelompok'));
     }
 
-    public function PermintaanStore(Request $request){
+    public function PermintaanStore(Request $request)
+    {
         // Ambil data terakhir dari tabel untuk menentukan digit pertama
         $lastPermintaan = Permintaan::orderBy('id', 'desc')->first();
         $lastNoPermintaan = $lastPermintaan ? $lastPermintaan->no_permintaan : null;
-
+    
         // Tentukan digit pertama
         if ($lastNoPermintaan) {
             // Ambil digit terakhir dari nomor permintaan terakhir
@@ -107,14 +111,14 @@ class PilihanController extends Controller
         } else {
             $digitPertama = 1; // Mulai dari 1 jika tidak ada nomor permintaan sebelumnya
         }
-    
+        
         // Format untuk bulan dan tahun
         $bulan = Carbon::now()->format('m');
         $tahun = Carbon::now()->format('Y');
-    
+        
         // Format nomor permintaan
         $noPermintaan = "B-{$digitPertama}/31751/PL.711/{$bulan}/{$tahun}";
-    
+        
         // Simpan data permintaan
         $permintaan = Permintaan::create([
             'user_id' => Auth::user()->id,
@@ -127,6 +131,21 @@ class PilihanController extends Controller
             'updated_at' => Carbon::now(),
         ]);
     
+        // Kirim notifikasi kepada supervisor dan admin
+        $rolesToNotify = ['admin', 'supervisor'];
+        $usersToNotify = User::whereIn('role', $rolesToNotify)->get();
+    
+        foreach ($usersToNotify as $user) {
+            $notificationMessage = 'Terdapat permintaan baru dari ' . Auth::user()->name . 
+                                   '.';
+    
+            Notification::create([
+                'user_id' => $user->id,
+                'permintaan_id' => $permintaan->id,
+                'message' => $notificationMessage,
+            ]);
+        }
+    
         // Mengembalikan ID permintaan yang baru dibuat
         return $permintaan->id;
     }
@@ -137,10 +156,10 @@ class PilihanController extends Controller
         $tableData = $request->input('table_data');
         $date = $request->input('hidden_date');
         $description = $request->input('hidden_description');
-
+    
         // Log data untuk debugging
         Log::info('Table Data:', ['data' => $tableData]);
-
+    
         // Pastikan data tidak null
         if (empty($tableData)) {
             $notification = array(
@@ -149,15 +168,21 @@ class PilihanController extends Controller
             );
             return redirect()->back()->with($notification);
         }
-
+    
         // Decode data JSON
         $tableData = json_decode($tableData, true);
-
-        $permintaanId = $this->PermintaanStore($request);
-
+    
+        // Filter data kosong
+        $tableData = array_filter($tableData, function($item) {
+            return isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req']) &&
+                   !empty($item['kelompok_nama']) && !empty($item['barang_nama']) && !empty($item['qty_req']);
+        });
+    
         // Proses data
         if (is_array($tableData) && !empty($tableData)) {
             // Validasi permintaan ID
+            $permintaanId = $this->PermintaanStore($request);
+    
             if (!$permintaanId) {
                 $notification = array(
                     'message' => 'Gagal membuat permintaan',
@@ -165,50 +190,50 @@ class PilihanController extends Controller
                 );
                 return redirect()->back()->with($notification);
             }
-
+    
             foreach ($tableData as $index => $item) {
-                // Validasi data
-                if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
+                if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'], $item['barang_satuan'])) {
                     $pilihan = new Pilihan();
-                    $pilihan->permintaan_id = $permintaanId; // Gunakan ID permintaan yang baru dibuat
-                    $pilihan->date = $date; // Gunakan date dari input tersembunyi
-                    $pilihan->description = $description; // Gunakan description dari input tersembunyi
+                    $pilihan->permintaan_id = $permintaanId;
+                    $pilihan->date = $date;
+                    $pilihan->description = $description;
+                    
                     // Ambil ID barang dan kelompok dari nama
                     $barang = Barang::where('nama', $item['barang_nama'])->first();
                     $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
-                    if ($barang && $kelompok) {
+                    $satuan = Satuan::where('nama', $item['barang_satuan'])->first(); // Cari satuan berdasarkan nama
+    
+                    if ($barang && $kelompok && $satuan) {
                         $pilihan->barang_id = $barang->id;
-                        // $pilihan->kelompok_id = $kelompok->id;
+                        $pilihan->satuan_id = $satuan->satuan_id; // Set satuan_id
                         $pilihan->req_qty = (int)filter_var($item['qty_req'], FILTER_SANITIZE_NUMBER_INT);
-                        $pilihan->pilihan_no = sprintf('P-%04d', $index); // Atur pilihan_no sesuai dengan kebutuhan
+                        $pilihan->pilihan_no = sprintf('P-%04d', $index);
                         $pilihan->created_by = Auth::user()->name;
                         $pilihan->created_at = Carbon::now();
                         $pilihan->updated_at = Carbon::now();
-                        $pilihan->save(); // Simpan ke database
-
+                        $pilihan->save();
+    
                         // Kurangi kuantitas barang
                         $barang->qty_item -= $pilihan->req_qty;
                         $barang->save();
                     }
                 }
             }
-
-            // Kirimkan notifikasi sukses dan redirect
+    
             $notification = array(
                 'message' => 'Permintaan berhasil ditambah',
                 'alert-type' => 'success'
             );
             return redirect()->route('permintaan.saya')->with($notification);
         } else {
-            // Jika $tableData bukan array atau kosong
             $notification = array(
                 'message' => 'Data tabel tidak valid',
                 'alert-type' => 'error'
             );
             return redirect()->route('permintaan.saya')->with($notification);
         }
-    }
-
+    }   
+     
     public function PilihanEdit($id)
     {
         $pilihan = Pilihan::findOrFail($id);

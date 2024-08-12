@@ -131,7 +131,7 @@
                                     @forelse($pilihan as $item)
                                         <tr>
                                             <td>{{ $item->barang->nama }}</td>
-                                            <td style="white-space: nowrap; width: 1%; min-width: 400px;">{{ $item->req_qty }} {{ $item->satuan->nama ?? 'N/A' }}</td>
+                                            <td style="white-space: nowrap; width: 1%; min-width: 400px;">{{ $item->req_qty }} {{ $item->barang->satuan->nama }}</td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -144,8 +144,7 @@
 
                         <!-- Approval Actions -->
                         <div class="mt-4 d-flex justify-content-end">
-                            
-                            <a href="{{ route(auth()->user()->role === 'admin' ? 'permintaan.all' : 'permintaan.saya') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="javascript:history.back()" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </div>

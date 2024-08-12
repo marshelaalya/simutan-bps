@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Permintaan;
+use App\Models\Notification;
 use App\Models\Barang;
 use App\Models\Kelompok;
 
@@ -16,10 +17,19 @@ class DashboardController extends Controller
         $query = Permintaan::whereIn('status', ['pending', 'approved by admin'])
             ->orderBy('created_at', 'desc')
             ->limit(5);
+            ->orderBy('created_at', 'desc')
+            ->limit(5);
         $barangs = Barang::all();
         $kelompoks = Kelompok::with('barangs')->get();
 
-        // Determine the kelompok with the most barangs
+        $notifications = Notification::where('user_id', $user->id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->limit(5)
+                                    ->get();
+        $unreadCount = Notification::where('user_id', $user->id)
+                                    ->where('is_read', false)
+                                    ->count();
+            // Determine the kelompok with the most barangs
         $kelompokWithMostBarangs = $kelompoks->sortByDesc(function ($kelompok) {
             return $kelompok->barangs->count();
         })->first();
@@ -31,24 +41,49 @@ class DashboardController extends Controller
         } elseif ($user->role === 'pegawai' || $user->role === 'supervisor') {
             $permintaans = $query->where('user_id', $user->id)->get();
             $view = ($user->role === 'pegawai') ? 'pegawai.index' : 'supervisor.index';
-            return view($view, compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
+            return view($view, compact('permintaans',  'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs'));
         }
-
+    
         // Redirect jika role tidak dikenali
         return redirect()->route('home');
-    }
+    }    
+
+
 
     public function dashboard()
     {
-        $permintaans = Permintaan::where('status', 'pending')
-            ->with('pilihan') // Pastikan relasi dimuat
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get();
-        $barangs = Barang::all(); // Added missing variable
-        
-        return view('admin.index', compact('permintaans', 'barangs'));
+        $user = Auth::user();
+        $notifications = Notification::where('user_id', $user->id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->limit(5)
+                                    ->get();
+        $unreadCount = Notification::where('user_id', $user->id)
+                                ->where('is_read', false)
+                                ->count();
+
+        return view('dashboard', compact('notifications', 'unreadCount'));
     }
+
+    public function markAllRead()
+{
+    $user = Auth::user();
+    Notification::where('user_id', $user->id)
+                ->where('is_read', false)
+                ->update(['is_read' => true]);
+
+    return response()->json(['status' => 'success']);
+}
+
+public function viewAllNotifications()
+{
+    $user = Auth::user();
+    $notifications = Notification::where('user_id', $user->id)
+                                ->orderBy('created_at', 'desc')
+                                ->get();
+    return view('notifications.index', compact('notifications'));
+}
+
+
 
     public function PermintaanAll()
     {

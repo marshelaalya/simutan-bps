@@ -69,6 +69,11 @@
                                                         style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                     Approved
                                                 </button>
+                                            @elseif($item->ctt_adm == NULL && $item->status == 'rejected by supervisor')
+                                                <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                    Approved
+                                                </button>
                                             @endif
                                         </td>
                                         <td class="text-center" style="white-space: nowrap;">

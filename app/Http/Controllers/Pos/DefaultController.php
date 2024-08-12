@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Satuan;
 
+
 class DefaultController extends Controller
 {
     public function getCategory(Request $request)
@@ -24,20 +25,16 @@ class DefaultController extends Controller
     }
 
     public function getSatuan(Request $request)
-    {
-        $kelompok_id = $request->kelompok_id;
-        $barang_id = $request->barang_id;
+{
+    $barang_id = $request->barang_id;
 
-        // Validasi jika parameter tidak ada
-        if (!$kelompok_id || !$barang_id) {
-            return response()->json(['error' => 'Invalid input'], 400);
-        }
+    $barang = Barang::where('id', $barang_id)->first(['satuan_id']);
 
-        // Ambil data satuan dari database berdasarkan kelompok_id dan barang_id
-        $satuan = Satuan::where('kelompok_id', $kelompok_id)
-                        ->where('barang_id', $barang_id)
-                        ->get(['id', 'nama']); // Pastikan kolom yang dibutuhkan diambil
+    // Ambil data satuan dari database berdasarkan barang_id
+    $satuan = Satuan::where('satuan_id', $barang->satuan_id) // Ubah query ini sesuai relasi atau struktur yang benar
+                    ->get(['satuan_id', 'nama']); // Pastikan kolom yang dibutuhkan diambil
 
-        return response()->json($satuan);
-    }
+    return response()->json($satuan);
+}
+
 }
