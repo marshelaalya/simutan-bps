@@ -19,6 +19,19 @@ $(document).ready(function() {
     $('#example').DataTable(); // Ganti '#example' dengan ID tabel Anda
 });
 
+$(document).ready(function() {
+    var table = $('#datatable').DataTable({
+        // Konfigurasi DataTable lainnya
+        initComplete: function() {
+            // Ubah kelas tombol setelah DataTable diinisialisasi
+            this.api().buttons().container().find('.dt-button.buttons-collection').each(function() {
+                $(this).removeClass('dt-button buttons-collection').addClass('form-select');
+            });
+        }
+    });
+});
+
+
 // Fungsi untuk menampilkan konfirmasi sebelum menghapus
 document.addEventListener('DOMContentLoaded', function () {
     const deleteButtons = document.querySelectorAll('.btn-delete');

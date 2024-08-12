@@ -1770,9 +1770,9 @@ progress{
 .table-sm>:not(caption)>*>*{
     padding:.3rem .3rem
 }
-.table-bordered>:not(caption)>*{
+/* .table-bordered>:not(caption)>*{
     border-width:1px 0
-}
+} */
 .table-bordered>:not(caption)>*>*{
     border-width:0 1px
 }

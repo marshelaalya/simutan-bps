@@ -2691,9 +2691,16 @@ div.dt-button-info{
     color:#fff;
     -webkit-box-shadow:none;
     box-shadow:none;
-    border-radius:3px;
+    border-radius:0.2rem;
     text-align:center;
-    z-index:21
+    /* z-index:21 */
+    margin: auto; /* Menengah horizontal */
+    display: block; /* Pastikan elemen adalah blok */
+    width: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-20%, -50%); /* Menengah horizontal dan vertikal */
 }
 div.dt-button-info h2{
     border-bottom:none;

@@ -25,36 +25,7 @@
     margin-left: 10px; /* Memberi jarak antara dropdown dan kotak pencarian */
 }
 
-/* Gaya untuk dropdown tombol export */
-.dt-button-collection {
-    display: inline-block;
-    position: relative;
-}
-
-/* .dt-button-collection .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    display: block;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-} */
-
-/* .dt-button-collection .dropdown-item {
-    display: block;
-    padding: 8px 16px;
-    color: #333;
-    text-decoration: none;
-} */
-
-/* .dt-button-collection .dropdown-item:hover {
-    background-color: #f8f9fa;
-} */
+/* Styling untuk tombol ekspor */
 .dt-button-collection .dropdown-toggle {
     display: block !important;
     width: 100% !important;
@@ -96,8 +67,6 @@
     outline: none !important;
     background-color: #e9ecef !important;
 }
-
-
 </style>
 
 <div class="page-content">
@@ -164,151 +133,153 @@
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
 <script type="text/javascript">
-  $(function () {
-    var table = $('.yajra-datatable').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        scrollX: true,
-        ajax: {
-            url: "{{ route('user.all') }}",
-            data: function (d) {
-                d.role = $('#roleFilter').val(); // Mengirimkan data filter ke server
-            }
-        },
-        columns: [
-            {data: 'name', name: 'name'},
-            {data: 'role', name: 'role'},
-            {data: 'email', name: 'email'},
-            {data: 'username', name: 'username'},
-            {
-                data: 'action', 
-                name: 'action', 
-                orderable: false, 
-                searchable: false,
-                render: function(data, type, row) {
-                    var editUrl = "{{ route('user.edit', ':id') }}".replace(':id', row.id);
-                    var deleteUrl = "{{ route('user.delete', ':id') }}".replace(':id', row.id);
-
-                    return `
-                    <div class="table-actions" style="text-align: center; vertical-align: middle;">
-                        <a href="${editUrl}" class="btn bg-warning btn-sm">
-                            <i class="fas fa-edit" style="color: #ca8a04"></i>
-                        </a>
-                        <a href="${deleteUrl}" class="btn bg-danger btn-sm">
-                            <i class="fas fa-trash-alt text-danger"></i>
-                        </a>
-                    </div>
-                    `;
+    $(document).ready(function() {
+        var table = $('.yajra-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            scrollX: true,
+            ajax: {
+                url: "{{ route('user.all') }}",
+                data: function (d) {
+                    d.role = $('#roleFilter').val(); // Mengirimkan data filter ke server
                 }
             },
-        ],
-        dom: 'Brftip',
-        buttons: [
-            {
-                extend: 'collection',
-                text: 'Export',
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: 'Export Excel',
-                        title: 'Data Export',
-                        exportOptions: {
-                            columns: ':visible' // Export all visible columns
-                        },
-                    },
-                    {
-                        extend: 'copy',
-                        text: 'Copy',
-                        exportOptions: {
-                            columns: ':visible'
-                        },
-                    },
-                    {
-                        extend: 'csv',
-                        text: 'CSV',
-                        exportOptions: {
-                            columns: ':visible'
-                        },
-                    },
-                    {
-                        extend: 'pdf',
-                        text: 'PDF',
-                        exportOptions: {
-                            columns: ':visible'
-                        },
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        exportOptions: {
-                            columns: ':visible'
-                        },
+            columns: [
+                {data: 'name', name: 'name'},
+                {data: 'role', name: 'role'},
+                {data: 'email', name: 'email'},
+                {data: 'username', name: 'username'},
+                {
+                    data: 'action', 
+                    name: 'action', 
+                    orderable: false, 
+                    searchable: false,
+                    className: 'no-export', // Tambahkan kelas khusus pada kolom aksi
+                    render: function(data, type, row) {
+                        var editUrl = "{{ route('user.edit', ':id') }}".replace(':id', row.id);
+                        var deleteUrl = "{{ route('user.delete', ':id') }}".replace(':id', row.id);
+    
+                        return `
+                        <div class="table-actions" style="text-align: center; vertical-align: middle;">
+                            <a href="${editUrl}" class="btn bg-warning btn-sm">
+                                <i class="fas fa-edit" style="color: #ca8a04"></i>
+                            </a>
+                            <a href="${deleteUrl}" class="btn bg-danger btn-sm">
+                                <i class="fas fa-trash-alt text-danger"></i>
+                            </a>
+                        </div>
+                        `;
                     }
-                ]
-            }
-        ],
-        initComplete: function() {
-            var column = this.api().column(1); // Role column
-
-            var select = $('<select id="roleFilter" class="form-select"><option value="">Semua Role</option></select>')
-                .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')) // Tambahkan dropdown ke sebelah search box
-                .on('change', function() {
-                    table.draw();
+                },
+            ],
+            dom: 'Brftip',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'form-select',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Export Excel',
+                            title: 'Data Export',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'copy',
+                            text: 'Copy',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'csv',
+                            text: 'CSV',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'PDF',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        }
+                    ]
+                }
+            ],
+            initComplete: function() {
+                var select = $('<select id="roleFilter" class="form-select"><option value="">Semua Role</option></select>')
+                    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')) // Tambahkan dropdown ke sebelah search box
+                    .on('change', function() {
+                        table.draw();
+                    });
+    
+                @foreach($roles as $role)
+                    select.append('<option value="{{ $role->role }}">{{ ucfirst($role->role) }}</option>');
+                @endforeach
+    
+                $('.form-select').each(function() {
+                    $(this).css({
+                        'display': 'block',
+                        // 'width': '100%',
+                        'padding': '.47rem 1.75rem .47rem .75rem',
+                        '-moz-padding-start': 'calc(.75rem - 3px)',
+                        'font-size': '.9rem',
+                        'font-weight': '500',
+                        'line-height': '1.5',
+                        'color': '#505d69',
+                        'background-color': '#fff',
+                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                        'background-repeat': 'no-repeat',
+                        'background-position': 'right .75rem center',
+                        'background-size': '16px 12px',
+                        'border': '1px solid #ced4da',
+                        'border-radius': '.25rem',
+                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        'appearance': 'none'
+                    });
                 });
 
-            @foreach($roles as $role)
-                select.append('<option value="{{ $role->role }}">{{ ucfirst($role->role) }}</option>');
-            @endforeach
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                    });
+                });
 
-            $('.dt-button-collection .dropdown-toggle').css({
-                'display': 'block',
-                'width': '100%',
-                'padding': '.47rem 1.75rem .47rem .75rem',
-                '-moz-padding-start': 'calc(.75rem - 3px)',
-                'font-size': '.9rem',
-                'font-weight': '500',
-                'line-height': '1.5',
-                'color': '#505d69',
-                'background-color': '#fff',
-                'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
-                'background-repeat': 'no-repeat',
-                'background-position': 'right .75rem center',
-                'background-size': '16px 12px',
-                'border': '1px solid #ced4da',
-                'border-radius': '.25rem',
-                'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
-                'appearance': 'none'
-            });
-            $('.dt-button-collection .dropdown-menu').css({
-                'border': '1px solid #ced4da',
-                'border-radius': '.25rem',
-                'box-shadow': '0 0 0 .15rem rgba(15,156,243,.25)',
-                'background-color': '#fff'
-            });
-            $('.dt-button-collection .dropdown-item').css({
-                'color': '#505d69',
-                'padding': '.5rem 1rem',
-                'text-decoration': 'none'
-            });
-            $('.dt-button-collection .dropdown-item:hover').css({
-                'background-color': '#f8f9fa'
-            });
-            $('.dt-button-collection .dropdown-item:focus').css({
-                'outline': 'none',
-                'background-color': '#e9ecef'
-            });
-        }
+                // Memulai observer pada elemen yang mengandung tombol
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+
+        $(document).ajaxComplete(function() {
+            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
+            setTimeout(function() {
+                $('.dt-button').removeClass('dt-button buttons-collection');
+                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            }, 100); // Menunggu beberapa waktu sebelum menghapus
+        });
+        
+        // Event listener for filtering
+        $('#roleFilter').change(function () {
+            table.draw();
+        });
     });
-
-    // Event listener for filtering
-    $('#roleFilter').change(function () {
-        table.draw();
-    });
-});
-
 </script>
-
-  
-
+    
 @endsection

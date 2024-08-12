@@ -14,53 +14,51 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $query = Permintaan::whereIn('status', ['pending', 'approved by admin'])
-        ->orderBy('created_at', 'desc')
-        ->limit(5);
+            ->orderBy('created_at', 'desc')
+            ->limit(5);
         $barangs = Barang::all();
         $kelompoks = Kelompok::with('barangs')->get();
-        
+
+        // Determine the kelompok with the most barangs
+        $kelompokWithMostBarangs = $kelompoks->sortByDesc(function ($kelompok) {
+            return $kelompok->barangs->count();
+        })->first();
 
         // Mengambil data permintaan berdasarkan peran pengguna
         if ($user->role === 'admin') {
-            // Untuk admin, ambil semua permintaan yang pending
             $permintaans = $query->get();
-            
-            return view('admin.index', compact('permintaans','barangs')); // Tampilan untuk dashboard admin
+            return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
         } elseif ($user->role === 'pegawai' || $user->role === 'supervisor') {
-            // Untuk pegawai dan supervisor, ambil permintaan milik pengguna tersebut
             $permintaans = $query->where('user_id', $user->id)->get();
             $view = ($user->role === 'pegawai') ? 'pegawai.index' : 'supervisor.index';
-            $kelompoks = Kelompok::with('barangs')->get();
-            return view($view, compact('permintaans','barangs', 'kelompoks')); // Tampilan untuk dashboard pegawai dan supervisor
+            return view($view, compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
         }
 
         // Redirect jika role tidak dikenali
         return redirect()->route('home');
     }
 
-
-
-    public function dashboard(){
-        
+    public function dashboard()
+    {
         $permintaans = Permintaan::where('status', 'pending')
-                                ->with('pilihan') // Pastikan relasi dimuat
-                                ->orderBy('created_at', 'desc')
-                                ->limit(5)
-                                ->get();
-                                
+            ->with('pilihan') // Pastikan relasi dimuat
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        $barangs = Barang::all(); // Added missing variable
+        
         return view('admin.index', compact('permintaans', 'barangs'));
     }
 
-    public function PermintaanAll(){
+    public function PermintaanAll()
+    {
         $permintaans = Permintaan::latest()->get();
         return view('backend.permintaan.permintaan_all', compact('permintaans'));
     }
 
-    public function BarangAll(){
+    public function BarangAll()
+    {
         $barangs = Barang::latest()->get();
         return view('backend.barang.barang_all', compact('barangs'));
-    } // End Method
-
-    
-    
+    }
 }

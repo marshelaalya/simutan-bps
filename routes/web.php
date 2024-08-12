@@ -75,6 +75,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/permintaan/edit/{id}', 'PermintaanEdit')->name('permintaan.edit');
         Route::put('/permintaan/update/{id}', 'PermintaanUpdate')->name('permintaan.update');
         Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
+        Route::get('permintaans/data', [PermintaanController::class, 'getData'])->name('permintaans.data');
     });
 
     Route::controller(KelompokController::class)->group(function () {

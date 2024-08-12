@@ -11,7 +11,7 @@
 .swiper-pagination-bullets.swiper-pagination-horizontal,
 .swiper-pagination-custom,
 .swiper-pagination-fraction {
-  bottom: auto; /* Ganti dengan nilai yang diinginkan */
+  bottom: -15px; /* Ganti dengan nilai yang diinginkan */
 }
 
     .swiper-button-next, .swiper-button-prev {
@@ -109,7 +109,27 @@
 }
 
 .swiper-container-wrapper {
-        position: relative; /* Ensure the container is relatively positioned */
+        position: relative;
+        display: none; /* Hide all Swiper containers by default */
+    }
+    .swiper-container-wrapper.active {
+        position: relative;
+        display: block; /* Show the active Swiper container */
+    }
+
+    .kelompok-button {
+        cursor: pointer;
+        padding: 10px 20px;
+        margin: 5px;
+        background-color: rgba(15, 156, 243, 0.5);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .kelompok-button.active {
+        background-color: #043277;
     }
 </style>
 
@@ -211,40 +231,47 @@
                 </div><!-- end card -->
             </div><!-- end col -->
         </div><!-- end row -->
-
+        <!-- Buttons for Kelompok -->
+        <div class="mb-4">
+            @foreach($kelompoks as $index => $kelompok)
+            <button class="kelompok-button {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }} fw-bold" data-target="#swiper-container-{{ $index }}">
+                {{ $kelompok->nama }}
+            </button>
+            @endforeach
+        </div>
         <!-- Sliders for Each Kelompok Barang -->
-        @foreach($kelompoks as $kelompok)
-            <h4 class="card-title mb-3 text-info">{{ $kelompok->nama }}</h4>
-            <div class="swiper-container-wrapper mb-4">
-                <div class="swiper-container">
-                    <div class="swiper-wrapper">
-                        @foreach($kelompok->barangs as $item)
-                            <div class="swiper-slide">
-                                <div class="card-slider">
-                                    <img src="https://via.placeholder.com/150x120" class="card-slider-img-top" alt="Gambar Barang">
-                                    <div class="card-slider-body">
-                                        <h5 class="card-slider-title">{{ $item->nama }}</h5>
-                                        <p class="card-slider-text">Stok: {{ $item->qty_item }}</p>
-                                    </div>
+        @foreach($kelompoks as $index => $kelompok)
+        <div class="swiper-container-wrapper mb-4 {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="swiper-container-{{ $index }}">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    @foreach($kelompok->barangs as $item)
+                        <div class="swiper-slide">
+                            <div class="card-slider">
+                                <img src="https://via.placeholder.com/150x120" class="card-slider-img-top" alt="Gambar Barang">
+                                <div class="card-slider-body">
+                                    <h5 class="card-slider-title">{{ $item->nama }}</h5>
+                                    <p class="card-slider-text">Stok: {{ $item->qty_item }}</p>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
-
-                    
+                        </div>
+                    @endforeach
                 </div>
-                <!-- Add Navigation -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
 
-                <!-- Add Pagination -->
-                <div class="swiper-pagination"></div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
+                
             </div>
-        @endforeach
+            
+            <!-- Add Navigation -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+
+        </div>
+    @endforeach
 
         <div class="row">
             <div class="col-xl-12">
-                <h4 class="card-title mb-3 text-info">Permintaan Terbaru</h4>
+                <h4 class="card-title mb-3 text-info">Stok Barang</h4>
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
@@ -303,47 +330,71 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Pastikan jQuery sudah di-load -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
 <script>
     $(document).ready(function() {
-        $('#datatable').DataTable({
-            initComplete: function() {
-                $('#datatable thead').css('background-color', '#043277').css('color', 'white');
-            }
-        });
-    });
-</script>
-
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script>
-    var swiper = new Swiper('.swiper-container', {
-        loop: true,
-        slidesPerView: 6, // Display 6 cards per slide
-        spaceBetween: 20, // Adjust space between cards
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        autoplay: {
-            delay: 3000, // Slide change every 3 seconds
-            disableOnInteraction: false,
-        },
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-            },
-            768: {
-                slidesPerView: 4,
-            },
-            1024: {
+        // Initialize Swipers
+        var swipers = [];
+        $('.swiper-container').each(function() {
+            swipers.push(new Swiper(this, {
+                loop: true,
                 slidesPerView: 6,
-            },
+                spaceBetween: 20,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                    },
+                    768: {
+                        slidesPerView: 4,
+                    },
+                    1024: {
+                        slidesPerView: 6,
+                    },
+                }
+            }));
+        });
+
+        // Handle button clicks
+        $('.kelompok-button').click(function() {
+            var target = $(this).data('target');
+
+            // Fade out all Swiper containers
+            $('.swiper-container-wrapper').fadeOut(300, function() {
+                // After fading out, hide all containers
+                $(this).removeClass('active').css('display', 'none');
+            });
+
+            // Show the targeted Swiper container
+            $(target).fadeIn(300, function() {
+                $(this).addClass('active').css('display', 'block');
+            });
+
+            // Mark the clicked button as active
+            $('.kelompok-button').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // Show the Swiper container with the most barangs by default
+        if ($('.kelompok-button').length) {
+            $('.kelompok-button.active').click();
         }
     });
 </script>
+
 
 
 @endsection
