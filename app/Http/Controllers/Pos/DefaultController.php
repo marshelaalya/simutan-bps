@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Satuan;
 
+
 class DefaultController extends Controller
 {
     public function getCategory(Request $request)
