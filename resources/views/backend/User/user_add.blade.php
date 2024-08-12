@@ -64,8 +64,10 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-end">
+                                <input type="submit" class="btn btn-info waves-effect waves-light" value="Tambahkan Pengguna">
+                            </div>
                             
-                            <input type="submit" class="btn btn-info waves-effect waves-light" value="Tambahkan Pengguna">
                         </form>
                     </div>
                 </div>

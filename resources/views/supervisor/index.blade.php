@@ -186,7 +186,7 @@
                                     
                                     <td class="text-center">
                                         <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                            <i class="ri-eye-fill font-size-16 align-middle" style="color: #5874ff"></i>
+                                            <i class="ri-eye-fill font-size-16 align-middle text-primary"></i>
                                         </a>
                                     </td>
                                 </tr>

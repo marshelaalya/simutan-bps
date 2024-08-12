@@ -41,7 +41,7 @@
 
                             <div class="row mb-3">
                                 <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>
-                                <div class="form-group col-sm-10">
+                                <div class="form-group col-sm-4">
                                     <input name="nama" class="form-control" type="text" id="nama">                    
                                 </div>
                             </div>
@@ -69,15 +69,21 @@
 
                             <div class="row mb-3">
                                 <label for="satuan_id" class="col-sm-2 col-form-label">Satuan Barang</label>
-                                <div class="form-group col-sm-10">
+                                <div class="form-group col-sm-2">
                                     <select name="satuan_id" class="form-select" id="satuan_id">
-                                        <option selected="" disabled>Pilih satuan barang</option>
+                                        <option selected disabled>Pilih satuan barang</option>
                                         @foreach($satuans as $satuan)
                                             <option value="{{ $satuan->satuan_id }}">{{ $satuan->nama }}</option>
                                         @endforeach
+                                        <option value="lainnya">Lainnya</option>
                                     </select>
                                 </div>
+                                <div class="form-group col-sm-2" id="satuanBaruContainer" style="display: none;">
+                                    <label for="satuanBaru" class="col-form-label ms-3" style="width:100%">Masukkan Satuan Baru</label>
+                                    <input name="satuanBaru" class="form-control" type="text" id="satuanBaru">
+                                </div>
                             </div>
+                                                        
                             
                             
                             
@@ -92,6 +98,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const satuanSelect = document.getElementById('satuan_id');
+    const satuanBaruContainer = document.getElementById('satuanBaruContainer');
+    const satuanBaruInput = document.getElementById('satuanBaru');
+
+    satuanSelect.addEventListener('change', function() {
+        if (this.value === 'lainnya') {
+            satuanBaruContainer.style.display = 'block'; // Show the input and label
+            satuanBaruInput.disabled = false; // Enable input field
+        } else {
+            satuanBaruContainer.style.display = 'none'; // Hide the input and label
+            satuanBaruInput.disabled = true;  // Disable input field
+            satuanBaruInput.value = '';       // Clear input field
+        }
+    });
+});
+
+</script>
 
 <script type="text/javascript">
     $(document).ready(function (){
@@ -125,5 +151,22 @@
             },
         });
     });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const satuanSelect = document.getElementById('satuan_id');
+        const satuanBaruInput = document.getElementById('satuanBaru');
+
+        satuanSelect.addEventListener('change', function() {
+            if (this.value === 'lainnya') {
+                satuanBaruInput.disabled = false; // Enable input field
+            } else {
+                satuanBaruInput.disabled = true;  // Disable input field
+                satuanBaruInput.value = '';       // Clear input field
+            }
+        });
+    });
+
 </script>
 @endsection
