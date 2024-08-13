@@ -16,6 +16,7 @@ use App\Models\Kelompok;
 use Illuminate\Support\Facades\Log; // Import Log Facade
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Yajra\DataTables\DataTables;
 
 class PermintaanController extends Controller
 {
@@ -300,4 +301,114 @@ class PermintaanController extends Controller
         // Output PDF
         return $dompdf->stream('permintaan_'.$permintaan->no_permintaan.'.pdf', array('Attachment' => 0));
     }
+
+    // PermintaanController.php
+
+public function getPermintaanData(Request $request)
+{
+    $query = Permintaan::with('pilihan')
+        ->select(['permintaans.id', 'permintaans.status', 'permintaans.user_id']);
+
+    if ($request->admin_approval) {
+        if ($request->admin_approval === 'pending') {
+            $query->where('status', 'pending');
+        } elseif ($request->admin_approval === 'approved by admin') {
+            $query->where('status', 'approved by admin');
+        } elseif ($request->admin_approval === 'rejected by admin') {
+            $query->where('status', 'rejected by admin');
+        }
+    }
+
+    if ($request->supervisor_approval) {
+        if ($request->supervisor_approval === 'pending') {
+            $query->where(function($q) {
+                $q->where('status', 'approved by admin')
+                  ->orWhere('status', 'pending');
+            });
+        } elseif ($request->supervisor_approval === 'approved by supervisor') {
+            $query->where('status', 'approved by supervisor');
+        } elseif ($request->supervisor_approval === 'rejected by supervisor') {
+            $query->where('status', 'rejected by supervisor');
+        }
+    }
+
+    return DataTables::of($query)
+        ->addColumn('date', function ($row) {
+            return $row->pilihan->first()->date ?? 'Tidak ada data';
+        })
+        ->addColumn('created_by', function ($row) {
+            return $row->pilihan->first()->created_by ?? 'Tidak ada data';
+        })
+        ->addColumn('description', function ($row) {
+            return $row->pilihan->first()->description ?? 'Tidak ada data';
+        })
+        ->addColumn('admin_approval', function ($row) {
+            if ($row->status == 'pending') {
+                return '<button class="btn btn-secondary bg-warning btn-sm font-size-13" 
+                            style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
+                            Pending
+                        </button>';
+            } elseif ($row->status == 'rejected by admin') {
+                return '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
+                            style="border: 0; pointer-events: none; cursor: not-allowed;">
+                            Rejected
+                        </button>';
+            } elseif ($row->status == 'approved by admin' || $row->status == 'rejected by supervisor') {
+                return '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                            style="border: 0; pointer-events: none; cursor: not-allowed;">
+                            Approved
+                        </button>';
+            } elseif ($row->status == 'approved by supervisor' && $row->ctt_adm == NULL) {
+                return '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                            style="border: 0; pointer-events: none; cursor: not-allowed;">
+                            Approved
+                        </button>';
+            }
+        })
+        ->addColumn('supervisor_approval', function ($row) {
+            if ($row->status == 'approved by admin' || $row->status == 'pending') {
+                return '<button class="btn btn-secondary bg-warning btn-sm font-size-13" 
+                            style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
+                            Pending
+                        </button>';
+            } elseif ($row->status == 'rejected by supervisor' || $row->status == 'rejected by admin') {
+                return '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
+                            style="border: 0; pointer-events: none; cursor: not-allowed;">
+                            Rejected
+                        </button>';
+            } elseif ($row->status == 'approved by supervisor') {
+                return '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                            style="border: 0; pointer-events: none; cursor: not-allowed;">
+                            Approved
+                        </button>';
+            }
+        })
+        ->addColumn('action', function ($row) {
+    $viewButton = '<a href="'.route('permintaan.view', $row->id).'" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                    <i class="ri-eye-fill font-size-16 align-middle"></i>
+                </a>';
+
+    // Check if status is rejected
+    if ($row->status == 'rejected by admin' || $row->status == 'rejected by supervisor') {
+        return '<div class="table-actions" style="display: inline-flex; justify-content: center; align-items: center; text-align: center; vertical-align: middle;">' . $viewButton . '</div>';
+    }
+
+    $approveButton = $row->status == 'approved by supervisor'
+        ? '<a href="'.route('permintaan.print', $row->id).'" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
+            </a>'
+        : '<a href="'.route('permintaan.approve', $row->id).'" class="btn bg-success btn-sm" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
+            </a>';
+
+    return '<div class="table-actions" style="display: inline-flex; justify-content: center; align-items: center; text-align: center; vertical-align: middle;">' . $viewButton . $approveButton . '</div>';
+})
+
+        
+        
+        ->rawColumns(['admin_approval', 'supervisor_approval', 'action'])
+        ->make(true);
+}
+
+
 }

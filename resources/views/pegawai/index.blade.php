@@ -87,8 +87,9 @@
 
 .card-slider-img-top {
     width: 100%;
-    height: 120px;
+    /* height: 120px; */
     object-fit: cover;
+    padding: 15px 15px 0 15px;
 }
 
 .card-slider-title {
@@ -131,6 +132,15 @@
     .kelompok-button.active {
         background-color: #043277;
     }
+
+    .col-md-6 {
+        margin-bottom: 1.5rem; /* Space between columns */
+    }
+
+    canvas {
+        width: 100% !important; /* Ensure canvas fits its container */
+        height: auto !important; /* Adjust height based on width */
+    }
 </style>
 
 
@@ -157,80 +167,7 @@
 
         <h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2>
 
-        <div class="row gx-4">
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="font-size-14 mb-1">Total Permintaan<br>Diajukan</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanBulanIni ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-primary text-primary rounded-3">
-                                    <i class="mdi mdi-clipboard-text-multiple-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                            
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="font-size-14 mb-1">Total Permintaan<br>Selesai</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanSelesai ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-success text-success rounded-3">
-                                    <i class="mdi mdi-clipboard-check-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                              
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="font-size-14 mb-1">Total Permintaan<br>Pending</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanPending ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-warning text-warning rounded-3">
-                                    <i class="mdi mdi-clipboard-clock-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                              
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="font-size-14 mb-1">Total Permintaan<br>Ditolak</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanRejected ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-danger text-danger rounded-3">
-                                    <i class="mdi mdi-clipboard-remove-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                              
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-        </div><!-- end row -->
+        
         <!-- Buttons for Kelompok -->
         <div class="mb-4">
             @foreach($kelompoks as $index => $kelompok)
@@ -247,10 +184,11 @@
                     @foreach($kelompok->barangs as $item)
                         <div class="swiper-slide">
                             <div class="card-slider">
-                                <img src="https://via.placeholder.com/150x120" class="card-slider-img-top" alt="Gambar Barang">
+                                <img src="https://cdn-icons-png.flaticon.com/128/2659/2659360.png" class="card-slider-img-top" alt="Gambar Barang"> 
                                 <div class="card-slider-body">
                                     <h5 class="card-slider-title">{{ $item->nama }}</h5>
-                                    <p class="card-slider-text">Stok: {{ $item->qty_item }}</p>
+                                    <p class="card-slider-text">Stok: {{ $item->qty_item }} {{ $item->satuan->nama ?? 'N/A' }}</p>
+                                    {{-- <p class="card-slider-text">{{ $item->satuan->nama ?? 'N/A' }}</p> --}}
                                 </div>
                             </div>
                         </div>
@@ -268,6 +206,117 @@
 
         </div>
     @endforeach
+
+    {{-- <div class="row gx-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+    <!-- Chart Container -->
+    <div class="row gx-4">
+        <!-- Chart for Top Score Barang Diminta -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+            <h4 class="card-title mb-3 text-info">Top Score Barang Diminta</h4>
+            <canvas id="myChartBarang" width="400" height="200" style="max-width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Chart for Top Score Request User -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+            <h4 class="card-title mb-3 text-info">Top Score Request User</h4>
+            <canvas id="myChartUser" width="400" height="200" style="max-width: 100%;"></canvas>
+        </div>
+    </div>
+        </div>
+    </div>
+
+    <div class="row gx-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Total Permintaan<br>Diajukan</h5>
+                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                <h4 class="mb-2 mt-2">{{ $totalPermintaanBulanIni ?? 'Tidak ada data' }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-primary text-primary rounded-3">
+                                    <i class="mdi mdi-clipboard-text-multiple-outline font-size-24"></i>  
+                                </span>
+                            </div>
+                        </div>                                            
+                    </div><!-- end cardbody -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Total Permintaan<br>Selesai</h5>
+                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                <h4 class="mb-2 mt-2">{{ $totalPermintaanSelesai ?? 'Tidak ada data' }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-success text-success rounded-3">
+                                    <i class="mdi mdi-clipboard-check-outline font-size-24"></i>  
+                                </span>
+                            </div>
+                        </div>                                              
+                    </div><!-- end cardbody -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Total Permintaan<br>Pending</h5>
+                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                <h4 class="mb-2 mt-2">{{ $totalPermintaanPending ?? 'Tidak ada data' }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-warning text-warning rounded-3">
+                                    <i class="mdi mdi-clipboard-clock-outline font-size-24"></i>  
+                                </span>
+                            </div>
+                        </div>                                              
+                    </div><!-- end cardbody -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">Total Permintaan<br>Ditolak</h5>
+                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                <h4 class="mb-2 mt-2">{{ $totalPermintaanRejected ?? 'Tidak ada data' }}</h4>
+                            </div>
+                            <div class="avatar-sm">
+                                <span class="avatar-title bg-danger text-danger rounded-3">
+                                    <i class="mdi mdi-clipboard-remove-outline font-size-24"></i>  
+                                </span>
+                            </div>
+                        </div>                                              
+                    </div><!-- end cardbody -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+        </div><!-- end row -->
+
 
         <div class="row">
             <div class="col-xl-12">
@@ -332,6 +381,86 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Pastikan jQuery sudah di-load -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Initialize the first chart
+        var ctxBarang = document.getElementById('myChartBarang').getContext('2d');
+        var myChartBarang = new Chart(ctxBarang, {
+            type: 'bar', // or 'line', 'pie', etc.
+            data: {
+                labels: ['Pensil', 'Pulpen', 'Sapu', 'Kertas', 'Penghapus', 'Lampu'], // X-axis labels
+                datasets: [{
+                    label: 'Top Score Barang Diminta',
+                    data: [12, 19, 3, 5, 2, 3], // Data points
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Initialize the second chart
+        var ctxUser = document.getElementById('myChartUser').getContext('2d');
+        var myChartUser = new Chart(ctxUser, {
+            type: 'bar', // or 'bar', 'pie', etc.
+            data: {
+                labels: ['Rudi', 'Juni', 'Ulul', 'Budi', 'Lia', 'Mona'], // X-axis labels
+                datasets: [{
+                    label: 'Top Score Request User',
+                    data: [5, 15, 10, 25, 7, 10], // Data points
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
 
 <script>
     $(document).ready(function() {

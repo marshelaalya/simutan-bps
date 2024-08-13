@@ -75,7 +75,7 @@
     <script src="{{ asset('backend/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/node-waves/waves.min.js') }}"></script>
 
-    <script src="{{ asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    {{-- <script src="{{ asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     
     <!-- Responsive examples -->
@@ -87,7 +87,7 @@
          <script src="{{ asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     
          <!-- Datatable init js -->
-         <script src="{{ asset('backend/assets/js/pages/datatables.init.js') }}"></script>
+         <script src="{{ asset('backend/assets/js/pages/datatables.init.js') }}"></script> --}}
 
     <!-- ApexCharts -->
     <script src="{{ asset('backend/assets/libs/apexcharts/apexcharts.min.js') }}"></script>

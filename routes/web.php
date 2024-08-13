@@ -88,7 +88,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
         Route::get('/permintaan/print/{id}', 'PermintaanPrint')->name('permintaan.print');
         
-        Route::get('permintaans/data', [PermintaanController::class, 'getData'])->name('permintaans.data');
+        Route::get('permintaan/data', [PermintaanController::class, 'getPermintaanData'])->name('permintaan.data');
+        Route::resource('permintaan', PermintaanController::class);
     });
 
     Route::controller(KelompokController::class)->group(function () {
@@ -98,6 +99,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelompok/edit/{id}', 'KelompokEdit')->name('kelompok.edit');
         Route::post('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update');
         Route::get('/kelompok/delete/{id}', 'KelompokDelete')->name('kelompok.delete');
+        Route::get('kelompok/data',  'data')->name('kelompok.data');
+
     });
 
     Route::controller(BarangController::class)->group(function () {
@@ -107,6 +110,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
         Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
         Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
+        Route::get('barang/data', 'data')->name('barang.data');
+
         // web.php
 
     });

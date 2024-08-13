@@ -1,6 +1,15 @@
 @extends('admin.admin_master')
 @section('admin')
 
+<style>
+    .table-actions {
+        display: inline-flex;
+        gap: 5px; /* Jarak antar tombol */
+        justify-content: center;
+        align-items: center;
+    }
+    </style>
+
 <div class="page-content">
     <div class="container-fluid">
         <!-- start page title -->
@@ -34,7 +43,7 @@
                             </a>
                         </div>
                                                
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap" 
+                        <table id="datatable" class="table table-bordered yajra-datatable" 
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             
                             <thead>
@@ -84,4 +93,38 @@
     </div>
 </div>
 
+
+
+<!-- Include DataTables JS and Buttons JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+    $('#datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('barang.data') }}',
+        columns: [
+            { data: 'kode', name: 'kode' },
+            { data: 'kelompok.nama', name: 'kelompok.nama' },
+            { data: 'nama', name: 'nama' },
+            { data: 'qty_item', name: 'qty_item', class: 'text-center' },
+            { data: 'satuan.nama', name: 'satuan.nama', class: 'text-center' },
+            { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+});
+
+</script>
 @endsection

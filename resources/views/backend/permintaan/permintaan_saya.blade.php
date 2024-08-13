@@ -69,6 +69,11 @@
                                                         style="border: 0; pointer-events: none; cursor: not-allowed;">
                                                     Approved
                                                 </button>
+                                                @elseif($item->status == 'approved by supervisor')
+                                                <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
+                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
+                                                    Approved
+                                                </button>
                                             @elseif($item->ctt_adm == NULL && $item->status == 'rejected by supervisor')
                                                 <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
                                                         style="border: 0; pointer-events: none; cursor: not-allowed;">
@@ -110,7 +115,7 @@
                                                 <a href="{{ route('permintaan.delete', $item->id) }}" class="btn bg-danger btn-sm me-2 btn-delete" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                     <i class="fas fa-trash-alt text-danger"></i>
                                                 </a>                                                                                              
-                                            @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'finished' || $item->status == 'rejected by admin')
+                                            @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'approved by supervisor' || $item->status == 'rejected by admin')
                                                 <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                     <i class="ri-eye-fill font-size-16 align-middle text-primary"></i>
                                                 </a>

@@ -1,6 +1,16 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
 @section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
+<style>
+    .table-actions {
+        display: inline-flex;
+        gap: 5px; /* Jarak antar tombol */
+        justify-content: center;
+        align-items: center;
+    }
+    </style>
+
+
 <div class="page-content">
     <div class="container-fluid">
         <!-- start page title -->
@@ -34,7 +44,7 @@
                             </a>
                         </div>
                                                
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap" 
+                        <table id="datatable" class="table table-bordered yajra-datatable" 
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             
                         <thead>
@@ -50,16 +60,19 @@
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->nama }}</td>
                                     <td class="table-actions" style="text-align: center; vertical-align: middle;">
-                                        <!-- Tombol dengan link route ke halaman view -->
-                                        <a href="{{ route('kelompok.edit', $item->id) }}" class="btn bg-warning btn-sm">
-                                            <i class="fas fa-edit" style="color: #ca8a04"></i>
-                                        </a>
-                                        
-                                        <!-- Tombol dengan link route ke halaman print -->
-                                        <a href="{{ route('kelompok.delete', $item->id) }}" class="btn bg-danger btn-sm">
-                                            <i class="fas fa-trash-alt text-danger"></i>
-                                        </a>
+                                        <div class="table-actions">
+                                            <!-- Tombol dengan link route ke halaman edit -->
+                                            <a href="{{ route('kelompok.edit', $item->id) }}" class="btn bg-warning btn-sm">
+                                                <i class="fas fa-edit" style="color: #ca8a04"></i>
+                                            </a>
+                                            
+                                            <!-- Tombol dengan link route ke halaman delete -->
+                                            <a href="{{ route('kelompok.delete', $item->id) }}" class="btn bg-danger btn-sm">
+                                                <i class="fas fa-trash-alt text-danger"></i>
+                                            </a>
+                                        </div>
                                     </td>
+                                    
                                 </tr>
                             @endforeach
                         </tbody>
@@ -71,5 +84,33 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    $('#datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('kelompok.data') }}",
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'nama', name: 'nama' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'excel', 'csv', 'pdf', 'print'
+        ]
+    });
+});
+
+</script>
 
 @endsection
