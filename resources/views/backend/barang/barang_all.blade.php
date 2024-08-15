@@ -121,8 +121,27 @@
         ],
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+                {
+                    extend: 'copy',
+                    title: 'Rekap Stok Barang' // Set custom title for copy export
+                },
+                {
+                    extend: 'csv',
+                    title: 'Rekap Stok Barang' // Set custom title for CSV export
+                },
+                {
+                    extend: 'excel',
+                    title: 'Rekap Stok Barang' // Set custom title for Excel export
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Rekap Stok Barang' // Set custom title for PDF export
+                },
+                {
+                    extend: 'print',
+                    title: 'Rekap Stok Barang' // Set custom title for print
+                }
+            ]
     });
 });
 

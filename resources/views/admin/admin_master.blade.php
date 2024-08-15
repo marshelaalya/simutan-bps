@@ -10,6 +10,8 @@
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.20.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />

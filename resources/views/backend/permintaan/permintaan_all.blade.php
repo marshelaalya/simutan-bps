@@ -16,6 +16,33 @@
     flex-grow: 1; /* Ensure it takes the remaining space */
 }
 
+a[data-tooltip] {
+    position: relative;
+}
+
+a[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%; /* Tooltip berada di atas elemen */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out; /* Percepat transisi menjadi 0.1s */
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 999;
+}
+
+a[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+
 
 </style>
 

@@ -384,25 +384,30 @@ public function getPermintaanData(Request $request)
             }
         })
         ->addColumn('action', function ($row) {
-    $viewButton = '<a href="'.route('permintaan.view', $row->id).'" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                    <i class="ri-eye-fill font-size-16 align-middle"></i>
-                </a>';
-
-    // Check if status is rejected
-    if ($row->status == 'rejected by admin' || $row->status == 'rejected by supervisor') {
-        return '<div class="table-actions" style="display: inline-flex; justify-content: center; align-items: center; text-align: center; vertical-align: middle;">' . $viewButton . '</div>';
-    }
-
-    $approveButton = $row->status == 'approved by supervisor'
-        ? '<a href="'.route('permintaan.print', $row->id).'" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-            </a>'
-        : '<a href="'.route('permintaan.approve', $row->id).'" class="btn bg-success btn-sm" style="width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
-            </a>';
-
-    return '<div class="table-actions" style="display: inline-flex; justify-content: center; align-items: center; text-align: center; vertical-align: middle;">' . $viewButton . $approveButton . '</div>';
-})
+            // Tombol "View" dengan tooltip "Lihat Permintaan"
+            $viewButton = '<a href="'.route('permintaan.view', $row->id).'" class="btn btn-sm me-2 text-primary" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue;" data-tooltip="Lihat Permintaan">
+                            <i class="ti ti-eye font-size-20 align-middle"></i>
+                        </a>';
+        
+            // Tombol "Approve" atau "Print" dengan tooltip yang sesuai
+            if ($row->status == 'approved by supervisor') {
+                $approveOrPrintButton = '<a href="'.route('permintaan.print', $row->id).'" class="btn btn-sm text-danger" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red;" data-tooltip="Cetak Permintaan">
+                                            <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
+                                        </a>';
+            } else {
+                $approveOrPrintButton = '<a href="'.route('permintaan.approve', $row->id).'" class="btn btn-sm" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;' . ($row->status == 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;') . '" data-tooltip="Setujui Permintaan">
+                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                        </a>';
+            }
+        
+            // Menggabungkan tombol "View" dan "Approve/Print"
+            return '<div class="text-center d-flex justify-content-center align-items-center">' . $viewButton . $approveOrPrintButton . '</div>';
+        })
+        
+        
+        
+        
+        
 
         
         
