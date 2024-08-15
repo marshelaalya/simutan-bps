@@ -9,6 +9,7 @@ use App\Models\Satuan;
 use App\Models\Barang;
 use Auth;
 use Illuminate\Support\Carbon;
+use Yajra\DataTables\DataTables;
 
 class BarangController extends Controller
 {
@@ -16,6 +17,27 @@ class BarangController extends Controller
         $barangs = Barang::latest()->get();
         return view('backend.barang.barang_all', compact('barangs'));
     } // End Method
+
+    public function data()
+{
+    // Fetch data with eager loading of related models
+    $barangs = Barang::with('kelompok', 'satuan')->get();
+
+    // Use DataTables to format the data
+    return DataTables::of($barangs)
+        ->addColumn('action', function ($barang) {
+            return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
+                        <a href="'.route('barang.edit', $barang->id).'" class="btn bg-warning btn-sm">
+                            <i class="fas fa-edit" style="color: #ca8a04"></i>
+                        </a>
+                        <a href="'.route('barang.delete', $barang->id).'" class="btn bg-danger btn-sm">
+                            <i class="fas fa-trash-alt text-danger"></i>
+                        </a>
+                    </div>';
+        })
+        ->rawColumns(['action'])
+        ->toJson(); // Ensure the data is returned as JSON
+}
 
     public function barangStore(Request $request)
 {

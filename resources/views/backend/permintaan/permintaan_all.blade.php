@@ -1,143 +1,172 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
 @section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
+<style>
+.filter-buttons {
+    display: flex;
+    align-items: center;
+}
 
- <div class="page-content">
+.filter-buttons .form-select-sm {
+    min-width: 180px;
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.datatable-search {
+    flex-grow: 1; /* Ensure it takes the remaining space */
+}
+
+a[data-tooltip] {
+    position: relative;
+}
+
+a[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%; /* Tooltip berada di atas elemen */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out; /* Percepat transisi menjadi 0.1s */
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 999;
+}
+
+a[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+
+
+</style>
+
+<div class="page-content">
     <div class="container-fluid">
 
         <!-- start page title -->
-<div class="row">
-    <div class="col-12">
-    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-        <h4 class="mb-sm-0 text-info">List Semua Permintaan</h4>
-    
-        <div class="page-title-right">
-            <ol class="breadcrumb m-0">
-                <li class="breadcrumb-item"><a href="javascript: void(0);">Permintaan</a></li>
-                <li class="breadcrumb-item active">Semua Permintaan</li>
-            </ol>
-        </div>
-    
-    </div>
-    </div>
-    </div>
-    <!-- end page title -->
-                        
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <h4 class="card-title mb-0">Permintaan Barang</h4>
-                        <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light ml-3">
-                            <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
-                        </a>
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0 text-info">List Semua Permintaan</h4>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Permintaan</a></li>
+                            <li class="breadcrumb-item active">Semua Permintaan</li>
+                        </ol>
                     </div>
 
-                    <table id="datatable" class="table table-bordered dt-responsive nowrap" 
-                    style="border-collapse: collapse; border-spacing: 0; width: 100%; table-layout: auto;">
-                 <thead>
-                     <tr>
-                         <th width="6%">Tanggal</th>
-                         <th width="12%">Nama Pegawai</th>
-                         <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
-                         <th width="10%" class="text-center">Approval Admin</th>
-                         <th width="12.5%" class="text-center">Approval Supervisor</th>
-                         <th width="5%" class="text-center">Aksi</th>
-                     </tr>
-                        </thead>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
 
-                        <tbody>
-                            @foreach($permintaans as $key => $item)
-                                <tr>
-                                    <td style="white-space: nowrap;">
-                                        {{ $item->pilihan->first()->date ?? 'Tidak ada data' }}
-                                    </td>
-                                    <td style="white-space: nowrap;">
-                                        {{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}
-                                    </td>
-                                    <td style="word-wrap: break-word; word-break: break-all; white-space: normal;">
-                                        {{ $item->pilihan->first()->description ?? 'Tidak ada data' }}
-                                    </td>
-                                    <td class="text-center align-middle justify-content-center" style="white-space: nowrap;">
-                                        @if($item->status == 'pending')
-                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                                                    style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                                                Pending
-                                            </button>
-                                        @elseif($item->status == 'rejected by admin')
-                                            <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Rejected
-                                            </button>
-                                        @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor')
-                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Approved
-                                            </button>
-                                        @elseif($item->status == 'approved by supervisor')
-                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Approved
-                                            </button>
-                                        @endif
-                                    </td>
-                                    <td class="text-center align-middle justify-content-center" style="white-space: nowrap;">
-                                        @if($item->status == 'approved by admin' || $item->status == 'pending')
-                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                                                    style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                                                Pending
-                                            </button>
-                                        @elseif($item->status == 'rejected by supervisor' || $item->status == 'rejected by admin')
-                                            <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Rejected
-                                            </button>
-                                        @elseif($item->status == 'approved by supervisor')
-                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Approved
-                                            </button>
-                                        @endif
-                                    </td>
-                                                                     
-                                    <td class="text-center d-flex justify-content-center align-items-center"> 
-                                        @if($item->status == 'pending')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
-                                            </a>
-                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
-                                            </a>
-                                        @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'rejected by admin')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
-                                            </a>
-                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
-                                            </a>
-                                        @elseif($item->status == 'approved by supervisor')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
-                                            </a>
-                                            <a href="{{ route('permintaan.print', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
-                                            </a>
-                                        {{-- @elseif($item->status == 'rejected by admin')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill align-middle text-primary"></i>
-                                            </a> --}}
-                                        @endif
-                                    </td>
-                                    
-                                    
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h4 class="card-title mb-0">Permintaan Barang</h4>
+                            <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light ml-3">
+                                <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
+                            </a>
+                        </div>
 
-                </div> <!-- end col -->
-            </div> <!-- end row -->              
-        </div> <!-- container-fluid -->
+                        <!-- HTML for Filters -->
+<!-- user_all.blade.php -->
+
+<div class="d-flex justify-content-between align-items-center">
+    <div class="filter-buttons d-flex me-3">
+        <select id="admin_approval_filter" class="form-select form-select-sm me-2">
+            <option value="">Filter Admin Approval</option>
+            <option value="approved by admin">Approved</option>
+            <option value="rejected by admin">Rejected</option>
+            <option value="pending">Pending</option>
+        </select>
+
+        <select id="supervisor_approval_filter" class="form-select form-select-sm">
+            <option value="">Filter Supervisor Approval</option>
+            <option value="approved by supervisor">Approved</option>
+            <option value="rejected by supervisor">Rejected</option>
+            <option value="pending">Pending</option>
+        </select>
     </div>
+    <div class="datatable-search"></div>
+</div>
+
+
+
+
+                        <table id="datatable" class="table table-bordered yajra-datatable" 
+                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Nama Pegawai</th>
+                                    <th>Catatan</th>
+                                    <th>Approval Admin</th>
+                                    <th>Approval Supervisor</th>
+                                    <th width="1%" class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!-- DataTable akan mengisi baris di sini -->
+                            </tbody>
+                        </table>
+
+                    </div> <!-- end col -->
+                </div> <!-- end row -->              
+            </div> <!-- container-fluid -->
+        </div>
+
+        <!-- JavaScript libraries for DataTables -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+        <script>
+            // permintaan_all.blade.php
+
+            $(document).ready(function() {
+    var table = $('#datatable').DataTable({
+        dom: '<"d-flex justify-content-between align-items-center"<"filter-buttons d-flex me-3"><"datatable-search"f>>rtip',
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('permintaan.data') }}",
+            data: function(d) {
+                d.admin_approval = $('#admin_approval_filter').val();
+                d.supervisor_approval = $('#supervisor_approval_filter').val();
+            }
+        },
+        columns: [
+            { data: 'date', name: 'date' },
+            { data: 'created_by', name: 'created_by' },
+            { data: 'description', name: 'description' },
+            { data: 'admin_approval', name: 'admin_approval', orderable: false, searchable: false, className: "text-center" },
+            { data: 'supervisor_approval', name: 'supervisor_approval', orderable: false, searchable: false, className: "text-center" },
+            { data: 'action', name: 'action', orderable: false, searchable: false, className: "text-center" }
+        ]
+    });
+
+    $('#admin_approval_filter, #supervisor_approval_filter').change(function() {
+        table.draw();
+    });
+});
+
+
+
+        </script>
+        
 @endsection

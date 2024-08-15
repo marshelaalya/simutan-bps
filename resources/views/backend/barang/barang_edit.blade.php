@@ -55,7 +55,7 @@
                             <div class="row mb-3">
                                 <label for="nama" class="col-sm-2 col-form-label">Satuan Barang</label>
                                 <div class="form-group col-sm-10">
-                                    <input name="satuan" value="{{ $barang->satuan  }}" class="form-control" type="text" id="nama">                    
+                                    <input name="satuan" value="{{ $barang->satuan->nama }}" class="form-control" type="text" id="nama">                    
                                 </div>
                             </div>
                             

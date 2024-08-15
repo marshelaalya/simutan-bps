@@ -5,7 +5,8 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
-
+{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="page-content">
 <div class="container-fluid">
@@ -104,7 +105,27 @@
 </div><!-- end col -->
 </div><!-- end row -->
 
-<div class="row">
+<div class="row gx-4">
+    <!-- Chart for Top Score Barang Diminta -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3 text-info">Top Score Barang Diminta</h4>
+                <canvas id="myChartBarang" width="400" height="200" style="max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart for Top Score Request User -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3 text-info">Top Score Request User</h4>
+                <canvas id="myChartUser" width="400" height="200" style="max-width: 100%;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
  
 
 <div class="row">
@@ -120,8 +141,8 @@
 
         <h4 class="card-title mb-4 text-info">Permintaan Terbaru</h4>
         <div class="table-responsive">
-            <table id="datatable" class="table table-bordered dt-responsive nowrap" 
-                    style="border-collapse: collapse; border-spacing: 0; width: 100%; table-layout: auto;">
+            <table id="datatable" class="table table-bordered yajra-datatable" 
+                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                  <thead>
                      <tr>
                          <th width="6%">Tanggal</th>
@@ -187,13 +208,13 @@
                                         @endif
                                     </td>
                                                                      
-                                    <td class="text-center d-flex justify-content-center align-items-center"> 
+                                    {{-- <td class="text-center d-flex justify-content-center align-items-center"> 
                                         @if($item->status == 'pending')
-                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn btn-sm me-2 text-primary" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-eye font-size-20 align-middle"></i>
                                             </a>
-                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
+                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn btn-sm text-success" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
                                             </a>
                                         @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'rejected by admin')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
@@ -208,6 +229,48 @@
                                             </a>
                                             <a href="{{ route('permintaan.all', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
                                                 <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn btn-sm me-2 text-primary" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-eye font-size-20 align-middle"></i>
+                                            </a>
+                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn btn-sm text-success" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                            </a>
+                                        @elseif($item->status == 'rejected by admin')
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-eye-fill align-middle text-primary"></i>
+                                            </a>
+                                        @endif
+                                    </td> --}}
+                                    <td class="text-center d-flex justify-content-center align-items-center"> 
+                                        @if($item->status == 'pending')
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn btn-sm me-2 text-primary" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-eye font-size-20 align-middle"></i>
+                                            </a>
+                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn btn-sm text-success" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                            </a>
+                                        {{-- @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'rejected by admin')
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
+                                            </a>
+                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn bg-success btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="fas fa-clipboard-check font-size-14 text-success align-middle"></i>
+                                            </a>
+                                        @elseif($item->status == 'approved by supervisor')
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2 text-primary" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-eye-fill font-size-16 align-middle"></i>
+                                            </a>
+                                            <a href="{{ route('permintaan.all', $item->id) }}" class="btn bg-danger btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ri-printer-fill font-size-16 text-danger align-middle"></i>
+                                            </a> --}}
+                                        @else
+                                            <a href="{{ route('permintaan.view', $item->id) }}" class="btn btn-sm me-2 text-gray" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-eye font-size-20 align-middle"></i>
+                                            </a>
+                                            <a href="{{ route('permintaan.approve', $item->id) }}" class="btn btn-sm text-gray" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                                <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
                                             </a>
                                         {{-- @elseif($item->status == 'rejected by admin')
                                             <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
@@ -237,6 +300,13 @@
 </div>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -247,6 +317,87 @@
     });
 });
 
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Pastikan jQuery sudah di-load -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the first chart
+        var ctxBarang = document.getElementById('myChartBarang').getContext('2d');
+        var myChartBarang = new Chart(ctxBarang, {
+            type: 'bar', // or 'line', 'pie', etc.
+            data: {
+                labels: ['Pensil', 'Pulpen', 'Sapu', 'Kertas', 'Penghapus', 'Lampu'], // X-axis labels
+                datasets: [{
+                    label: 'Top Score Barang Diminta',
+                    data: [12, 19, 3, 5, 2, 3], // Data points
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Initialize the second chart
+        var ctxUser = document.getElementById('myChartUser').getContext('2d');
+        var myChartUser = new Chart(ctxUser, {
+            type: 'bar', // or 'bar', 'pie', etc.
+            data: {
+                labels: ['Rudi', 'Juni', 'Ulul', 'Budi', 'Lia', 'Mona'], // X-axis labels
+                datasets: [{
+                    label: 'Top Score Request User',
+                    data: [5, 15, 10, 25, 7, 10], // Data points
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
 </script>
 
 @endsection

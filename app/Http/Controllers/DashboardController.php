@@ -12,39 +12,49 @@ use App\Models\Kelompok;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user();
-        $query = Permintaan::whereIn('status', ['pending', 'approved by admin'])
-            ->orderBy('created_at', 'desc')
-            ->limit(5);
-        $barangs = Barang::all();
-        $kelompoks = Kelompok::with('barangs')->get();
+{
+    $user = Auth::user();
 
-        $notifications = Notification::where('user_id', $user->id)
-                                    ->orderBy('created_at', 'desc')
-                                    ->limit(5)
-                                    ->get();
-        $unreadCount = Notification::where('user_id', $user->id)
-                                    ->where('is_read', false)
-                                    ->count();
-            // Determine the kelompok with the most barangs
-        $kelompokWithMostBarangs = $kelompoks->sortByDesc(function ($kelompok) {
-            return $kelompok->barangs->count();
-        })->first();
+    // Inisialisasi variabel $query dengan nilai default
+    $query = Permintaan::query();
 
-        // Mengambil data permintaan berdasarkan peran pengguna
-        if ($user->role === 'admin' || $user->role === 'supervisor') {
-            $permintaans = $query->get();
-            return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
-        } elseif ($user->role === 'pegawai') {
-            $permintaans = $query->where('user_id', $user->id)->get();
-            $view = ($user->role === 'pegawai') ? 'pegawai.index' : 'supervisor.index';
-            return view($view, compact('permintaans',  'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs'));
-        }
-    
-        // Redirect jika role tidak dikenali
-        return redirect()->route('home');
-    }    
+    if ($user->role === 'admin') {
+        $query->whereIn('status', ['pending'])
+              ->orderBy('created_at', 'desc')
+              ->limit(5);
+    } elseif ($user->role === 'supervisor') {
+        $query->whereIn('status', ['pending', 'approved by admin'])
+              ->orderBy('created_at', 'desc')
+              ->limit(5);
+    }
+
+    // Ambil data lainnya
+    $barangs = Barang::all();
+    $kelompoks = Kelompok::with('barangs')->get();
+
+    $notifications = Notification::where('user_id', $user->id)
+        ->orderBy('created_at', 'desc')
+        ->limit(5)
+        ->get();
+    $unreadCount = Notification::where('user_id', $user->id)
+        ->where('is_read', false)
+        ->count();
+
+    $kelompokWithMostBarangs = $kelompoks->sortByDesc(function ($kelompok) {
+        return $kelompok->barangs->count();
+    })->first();
+
+    if ($user->role === 'admin' || $user->role === 'supervisor') {
+        $permintaans = $query->get();
+        return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
+    } elseif ($user->role === 'pegawai') {
+        $permintaans = $query->where('user_id', $user->id)->get();
+        return view('pegawai.index', compact('permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs'));
+    }
+
+    return redirect()->route('home');
+}
+   
 
 
 
