@@ -17,8 +17,6 @@ class DashboardController extends Controller
         $query = Permintaan::whereIn('status', ['pending', 'approved by admin'])
             ->orderBy('created_at', 'desc')
             ->limit(5);
-            ->orderBy('created_at', 'desc')
-            ->limit(5);
         $barangs = Barang::all();
         $kelompoks = Kelompok::with('barangs')->get();
 
@@ -35,10 +33,10 @@ class DashboardController extends Controller
         })->first();
 
         // Mengambil data permintaan berdasarkan peran pengguna
-        if ($user->role === 'admin') {
+        if ($user->role === 'admin' || $user->role === 'supervisor') {
             $permintaans = $query->get();
             return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
-        } elseif ($user->role === 'pegawai' || $user->role === 'supervisor') {
+        } elseif ($user->role === 'pegawai') {
             $permintaans = $query->where('user_id', $user->id)->get();
             $view = ($user->role === 'pegawai') ? 'pegawai.index' : 'supervisor.index';
             return view($view, compact('permintaans',  'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs'));

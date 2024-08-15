@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pilihan;
 use App\Models\Barang;
+use App\Models\Satuan;
 use App\Models\Kelompok;
 use Illuminate\Support\Facades\Log; // Import Log Facade
 use Dompdf\Dompdf;
@@ -218,6 +219,7 @@ class PermintaanController extends Controller
                 // Temukan Barang dan Kelompok berdasarkan nama
                 $barang = Barang::where('nama', $item['barang_nama'])->first();
                 $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
+                $satuan = Satuan::where('nama', $item['barang_satuan'])->first();
 
                 if ($barang && $kelompok) {
                     // Ekstrak angka dari qty_req
@@ -239,6 +241,7 @@ class PermintaanController extends Controller
                     $newPilihan->description = $item['description'] ?? null;
                     $newPilihan->barang_id = $barang->id;
                     $newPilihan->req_qty = (int)$qty_req;
+                    $newPilihan->satuan_id = $satuan->satuan_id;
                     $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur sesuai kebutuhan
                     $newPilihan->created_by = Auth::user()->name;
                     $newPilihan->save(); // Simpan ke database

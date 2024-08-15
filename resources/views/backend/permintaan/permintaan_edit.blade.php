@@ -152,10 +152,10 @@
                                 <hr class="border border-secondary" style="border-width: 0.2px;">
                                 
                                 <div class="row g-3 mb-3">
-                                    <div class="col-sm-3">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%"">
                                         <div>
                                             <label for="kelompok_id" class="form-label text-info">Kelompok Barang</label>
-                                            <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
+                                            <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang" required>
                                                 <option selected disabled>Kelompok Barang</option>
                                                 @foreach($kelompok as $kel)
                                                     <option value="{{ $kel->id }}">{{ $kel->nama }}</option>
@@ -163,29 +163,41 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:38%">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:25%">
                                         <div>
                                             <label for="barang_id" class="form-label text-info">Nama Barang</label>
-                                            <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
+                                            <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang" required>
                                                 <option selected disabled>Pilih barang yang ingin diajukan</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
                                         <div>
                                             <label for="req_qty" class="form-label text-info">Kuantitas Permintaan</label>
-                                            <input class="form-control" name="req_qty" type="text" id="req_qty">
+                                            <input class="form-control" name="req_qty" type="text" id="req_qty" required>
                                             <div id="qty_warning" class="form-text text-danger" style="display: none;">
                                                 Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
                                             </div>
                                             <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
+
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
+                                        <div>
+                                            <label for="satuan_id" class="form-label text-info">Satuan</label>
+                                            <select name="satuan_id" class="form-select" id="satuan_id" aria-label="Pilih Satuan">
+                                                <option selected disabled>Pilih Satuan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div class="col-sm-2 d-flex justify-content-end align-items-start w-auto" style="margin-top:2.8rem">
                                         <button type="button" class="btn btn-info" id="addMoreButton">
                                             <i class="mdi mdi-plus"></i> <span>Tambah</span>
                                         </button>
                                     </div>
+                                    {{-- <button type="button" class="btn btn-info" id="addMoreButton" style="display: inline-block;width: auto; height:auto;">Tambah Lagi</button> --}}
                                 </div>
                                 
                                 <!-- Tabel -->
@@ -203,10 +215,11 @@
                                         <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
                                             <thead class="table-light">
                                                 <tr>
-                                                    <th style="width: 23%;">Kelompok Barang</th>
+                                                    <th>Kelompok Barang</th>
                                                     <th>Nama Barang</th>
-                                                    <th class="text-center" style="width: 1%;">Kuantitas</th>
-                                                    <th class="text-center" style="width: 1%;">Aksi</th>
+                                                    <th>Kuantitas</th>
+                                                    <th>Satuan</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-body">
@@ -214,10 +227,11 @@
                                                     <tr class="delete_add_more_item">
                                                         <td>{{ optional($barang->find($item->barang_id))->kelompok->nama ?? 'N/A' }}</td>
                                                         <td>{{ optional($barang->find($item->barang_id))->nama ?? 'N/A' }}</td>
-                                                        <td class="text-center">{{ $item->req_qty }} {{ optional($barang->find($item->barang_id))->satuan ?? 'N/A' }}</td>
+                                                        <td class="text-center">{{ $item->req_qty }}</td>
+                                                        <td class="text-center"> {{ optional($barang->find($item->barang_id))->satuan->nama ?? 'N/A' }}</td>
                                                         <td style="text-align: center; vertical-align: middle;">
-                                                            <button type="button" class="btn btn-danger btn-sm removeeventmore">
-                                                                <i class="fas fa-trash"></i>
+                                                            <button type="button" class="btn bg-danger btn-sm delete-button">
+                                                                <i class="fas fa-trash text-danger"></i>
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -247,17 +261,29 @@
 </div>
 
 <script id="document-template" type="text/x-handlebars-template">
-    <tr>
-        <td>@{{kelompok_nama}}</td>
-        <td>@{{barang_nama}}</td>
-        <td class="text-center">@{{qty_req}} @{{barang_satuan}}</td>
+    <tr class="delete_add_more_item">
+        <td>@{{ kelompok_nama }}</td>
+        <td>@{{ barang_nama }}</td>
+        <td class="text-center">@{{ qty_req }}</td>
+        <td class="text-center">@{{ barang_satuan }}</td>
         <td style="text-align: center; vertical-align: middle;">
-            <a href="javascript:void(0);" class="btn btn-danger btn-sm removeeventmore">
-                <i class="fas fa-trash"></i>
+            <a href="javascript:void(0);" class="btn bg-danger btn-sm delete-button" data-id="@{{ id }}">
+                <i class="fas fa-trash text-danger"></i>
             </a>
         </td>
     </tr>
 </script>
+
+
+<script>
+    // Event delegation to handle dynamically added rows
+    $(document).on('click', '.delete-button', function() {
+        // Remove the table row that contains the clicked delete button
+        $(this).closest('tr').remove();
+        
+        // Optionally, you can handle additional actions such as updating the backend or notifying the user
+    });
+    </script>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -317,14 +343,38 @@
         });
 
         $('#barang_id').on('change', function() {
-            var selectedOption = $(this).find('option:selected');
-            availableQty = selectedOption.data('qty');
-            barang_satuan = selectedOption.data('satuan');
-            $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
-            $('#req_qty').val('');
-            $('#qty_warning').hide();
-            validateForm();
-        });
+        var selectedOption = $(this).find('option:selected');
+        var barang_id = $(this).val();
+        var kelompok_id = $('#kelompok_id').val(); // Ambil kelompok_id dari dropdown kelompok_id
+        availableQty = parseFloat(selectedOption.data('qty')) || 0; // Pastikan availableQty adalah angka
+        // barang_satuan = selectedOption.data('satuan_id'); // Pastikan data atribut sesuai
+
+        $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
+        $('#req_qty').val('');
+        $('#qty_warning').hide();
+
+        if (barang_id && kelompok_id) {
+            $.ajax({
+                url: "{{ route('get-satuan') }}",
+                type: "GET",
+                data: { kelompok_id: kelompok_id, barang_id: barang_id }, // Kirim kelompok_id dan barang_id
+                success: function(data) {
+                    var html = '<option value="">Pilih Satuan</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.satuan_id + '">' + item.nama + '</option>'; // Pastikan field 'id' dan 'nama' ada di response
+                    });
+                    $('#satuan_id').html(html);
+                },
+                error: function(xhr) {
+                    console.error('An error occurred:', xhr.responseText);
+                }
+            });
+        } else {
+            $('#satuan_id').html('<option value="">Pilih Satuan</option>');
+        }
+
+        validateForm();
+    });
 
         $('#req_qty').on('input', function() {
             var requestedQty = $(this).val();
@@ -345,6 +395,7 @@
             var barang_nama = $('#barang_id').find('option:selected').text();
             var qty_req = $('#req_qty').val();
             var description = $('#textarea').val();
+            var barang_satuan = $('#satuan_id').find('option:selected').text();
 
             if (date == '' || kelompok_id == '' || barang_id == '' || qty_req == '') {
                 $.notify("Semua kolom harus diisi.", { globalPosition: 'top right', className: 'error' });
@@ -364,11 +415,13 @@
             var html = template(context);
 
             $('#table-body').append(html);
-
+            checkIfTableIsEmpty();
+            
             $('#kelompok_id').val('');
             $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
             $('#req_qty').val('');
             $('#current_qty').text('Kuantitas barang sekarang: ');
+
             validateForm();
         });
 
@@ -391,12 +444,14 @@
                 var kelompok_nama = $(this).find('td:eq(0)').text();
                 var barang_nama = $(this).find('td:eq(1)').text();
                 var qty_req = $(this).find('td:eq(2)').text();
+                var barang_satuan = $(this).find('td:eq(3)').text().trim();
 
                 tableData.push({
                     date: $('#hidden_date').val(),
                     kelompok_nama: kelompok_nama,
                     barang_nama: barang_nama,
                     qty_req: qty_req,
+                    barang_satuan: barang_satuan,
                     description: $('#hidden_description').val()
                 });
             });
