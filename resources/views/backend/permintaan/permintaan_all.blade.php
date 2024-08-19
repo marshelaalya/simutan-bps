@@ -42,9 +42,25 @@ a[data-tooltip]:hover::before {
     opacity: 1;
 }
 
+.hover\:bg-primary:hover {
+    background-color: #e3f0fb!important; /* Sesuaikan dengan warna bg-primary */
+    color: #007bff !important;
+}
+
+.hover\:bg-success:hover {
+    background-color: #e2f6e7 !important; /* Sesuaikan dengan warna bg-success */
+    color: #28a745 !important;
+}
+
+.hover\:bg-danger:hover {
+    background-color: #feeaea !important; /* Sesuaikan dengan warna bg-danger */
+    color: #dc3545 !important;
+}
 
 
 </style>
+
+
 
 <div class="page-content">
     <div class="container-fluid">
@@ -81,24 +97,7 @@ a[data-tooltip]:hover::before {
                         <!-- HTML for Filters -->
 <!-- user_all.blade.php -->
 
-<div class="d-flex justify-content-between align-items-center">
-    <div class="filter-buttons d-flex me-3">
-        <select id="admin_approval_filter" class="form-select form-select-sm me-2">
-            <option value="">Filter Admin Approval</option>
-            <option value="approved by admin">Approved</option>
-            <option value="rejected by admin">Rejected</option>
-            <option value="pending">Pending</option>
-        </select>
 
-        <select id="supervisor_approval_filter" class="form-select form-select-sm">
-            <option value="">Filter Supervisor Approval</option>
-            <option value="approved by supervisor">Approved</option>
-            <option value="rejected by supervisor">Rejected</option>
-            <option value="pending">Pending</option>
-        </select>
-    </div>
-    <div class="datatable-search"></div>
-</div>
 
 
 
@@ -107,12 +106,12 @@ a[data-tooltip]:hover::before {
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Tanggal</th>
-                                    <th>Nama Pegawai</th>
-                                    <th>Catatan</th>
-                                    <th>Approval Admin</th>
-                                    <th>Approval Supervisor</th>
-                                    <th width="1%" class="text-center">Aksi</th>
+                                    <th class="align-content-center">Tanggal</th>
+                                    <th class="align-content-center">Nama Pegawai</th>
+                                    <th class="align-content-center">Catatan</th>
+                                    <th width="17%" class="align-content-center" style="white-space: nowrap;">Status</th>
+                                   
+                                    <th width="1%" class="text-center align-content-center">Aksi</th>
                                 </tr>
                             </thead>
 
@@ -135,38 +134,231 @@ a[data-tooltip]:hover::before {
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-        <script>
-            // permintaan_all.blade.php
-
+        {{-- <script type="text/javascript">
             $(document).ready(function() {
-    var table = $('#datatable').DataTable({
-        dom: '<"d-flex justify-content-between align-items-center"<"filter-buttons d-flex me-3"><"datatable-search"f>>rtip',
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "{{ route('permintaan.data') }}",
-            data: function(d) {
-                d.admin_approval = $('#admin_approval_filter').val();
-                d.supervisor_approval = $('#supervisor_approval_filter').val();
-            }
-        },
-        columns: [
-            { data: 'date', name: 'date' },
-            { data: 'created_by', name: 'created_by' },
-            { data: 'description', name: 'description' },
-            { data: 'admin_approval', name: 'admin_approval', orderable: false, searchable: false, className: "text-center" },
-            { data: 'supervisor_approval', name: 'supervisor_approval', orderable: false, searchable: false, className: "text-center" },
-            { data: 'action', name: 'action', orderable: false, searchable: false, className: "text-center" }
-        ]
-    });
+                var table = $('.yajra-datatable').DataTable({
+                    dom: '<"d-flex justify-content-between align-items-center"<"filter-buttons d-flex me-3"><"datatable-search"f>>rtip',
+                    processing: true,
+                serverSide: true,
+                responsive: true,
+                // scrollX: true,
+                    ajax: {
+                        url: "{{ route('permintaan.data') }}",
+                        data: function(d) {
+                            d.admin_approval = $('#admin_approval_filter').val();
+                            d.supervisor_approval = $('#supervisor_approval_filter').val();
+                        }
+                    },
+                    columns: [
+                        { data: 'date', name: 'date', className: 'align-content-center', orderable: true },
+                        { data: 'created_by', name: 'created_by', className: 'align-content-center', orderable: true },
+                        { data: 'description', name: 'description', className: 'align-content-center', orderable: true },
+                        {
+                            data: 'approval_status', 
+                            name: 'approval_status', 
+                            
+                            searchable: false, 
+                            className: 'text-center align-content-center'
+                        },
+                        { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center align-content-center' }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: ['_all'],
+                            render: function(data, type, row, meta) {
+                                return type === 'display' ? data : data;
+                            }
+                        }
+                    ]
+                });
+                
+                $('#admin_approval_filter, #supervisor_approval_filter').change(function() {
+                    table.draw();
+                });
+            });
+            </script> --}}
 
-    $('#admin_approval_filter, #supervisor_approval_filter').change(function() {
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var table = $('.yajra-datatable').DataTable({
+                        processing: true,
+                        serverSide: true,
+                        responsive: true,
+                        scrollX: true,
+                        ajax: {
+                            url: "{{ route('permintaan.all') }}",
+                            data: function(d) {
+                                d.admin_approval = $('#admin_approval_filter').val();
+                                d.supervisor_approval = $('#supervisor_approval_filter').val();
+                            }
+                        },
+                        columns: [
+                            { data: 'date', name: 'date', className: 'align-content-center' },
+                            { data: 'created_by', name: 'created_by', className: 'align-content-center' },
+                            { data: 'description', name: 'description', className: 'align-content-center' },
+                            {
+                                data: 'approval_status',
+                                name: 'approval_status',
+                                searchable: false,
+                                className: 'text-center align-content-center'
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false,
+                                className: 'text-center align-content-center no-export',
+                                render: function(data, type, row) {
+                                    var viewUrl = "{{ route('permintaan.view', ':id') }}".replace(':id', row.id);
+                                    var approveUrl = "{{ route('permintaan.approve', ':id') }}".replace(':id', row.id);
+                                    var printUrl = "{{ route('permintaan.print', ':id') }}".replace(':id', row.id);
+                
+                                    var viewButton = `
+                                        <a href="${viewUrl}" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan">
+                                            <i class="ti ti-eye font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                
+                                    var approveOrPrintButton = row.status === 'approved by supervisor' ? `
+                                        <a href="${printUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
+                                            <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
+                                        </a>
+                                    ` : `
+                                        <a href="${approveUrl}" class="btn btn-sm ${row.status === 'pending' ? 'hover:bg-success' : ''}" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; ${row.status === 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;'} padding: 15px;" data-tooltip="Setujui Permintaan">
+                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                
+                                    return `
+                                        <div class="text-center d-flex justify-content-center align-items-center">
+                                            ${viewButton}
+                                            ${approveOrPrintButton}
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        dom: 'Brftip',
+                        buttons: [
+                            {
+                                extend: 'collection',
+                                text: 'Export',
+                                className: 'form-select',
+                                buttons: [
+                                    {
+                                        extend: 'excelHtml5',
+                                        text: 'Export Excel',
+                                        title: 'Data Export',
+                                        exportOptions: {
+                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                                        },
+                                    },
+                                    {
+                                        extend: 'copy',
+                                        text: 'Copy',
+                                        exportOptions: {
+                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                                        },
+                                    },
+                                    {
+                                        extend: 'csv',
+                                        text: 'CSV',
+                                        exportOptions: {
+                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                                        },
+                                    },
+                                    {
+                                        extend: 'pdf',
+                                        text: 'PDF',
+                                        exportOptions: {
+                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                                        },
+                                    },
+                                    {
+                                        extend: 'print',
+                                        text: 'Print',
+                                        exportOptions: {
+                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                                        },
+                                    }
+                                ]
+                            }
+                        ],
+                        initComplete: function() {
+                            // Filter untuk admin approval
+                            // Filter untuk approval admin
+var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 150px;"><option value="">Semua Status Admin</option></select>')
+    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
+    .on('change', function() {
         table.draw();
     });
-});
 
+// Menambahkan opsi untuk approval admin
+adminSelect.append('<option value="pending">Admin Pending</option>');
+adminSelect.append('<option value="approved by admin">Admin Approved</option>');
+adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
 
+// Filter untuk approval supervisor
+var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 150px;"><option value="">Semua Status Supervisor</option></select>')
+    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
+    .on('change', function() {
+        table.draw();
+    });
 
-        </script>
+// Menambahkan opsi untuk approval supervisor
+supervisorSelect.append('<option value="pending">Supervisor Pending</option>');
+supervisorSelect.append('<option value="approved by supervisor">Supervisor Approved</option>');
+supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejected</option>');
+
+                
+                            // Styling untuk select
+                            $('.form-select').each(function() {
+                                $(this).css({
+                                    'display': 'block',
+                                    'padding': '.47rem 1.75rem .47rem .75rem',
+                                    '-moz-padding-start': 'calc(.75rem - 3px)',
+                                    'font-size': '.9rem',
+                                    'font-weight': '500',
+                                    'line-height': '1.5',
+                                    'color': '#505d69',
+                                    'background-color': '#fff',
+                                    'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                                    'background-repeat': 'no-repeat',
+                                    'background-position': 'right .75rem center',
+                                    'background-size': '16px 12px',
+                                    'border': '1px solid #ced4da',
+                                    'border-radius': '.25rem',
+                                    'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                                    'appearance': 'none'
+                                });
+                            });
+                
+                            var observer = new MutationObserver(function(mutations) {
+                                mutations.forEach(function(mutation) {
+                                    $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                                });
+                            });
+                
+                            // Memulai observer pada elemen yang mengandung tombol
+                            observer.observe(document.body, {
+                                childList: true,
+                                subtree: true
+                            });
+                        }
+                    });
+                    $(document).ajaxComplete(function() {
+            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
+            setTimeout(function() {
+                $('.dt-button').removeClass('dt-button buttons-collection');
+                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            }, 100); // Menunggu beberapa waktu sebelum menghapus
+        });
+                });
+                </script>
+                
+            
+            
+            
         
 @endsection

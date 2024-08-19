@@ -8,7 +8,7 @@
                         <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-dark" height="40">
+                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-dark" height="44">
                     </span>
                 </a>
 
@@ -17,7 +17,7 @@
                         <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm-light" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-light" height="40">
+                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-light" height="44">
                     </span>
                 </a>
             </div>
@@ -26,13 +26,7 @@
                 <i class="ri-menu-2-line align-middle"></i>
             </button>
 
-            <!-- App Search-->
-            <form class="app-search d-none d-lg-block">
-                <div class="position-relative">
-                    <input type="text" class="form-control" placeholder="Search...">
-                    <span class="ri-search-line"></span>
-                </div>
-            </form>
+           
         </div>
 
         <div class="d-flex">

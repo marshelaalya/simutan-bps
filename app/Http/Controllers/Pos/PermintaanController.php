@@ -20,10 +20,101 @@ use Yajra\DataTables\DataTables;
 
 class PermintaanController extends Controller
 {
-    public function PermintaanAll(){
-        $permintaans = Permintaan::latest()->get();
-        return view('backend.permintaan.permintaan_all', compact('permintaans'));
+    public function PermintaanAll(Request $request){
+        if ($request->ajax()) {
+            // Query dasar dengan relasi ke tabel 'pilihan'
+            $query = Permintaan::with('pilihan')
+                ->select(['permintaans.id', 'permintaans.status', 'permintaans.user_id']);
+        
+            // Filter berdasarkan status persetujuan admin
+            if ($request->has('admin_approval') && !empty($request->admin_approval)) {
+                if ($request->admin_approval === 'pending') {
+                    $query->where('status', 'pending');
+                } elseif ($request->admin_approval === 'approved by admin') {
+                    $query->where(function($q) {
+                        $q->where('status', 'approved by admin')
+                          ->orWhere('status', 'approved by supervisor');
+                    });
+                } elseif ($request->admin_approval === 'rejected by admin') {
+                    $query->where('status', 'rejected by admin');
+                }
+            }
+        
+            // Filter berdasarkan status persetujuan supervisor
+            if ($request->has('supervisor_approval') && !empty($request->supervisor_approval)) {
+                if ($request->supervisor_approval === 'pending') {
+                    $query->where(function($q) {
+                        $q->where('status', 'approved by admin')
+                          ->orWhere('status', 'pending');
+                    });
+                } elseif ($request->supervisor_approval === 'approved by supervisor') {
+                    $query->where('status', 'approved by supervisor');
+                } elseif ($request->supervisor_approval === 'rejected by supervisor') {
+                    $query->where(function($q) {
+                        $q->where('status', 'rejected by admin')
+                          ->orWhere('status', 'rejected by supervisor');
+                    });
+                }
+            }
+        
+            // Eksekusi query dan kembalikan hasilnya dalam format DataTables
+            $permintaans = $query->latest()->get();
+        
+            return DataTables::of($permintaans)
+                ->addIndexColumn()
+                ->addColumn('date', function ($row) {
+                    return $row->pilihan->first()->date ?? 'Tidak ada data';
+                })
+                ->addColumn('created_by', function ($row) {
+                    return $row->pilihan->first()->created_by ?? 'Tidak ada data';
+                })
+                ->addColumn('description', function ($row) {
+                    return $row->pilihan->first()->description ?? 'Tidak ada data';
+                })
+                ->addColumn('approval_status', function ($row) {
+                    // Status Admin
+                    $adminStatus = '';
+                    if ($row->status == 'pending') {
+                        $adminStatus = '<button class="btn btn-secondary bg-warning btn-sm font-size-13" style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Pending</button>';
+                    } elseif ($row->status == 'rejected by admin') {
+                        $adminStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Rejected</button>';
+                    } elseif ($row->status == 'approved by admin' || $row->status == 'rejected by supervisor') {
+                        $adminStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Approved</button>';
+                    }
+        
+                    // Status Supervisor
+                    $supervisorStatus = '';
+                    if ($row->status == 'approved by admin' || $row->status == 'pending') {
+                        $supervisorStatus = '<button class="btn btn-secondary bg-warning btn-sm font-size-13" style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">Supervisor Pending</button>';
+                    } elseif ($row->status == 'rejected by supervisor' || $row->status == 'rejected by admin') {
+                        $supervisorStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed;">Supervisor Rejected</button>';
+                    } elseif ($row->status == 'approved by supervisor') {
+                        $supervisorStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed;">Supervisor Approved</button>';
+                    }
+        
+                    // Menggabungkan status admin dan supervisor
+                    return '<div class="d-flex flex-column align-items-start">' . $adminStatus . $supervisorStatus . '</div>';
+                })
+                ->addColumn('action', function ($row) {
+                    $viewButton = '<a href="'.route('permintaan.view', $row->id).'" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan"><i class="ti ti-eye font-size-20 align-middle"></i></a>';
+                    
+                    $approveOrPrintButton = $row->status == 'approved by supervisor' ?
+                        '<a href="'.route('permintaan.print', $row->id).'" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan"><i class="ti ti-printer font-size-20 align-middle text-danger"></i></a>' :
+                        '<a href="'.route('permintaan.approve', $row->id).'" class="btn btn-sm ' . ($row->status == 'pending' ? 'hover:bg-success' : '') . '" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none;' . ($row->status == 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;') . ' padding: 15px;" data-tooltip="Setujui Permintaan"><i class="ti ti-clipboard-check font-size-20 align-middle"></i></a>';
+        
+                    return '<div class="text-center d-flex justify-content-center align-items-center">' . $viewButton . $approveOrPrintButton . '</div>';
+                })
+                ->rawColumns(['approval_status', 'action'])
+                ->make(true);
+        }
+    
+        // Mengambil status approval yang unik
+        $statusAppr = Permintaan::select('status')->distinct()->get();
+    
+        return view('backend.permintaan.permintaan_all', compact('statusAppr'));
     }
+    
+
 
     public function PermintaanAdd(){
         return view('backend.permintaan.permintaan_add');
@@ -304,116 +395,86 @@ class PermintaanController extends Controller
 
     // PermintaanController.php
 
-public function getPermintaanData(Request $request)
-{
-    $query = Permintaan::with('pilihan')
-        ->select(['permintaans.id', 'permintaans.status', 'permintaans.user_id']);
+//     public function getPermintaanData(Request $request)
+// {
+//     $query = Permintaan::with('pilihan')
+//         ->select(['permintaans.id', 'permintaans.status', 'permintaans.user_id']);
 
-    if ($request->admin_approval) {
-        if ($request->admin_approval === 'pending') {
-            $query->where('status', 'pending');
-        } elseif ($request->admin_approval === 'approved by admin') {
-            $query->where('status', 'approved by admin');
-        } elseif ($request->admin_approval === 'rejected by admin') {
-            $query->where('status', 'rejected by admin');
-        }
-    }
+//     // Filter by admin approval status
+//     if ($request->admin_approval) {
+//         if ($request->admin_approval === 'pending') {
+//             $query->where('status', 'pending');
+//         } elseif ($request->admin_approval === 'approved by admin') {
+//             $query->where('status', 'approved by admin');
+//         } elseif ($request->admin_approval === 'rejected by admin') {
+//             $query->where('status', 'rejected by admin');
+//         }
+//     }
 
-    if ($request->supervisor_approval) {
-        if ($request->supervisor_approval === 'pending') {
-            $query->where(function($q) {
-                $q->where('status', 'approved by admin')
-                  ->orWhere('status', 'pending');
-            });
-        } elseif ($request->supervisor_approval === 'approved by supervisor') {
-            $query->where('status', 'approved by supervisor');
-        } elseif ($request->supervisor_approval === 'rejected by supervisor') {
-            $query->where('status', 'rejected by supervisor');
-        }
-    }
+//     // Filter by supervisor approval status
+//     if ($request->supervisor_approval) {
+//         if ($request->supervisor_approval === 'pending') {
+//             $query->where(function($q) {
+//                 $q->where('status', 'approved by admin')
+//                   ->orWhere('status', 'pending');
+//             });
+//         } elseif ($request->supervisor_approval === 'approved by supervisor') {
+//             $query->where('status', 'approved by supervisor');
+//         } elseif ($request->supervisor_approval === 'rejected by supervisor') {
+//             $query->where('status', 'rejected by supervisor');
+//         }
+//     }
 
-    return DataTables::of($query)
-        ->addColumn('date', function ($row) {
-            return $row->pilihan->first()->date ?? 'Tidak ada data';
-        })
-        ->addColumn('created_by', function ($row) {
-            return $row->pilihan->first()->created_by ?? 'Tidak ada data';
-        })
-        ->addColumn('description', function ($row) {
-            return $row->pilihan->first()->description ?? 'Tidak ada data';
-        })
-        ->addColumn('admin_approval', function ($row) {
-            if ($row->status == 'pending') {
-                return '<button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                            style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                            Pending
-                        </button>';
-            } elseif ($row->status == 'rejected by admin') {
-                return '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                            style="border: 0; pointer-events: none; cursor: not-allowed;">
-                            Rejected
-                        </button>';
-            } elseif ($row->status == 'approved by admin' || $row->status == 'rejected by supervisor') {
-                return '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                            style="border: 0; pointer-events: none; cursor: not-allowed;">
-                            Approved
-                        </button>';
-            } elseif ($row->status == 'approved by supervisor' && $row->ctt_adm == NULL) {
-                return '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                            style="border: 0; pointer-events: none; cursor: not-allowed;">
-                            Approved
-                        </button>';
-            }
-        })
-        ->addColumn('supervisor_approval', function ($row) {
-            if ($row->status == 'approved by admin' || $row->status == 'pending') {
-                return '<button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                            style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                            Pending
-                        </button>';
-            } elseif ($row->status == 'rejected by supervisor' || $row->status == 'rejected by admin') {
-                return '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                            style="border: 0; pointer-events: none; cursor: not-allowed;">
-                            Rejected
-                        </button>';
-            } elseif ($row->status == 'approved by supervisor') {
-                return '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                            style="border: 0; pointer-events: none; cursor: not-allowed;">
-                            Approved
-                        </button>';
-            }
-        })
-        ->addColumn('action', function ($row) {
-            // Tombol "View" dengan tooltip "Lihat Permintaan"
-            $viewButton = '<a href="'.route('permintaan.view', $row->id).'" class="btn btn-sm me-2 text-primary" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue;" data-tooltip="Lihat Permintaan">
-                            <i class="ti ti-eye font-size-20 align-middle"></i>
-                        </a>';
+//     return DataTables::of($query)
+//         ->addColumn('date', function ($row) {
+//             return $row->pilihan->first()->date ?? 'Tidak ada data';
+//         })
+//         ->addColumn('created_by', function ($row) {
+//             return $row->pilihan->first()->created_by ?? 'Tidak ada data';
+//         })
+//         ->addColumn('description', function ($row) {
+//             return $row->pilihan->first()->description ?? 'Tidak ada data';
+//         })
+//         ->addColumn('approval_status', function ($row) {
+//             // Status Admin
+//             $adminStatus = '';
+//             if ($row->status == 'pending') {
+//                 $adminStatus = '<button class="btn btn-secondary bg-warning btn-sm font-size-13" style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Pending</button>';
+//             } elseif ($row->status == 'rejected by admin') {
+//                 $adminStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Rejected</button>';
+//             } elseif ($row->status == 'approved by admin' || $row->status == 'rejected by supervisor') {
+//                 $adminStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Approved</button>';
+//             } elseif ($row->status == 'approved by supervisor' && $row->ctt_adm == NULL) {
+//                 $adminStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Approved</button>';
+//             }
         
-            // Tombol "Approve" atau "Print" dengan tooltip yang sesuai
-            if ($row->status == 'approved by supervisor') {
-                $approveOrPrintButton = '<a href="'.route('permintaan.print', $row->id).'" class="btn btn-sm text-danger" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red;" data-tooltip="Cetak Permintaan">
-                                            <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
-                                        </a>';
-            } else {
-                $approveOrPrintButton = '<a href="'.route('permintaan.approve', $row->id).'" class="btn btn-sm" style="width: 20px; height: 20px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;' . ($row->status == 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;') . '" data-tooltip="Setujui Permintaan">
-                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
-                                        </a>';
-            }
+//             // Status Supervisor
+//             $supervisorStatus = '';
+//             if ($row->status == 'approved by admin' || $row->status == 'pending') {
+//                 $supervisorStatus = '<button class="btn btn-secondary bg-warning btn-sm font-size-13" style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">Supervisor Pending</button>';
+//             } elseif ($row->status == 'rejected by supervisor' || $row->status == 'rejected by admin') {
+//                 $supervisorStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed;">Supervisor Rejected</button>';
+//             } elseif ($row->status == 'approved by supervisor') {
+//                 $supervisorStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed;">Supervisor Approved</button>';
+//             }
         
-            // Menggabungkan tombol "View" dan "Approve/Print"
-            return '<div class="text-center d-flex justify-content-center align-items-center">' . $viewButton . $approveOrPrintButton . '</div>';
-        })
+//             // Combine Statuses
+//             return '<div class="d-flex flex-column align-items-start">' . $adminStatus . $supervisorStatus . '</div>';
+//         })
+//         ->addColumn('action', function ($row) {
+//             $viewButton = '<a href="'.route('permintaan.view', $row->id).'" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan"><i class="ti ti-eye font-size-20 align-middle"></i></a>';
+            
+//             $approveOrPrintButton = $row->status == 'approved by supervisor' ?
+//                 '<a href="'.route('permintaan.print', $row->id).'" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan"><i class="ti ti-printer font-size-20 align-middle text-danger"></i></a>' :
+//                 '<a href="'.route('permintaan.approve', $row->id).'" class="btn btn-sm ' . ($row->status == 'pending' ? 'hover:bg-success' : '') . '" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none;' . ($row->status == 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;') . ' padding: 15px;" data-tooltip="Setujui Permintaan"><i class="ti ti-clipboard-check font-size-20 align-middle"></i></a>';
         
-        
-        
-        
-        
+//             return '<div class="text-center d-flex justify-content-center align-items-center">' . $viewButton . $approveOrPrintButton . '</div>';
+//         })
+//         ->rawColumns(['approval_status', 'action'])
+//         ->make(true);
+// }
 
-        
-        
-        ->rawColumns(['admin_approval', 'supervisor_approval', 'action'])
-        ->make(true);
-}
+    
 
 
 }

@@ -207,4 +207,6 @@ class BarangController extends Controller
 
         return redirect()->back()->with($notification);
     }
+
+    
 }

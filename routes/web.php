@@ -46,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk melihat semua notifikasi (opsional)
     Route::get('/notifications', [DashboardController::class, 'viewAllNotifications'])->name('notifications.viewAll');
+    Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin.index');
 
     
 
@@ -111,7 +112,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
         Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
         Route::get('barang/data', 'data')->name('barang.data');
-
         // web.php
 
     });
