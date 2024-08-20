@@ -526,6 +526,76 @@
 </script>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var barangs = @json($topBarangs);
+
+    var labels = barangs.map(function(barang) {
+        return barang.nama;
+    });
+
+    var data = barangs.map(function(barang) {
+        return barang.total_qty;
+    });
+
+    var ctxBarang = document.getElementById('myChartBarang').getContext('2d');
+
+    // Membuat gradient horizontal untuk background
+    var gradientBackground = ctxBarang.createLinearGradient(0, 0, 400, 0);
+    gradientBackground.addColorStop(0, 'rgba(255, 255, 255, 0.5)');  // Biru dengan opacity 0.5
+    gradientBackground.addColorStop(0.5, 'rgba(0, 123, 255, 0.5)');  // Ungu dengan opacity 0.5
+    gradientBackground.addColorStop(1, 'rgba(0, 123, 255, 0.7)');
+    
+
+    // Membuat gradient horizontal untuk border dengan opacity 1
+    var gradientBorder = ctxBarang.createLinearGradient(0, 0, 400, 0);
+    // gradientBorder.addColorStop(0, 'rgba(4, 50, 119, 1)');  // Biru dengan opacity 1
+    // gradientBorder.addColorStop(1, 'rgba(111, 66, 193, 1)');  // Ungu dengan opacity 1
+    gradientBorder.addColorStop(1, 'rgba(4, 50, 119, 0.5)');  // Biru dengan opacity 0.5
+    gradientBorder.addColorStop(0.5, 'rgba(0, 123, 255, 0.5)');  // Ungu dengan opacity 0.5
+    gradientBorder.addColorStop(0, 'rgba(0, 123, 255, 0.5)');
+
+    var myChartBarang = new Chart(ctxBarang, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah Barang Diminta',
+                data: data,
+                backgroundColor: gradientBackground,
+                borderColor: gradientBorder,
+                borderWidth: 1,
+                borderRadius: 5,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.formattedValue;
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutBounce'
+            }
+        }
+    });
+});
+
+</script>
+
+{{-- <script>
 
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -604,7 +674,7 @@
         }
     });
     });
-</script>
+</script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

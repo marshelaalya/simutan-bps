@@ -18,12 +18,10 @@ class BarangController extends Controller
         return view('backend.barang.barang_all', compact('barangs'));
     } // End Method
 
-    public function data()
+    public function dataForAll()
 {
-    // Fetch data with eager loading of related models
     $barangs = Barang::with('kelompok', 'satuan')->get();
 
-    // Use DataTables to format the data
     return DataTables::of($barangs)
         ->addColumn('action', function ($barang) {
             return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
@@ -36,8 +34,19 @@ class BarangController extends Controller
                     </div>';
         })
         ->rawColumns(['action'])
-        ->toJson(); // Ensure the data is returned as JSON
+        ->toJson();
 }
+
+public function dataForIndex()
+{
+    $barangs = Barang::with('kelompok', 'satuan')->get();
+
+    return DataTables::of($barangs)
+        // Do not add 'action' column
+        ->rawColumns([]) // No raw columns
+        ->toJson();
+}
+
 
     public function barangStore(Request $request)
 {

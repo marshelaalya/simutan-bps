@@ -46,7 +46,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Rute untuk melihat semua notifikasi (opsional)
     Route::get('/notifications', [DashboardController::class, 'viewAllNotifications'])->name('notifications.viewAll');
+    
+    
     Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin.index');
+    Route::get('/pegawai/index', [DashboardController::class, 'index'])->name('pegawai.index');
 
     
 
@@ -111,7 +114,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
         Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
         Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
-        Route::get('barang/data', 'data')->name('barang.data');
+        Route::get('barang/data-all', 'dataForAll')->name('barang.data.all');
+        Route::get('barang/data-index', 'dataForIndex')->name('barang.data.index');    
+
+        
         // web.php
 
     });

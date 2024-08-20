@@ -107,10 +107,15 @@
 
 <script>
     $(document).ready(function() {
+
+        if ($.fn.DataTable.isDataTable('#datatable')) {
+    // Destroy the existing DataTable
+    $('#datatable').DataTable().destroy();
+}
     $('#datatable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{{ route('barang.data') }}',
+        ajax: '{{ route('barang.data.all') }}',
         columns: [
             { data: 'kode', name: 'kode' },
             { data: 'kelompok.nama', name: 'kelompok.nama' },
