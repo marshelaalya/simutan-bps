@@ -5,7 +5,6 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 
 <style>
@@ -360,10 +359,11 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
         align-items: center;
     }
 </style>
+
 <div class="page-content">
     <div class="container-fluid">
 
-        {{-- <!-- start page title -->
+        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -379,347 +379,293 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                 </div>
             </div>
         </div>
-        <!-- end page title --> --}}
+        <!-- end page title -->
 
         <h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2>
 
+        <div>
+            @foreach($kelompoks as $index => $kelompok)
+            <button class="kelompok-button {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }} fw-bold" data-target="#swiper-container-{{ $index }}" data-definisi="#definisi-{{ $index }}">
+                {{ $kelompok->nama }}
+            </button>
+            @endforeach
+        </div>
+        <div class="card gradient-background2 mb-4" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
+            <!-- SVG Wave -->
+            <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1;">
+                <svg viewBox="0 0 500 200" preserveAspectRatio="none">
+                    <path d="M0,80 C120,130 180,30 280,90 C400,160 500,50 500,50 L500,0 L0,0 Z" fill="#043277" opacity="0.7"></path> <!-- Warna Ungu -->
+                    <path d="M0,100 C150,150 250,20 350,110 C450,200 500,60 500,60 L500,0 L0,0 Z" fill="#043277" opacity="0.7"></path> <!-- Warna Biru -->
+                    <path d="M0,120 C180,170 300,50 400,130 C480,200 500,70 500,70 L500,0 L0,0 Z" fill="#043277" opacity="0.5"></path> <!-- Warna Biru Muda -->
+                </svg> 
+            </div>
         
-        
-
-    {{-- <div class="row gx-4">
-        <div class="col-xl-3 col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="flex-grow-1">
+            <div class="row gx-4" style="position: relative; z-index: 2;">
+                <!-- Chart for Top Score Barang Diminta (Kolom Kiri) -->
+                <div style="flex:0 0 auto; width:40%">
+                    <div class="card mb-0" style="background-color: rgba(4, 50, 119, 0); box-shadow:none">
+                        <div class="card-body">
+                            @foreach($kelompoks as $index => $kelompok)
+                            <div class="kelompok-definisi {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="definisi-{{ $index }}" style="display: {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'block' : 'none' }};">
+                                <h4 class="mb-2" style="color: white; ">{{ $kelompok->nama }}</h4>
+                                <p style="color: white; font-size: 18px; font-weight:400">
+                                    @if($kelompok->nama === 'Barang Pemeliharaan')
+                                        Barang pemeliharaan adalah barang-barang yang digunakan untuk pemeliharaan dan perawatan fasilitas, gedung, dan peralatan kantor agar tetap berfungsi dengan baik.
+                                    @elseif($kelompok->nama === 'Barang Konsumsi')
+                                        Barang konsumsi adalah barang-barang yang habis pakai dalam jangka waktu tertentu dan perlu diganti secara rutin, seperti kertas, tinta, dan alat tulis lainnya.
+                                    @elseif($kelompok->nama === 'Alat Kegiatan Kantor Lainnya')
+                                        Alat kegiatan kantor mencakup peralatan yang digunakan untuk mendukung berbagai kegiatan operasional kantor, seperti komputer, printer, mesin fotokopi, dan peralatan presentasi.
+                                    @else
+                                        Definisi untuk kelompok ini belum tersedia.
+                                    @endif
+                                </p>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div> --}}
-    
-
-    <div>
-        @foreach($kelompoks as $index => $kelompok)
-        <button class="kelompok-button {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }} fw-bold" data-target="#swiper-container-{{ $index }}" data-definisi="#definisi-{{ $index }}">
-            {{ $kelompok->nama }}
-        </button>
-        @endforeach
-    </div>
-    <div class="card gradient-background2 mb-4" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-        <!-- SVG Wave -->
-        <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 1;">
-            <svg viewBox="0 0 500 200" preserveAspectRatio="none">
-                <path d="M0,80 C120,130 180,30 280,90 C400,160 500,50 500,50 L500,0 L0,0 Z" fill="#043277" opacity="0.7"></path> <!-- Warna Ungu -->
-                <path d="M0,100 C150,150 250,20 350,110 C450,200 500,60 500,60 L500,0 L0,0 Z" fill="#043277" opacity="0.7"></path> <!-- Warna Biru -->
-                <path d="M0,120 C180,170 300,50 400,130 C480,200 500,70 500,70 L500,0 L0,0 Z" fill="#043277" opacity="0.5"></path> <!-- Warna Biru Muda -->
-            </svg>
-            
-            
-        </div>
-    
-        <div class="row gx-4" style="position: relative; z-index: 2;">
-            <!-- Chart for Top Score Barang Diminta (Kolom Kiri) -->
-            <div style="flex:0 0 auto; width:40%">
-                <div class="card mb-0" style="background-color: rgba(4, 50, 119, 0); box-shadow:none">
-                    <div class="card-body">
-                        @foreach($kelompoks as $index => $kelompok)
-                        <div class="kelompok-definisi {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="definisi-{{ $index }}" style="display: {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'block' : 'none' }};">
-                            <h4 class="mb-2" style="color: white; ">{{ $kelompok->nama }}</h4>
-                            <p style="color: white; font-size: 18px; font-weight:400">
-                                @if($kelompok->nama === 'Barang Pemeliharaan')
-                                    Barang pemeliharaan adalah barang-barang yang digunakan untuk pemeliharaan dan perawatan fasilitas, gedung, dan peralatan kantor agar tetap berfungsi dengan baik.
-                                @elseif($kelompok->nama === 'Barang Konsumsi')
-                                    Barang konsumsi adalah barang-barang yang habis pakai dalam jangka waktu tertentu dan perlu diganti secara rutin, seperti kertas, tinta, dan alat tulis lainnya.
-                                @elseif($kelompok->nama === 'Alat Kegiatan Kantor Lainnya')
-                                    Alat kegiatan kantor mencakup peralatan yang digunakan untuk mendukung berbagai kegiatan operasional kantor, seperti komputer, printer, mesin fotokopi, dan peralatan presentasi.
-                                @else
-                                    Definisi untuk kelompok ini belum tersedia.
-                                @endif
-                            </p>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Sliders for Each Kelompok Barang (Kolom Kanan) -->
-            <div style="flex:0 0 auto; width:60%">
-                <div class="card mb-0" style="background-color: rgba(4, 50, 119, 0); box-shadow:none">
-                    <div class="card-body">
-                        @foreach($kelompoks as $index => $kelompok)
-                            <div class="swiper-container-wrapper {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="swiper-container-{{ $index }}">
-                                <div class="swiper-container">
-                                    <div class="swiper-wrapper">
-                                        @foreach($kelompok->barangs as $item)
-                                            <div class="swiper-slide">
-                                                <div class="card-slider">
-                                                    <img src="https://cdn-icons-png.flaticon.com/128/2659/2659360.png" class="card-slider-img-top" alt="Gambar Barang"> 
-                                                    <div class="card-slider-body">
-                                                        <h5 class="card-slider-title">{{ $item->nama }}</h5>
-                                                        <p class="card-slider-text">Stok: {{ $item->qty_item }} {{ $item->satuan->nama ?? 'N/A' }}</p>
+        
+                <!-- Sliders for Each Kelompok Barang (Kolom Kanan) -->
+                <div style="flex:0 0 auto; width:60%">
+                    <div class="card mb-0" style="background-color: rgba(4, 50, 119, 0); box-shadow:none">
+                        <div class="card-body">
+                            @foreach($kelompoks as $index => $kelompok)
+                                <div class="swiper-container-wrapper {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="swiper-container-{{ $index }}">
+                                    <div class="swiper-container">
+                                        <div class="swiper-wrapper">
+                                            @foreach($kelompok->barangs as $item)
+                                                <div class="swiper-slide">
+                                                    <div class="card-slider">
+                                                        <img src="https://cdn-icons-png.flaticon.com/128/2659/2659360.png" class="card-slider-img-top" alt="Gambar Barang"> 
+                                                        <div class="card-slider-body">
+                                                            <h5 class="card-slider-title">{{ $item->nama }}</h5>
+                                                            <p class="card-slider-text">Stok: {{ $item->qty_item }} {{ $item->satuan->nama ?? 'N/A' }}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
+        
+                                        <!-- Add Pagination -->
+                                        <div class="swiper-pagination"></div>
                                     </div>
-    
-                                    <!-- Add Pagination -->
-                                    <div class="swiper-pagination"></div>
-                                </div>
-    
-                                <!-- Add Navigation -->
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    
-    
-    
-
-    <div class="row gx-4">
-            <div class="col-xl-3 col-md-6 mb-0">
-                <div class="card mb-0">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Total Permintaan<br>Diajukan</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanBulanIni ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-primary text-primary rounded-3">
-                                    <i class="mdi mdi-clipboard-text-multiple-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                            
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6 mb-0">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Total Permintaan<br>Selesai</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanSelesai ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-success text-success rounded-3">
-                                    <i class="mdi mdi-clipboard-check-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                              
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6 mb-0">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Total Permintaan<br>Pending</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanPending ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-warning text-warning rounded-3">
-                                    <i class="mdi mdi-clipboard-clock-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                              
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            <div class="col-xl-3 col-md-6 mb-0">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Total Permintaan<br>Ditolak</h5>
-                                <h6 class="mb-0 text-muted small">Bulan Ini</h6>
-                                <h4 class="mb-2 mt-2">{{ $totalPermintaanRejected ?? 'Tidak ada data' }}</h4>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-danger text-danger rounded-3">
-                                    <i class="mdi mdi-clipboard-remove-outline font-size-24"></i>  
-                                </span>
-                            </div>
-                        </div>                                              
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-    </div><!-- end row -->
-
-        <!-- Chart Container -->
-    <div class="row gx-4">
-        <!-- Chart for Top Score Barang Diminta -->
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-3 text-info">Top 5 Barang Diminta</h4>
-                    <canvas id="myChartBarang" width="400" height="237" style="max-width: 100%;"></canvas>
-                </div>
-            </div>
-        </div>
-    
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
-                    <div class="leaderboard-container" style="position: relative;">
-                        <!-- User 1 -->
-                        <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                            <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                    <!-- Wave 1 -->
-                                    <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                    <!-- Wave 2 -->
-                                    <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                    <!-- Wave 3 -->
-                                    <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                    <!-- Wave 4 -->
-                                    <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                </svg>
-                                
-                            </div>
-                            <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                <img src="{{ asset('backend/assets/images/users/16.png') }}" class="img-fluid rounded animate-up" alt="User 1" style="width: 100%; height: auto; aspect-ratio: 9/16; z-index: 2; position: relative;">
-                                <div class="quarter-circle large-circle"></div>
-                                <div class="quarter-circle small-circle">1</div>
-                                <div class="overlay-label position-absolute">
-                                    <strong>Juni</strong><br>
-                                    15 requests
-                                </div>
-                            </div>
-                        </div>
-                        
         
-                        <!-- User 2 -->
-                        <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                            <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                    <!-- Wave 1 -->
-                                    <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                    <!-- Wave 2 -->
-                                    <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                    <!-- Wave 3 -->
-                                    <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                    <!-- Wave 4 -->
-                                    <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                </svg>
-                                
-                            </div>
-                            <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                <img src="{{ asset('backend/assets/images/users/6.png') }}" class="img-fluid rounded animate-up" alt="User 2" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                                <div class="quarter-circle large-circle"></div>
-                                <div class="quarter-circle small-circle">2</div>
-                                <div class="overlay-label position-absolute" >
-                                    <strong>Adi</strong><br>
-                                    12 requests
+                                    <!-- Add Navigation -->
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
                                 </div>
-                            </div>
-                        </div>
-        
-                        <!-- User 3 -->
-                        <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                            <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                    <!-- Wave 1 -->
-                                    <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                    <!-- Wave 2 -->
-                                    <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                    <!-- Wave 3 -->
-                                    <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                    <!-- Wave 4 -->
-                                    <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                </svg>
-                                
-                            </div>
-                            <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                <img src="{{ asset('backend/assets/images/users/7.png') }}" class="img-fluid rounded animate-up" alt="User 3" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                                <div class="quarter-circle large-circle"></div>
-                                <div class="quarter-circle small-circle">3</div>
-                                <div class="overlay-label position-absolute">
-                                    <strong>Rudi</strong><br>
-                                    10 requests
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-
-
-        
-    </div>
-    <div class="row gx-4">
-        <div class="col-xl-12">
-            <h4 class="card-title mb-3 text-info">Stok Barang</h4>
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="datatablein" class="table table-bordered yajra-datatable" 
-                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        
-                        <thead>
-                            <tr>
-                                <th width="10%" class="text-center">Kode</th>
-                                <th width="20%">Kelompok Barang</th>
-                                <th>Nama Barang</th>
-                                <th width="1%" class="text-center">Stok</th>
-                                <th width="1%" class="text-center">Satuan</th>
-                                {{-- <th width="1%" class="text-center">Aksi</th> --}}
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach($barangs as $item)
-                                <tr>
-                                    <td width="1%" class="text-center">{{ $item->kode }}</td>
-                                    <td width="20%">{{ $item->kelompok->nama ?? 'N/A' }}</td>
-                                    <td>{{ $item->nama }}</td>
-                                    <td width="1%" class="text-center">{{ $item->qty_item }}</td>
-                                    <td width="1%" class="text-center">{{ $item->satuan->nama ?? 'N/A' }}</td>
-                                    
-                                        {{-- <a href="{{ route('barang.edit', $item->id) }}" class="btn btn-info sm" title="Edit Data"> <i class="fas fa-edit"></i> </a>
-                                        <a href="{{ route('barang.delete', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"> <i class="fas fa-trash-alt"></i> </a> --}}
-                                    
-                                    {{-- <td class="table-actions" style="text-align: center; vertical-align: middle;">
-                                        <!-- Tombol dengan link route ke halaman view -->
-                                        <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-warning btn-sm">
-                                            <i class="fas fa-edit" style="color: #ca8a04"></i>
-                                        </a>
-                                        
-                                        <!-- Tombol dengan link route ke halaman print -->
-                                        <a href="{{ route('barang.delete', $item->id) }}" class="btn bg-danger btn-sm">
-                                            <i class="fas fa-trash-alt text-danger"></i>
-                                        </a>
-                                    </td> --}}
-                                    
-                                </tr>
                             @endforeach
-                        </tbody>
-
-                    </table>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-end fw-bold">
-                        <a href="{{ route('permintaan.all') }}" class="text-info">Lihat Selengkapnya <i class="mdi mdi-arrow-right font-size-16 text-info align-middle"></i></a>
-                    </div>                
+                </div>
+            </div>
+        </div>
+
+        <div class="row gx-4">
+                <div class="col-xl-3 col-md-6 mb-0">
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">Total Permintaan<br>Diajukan</h5>
+                                    <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                    <h4 class="mb-2 mt-2">{{ $totalPermintaanBulanIni ?? 'Tidak ada data' }}</h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-primary text-primary rounded-3">
+                                        <i class="mdi mdi-clipboard-text-multiple-outline font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                            
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+                <div class="col-xl-3 col-md-6 mb-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">Total Permintaan<br>Selesai</h5>
+                                    <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                    <h4 class="mb-2 mt-2">{{ $totalPermintaanSelesai ?? 'Tidak ada data' }}</h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-success text-success rounded-3">
+                                        <i class="mdi mdi-clipboard-check-outline font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+                <div class="col-xl-3 col-md-6 mb-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">Total Permintaan<br>Pending</h5>
+                                    <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                    <h4 class="mb-2 mt-2">{{ $totalPermintaanPending ?? 'Tidak ada data' }}</h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-warning text-warning rounded-3">
+                                        <i class="mdi mdi-clipboard-clock-outline font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+                <div class="col-xl-3 col-md-6 mb-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">Total Permintaan<br>Ditolak</h5>
+                                    <h6 class="mb-0 text-muted small">Bulan Ini</h6>
+                                    <h4 class="mb-2 mt-2">{{ $totalPermintaanRejected ?? 'Tidak ada data' }}</h4>
+                                </div>
+                                <div class="avatar-sm">
+                                    <span class="avatar-title bg-danger text-danger rounded-3">
+                                        <i class="mdi mdi-clipboard-remove-outline font-size-24"></i>  
+                                    </span>
+                                </div>
+                            </div>                                              
+                        </div><!-- end cardbody -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+        </div><!-- end row -->
+
+            <!-- Chart Container -->
+        <div class="row gx-4">
+            <!-- Chart for Top Score Barang Diminta -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3 text-info">Top 5 Barang Diminta</h4>
+                        <canvas id="myChartBarang" width="400" height="237" style="max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
+                        <div class="leaderboard-container" style="position: relative;">
+                            <!-- User 1 -->
+                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
+                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                        <!-- Wave 1 -->
+                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                        <!-- Wave 2 -->
+                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                        <!-- Wave 3 -->
+                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                        <!-- Wave 4 -->
+                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                    </svg>
+                                    
+                                </div>
+                                <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
+                                    <img src="{{ asset('backend/assets/images/users/16.png') }}" class="img-fluid rounded animate-up" alt="User 1" style="width: 100%; height: auto; aspect-ratio: 9/16; z-index: 2; position: relative;">
+                                    <div class="quarter-circle large-circle"></div>
+                                    <div class="quarter-circle small-circle">1</div>
+                                    <div class="overlay-label position-absolute">
+                                        <strong>Juni</strong><br>
+                                        15 requests
+                                    </div>
+                                </div>
+                            </div>
+                            
+            
+                            <!-- User 2 -->
+                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
+                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                        <!-- Wave 1 -->
+                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                        <!-- Wave 2 -->
+                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                        <!-- Wave 3 -->
+                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                        <!-- Wave 4 -->
+                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                    </svg>
+                                    
+                                </div>
+                                <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
+                                    <img src="{{ asset('backend/assets/images/users/6.png') }}" class="img-fluid rounded animate-up" alt="User 2" style="width: 100%; height: auto; aspect-ratio: 9/16;">
+                                    <div class="quarter-circle large-circle"></div>
+                                    <div class="quarter-circle small-circle">2</div>
+                                    <div class="overlay-label position-absolute" >
+                                        <strong>Adi</strong><br>
+                                        12 requests
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- User 3 -->
+                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
+                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                        <!-- Wave 1 -->
+                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                        <!-- Wave 2 -->
+                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                        <!-- Wave 3 -->
+                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                        <!-- Wave 4 -->
+                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                    </svg>
+                                    
+                                </div>
+                                <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
+                                    <img src="{{ asset('backend/assets/images/users/7.png') }}" class="img-fluid rounded animate-up" alt="User 3" style="width: 100%; height: auto; aspect-ratio: 9/16;">
+                                    <div class="quarter-circle large-circle"></div>
+                                    <div class="quarter-circle small-circle">3</div>
+                                    <div class="overlay-label position-absolute">
+                                        <strong>Rudi</strong><br>
+                                        10 requests
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h4 class="card-title mb-0">Stok Barang</h4>
+                        </div>
+                        <table id="datatable" class="table table-bordered yajra-datatable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">            
+                            <thead>
+                                <tr>
+                                    <th width="10%" class="text-center">Kode</th>
+                                    <th width="20%">Kelompok Barang</th>
+                                    <th>Nama Barang</th>
+                                    <th width="1%" class="text-center">Stok</th>
+                                    <th width="1%" class="text-center">Satuan</th>
+                                    {{-- <th width="1%" class="text-center">Aksi</th> --}}
+                                </tr>
+                            </thead>
+                            <tbody>  
+                            </tbody>
+                        </table>
+
+                        <div class="d-flex justify-content-end fw-bold">
+                            <a href="{{ route('permintaan.all') }}" class="text-info">Lihat Selengkapnya <i class="mdi mdi-arrow-right font-size-16 text-info align-middle"></i></a>
+                        </div>                
+                    </div><!-- end card -->
                 </div><!-- end card -->
-            </div><!-- end card -->
-        </div><!-- end col -->
-    </div><!-- end row -->
+            </div><!-- end col -->
+        </div><!-- end row -->
+    </div>
 </div>
 
  <!-- Pastikan jQuery sudah di-load -->
@@ -728,7 +674,6 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-images"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Include DataTables JS and Buttons JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -737,16 +682,133 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
-    $('#datatable').DataTable({
-        initComplete: function() {
-            $('#datatable thead').css('background-color', '#043277').css('color', 'white');
-        }
-    });
-});
+        var table = $('.yajra-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            scrollX: true,
+            ajax: {
+                url: "{{ route('barang.all') }}",  // Pastikan route ini sesuai dengan yang ada di web.php
+                data: function(d) {
+                    d.kelompok_id = $('#kelompok_filter').val();  // Filter berdasarkan kelompok barang
+                }
+            },
+            columns: [
+                { data: 'kode', name: 'kode', className: 'text-center align-content-center' },
+                { data: 'kelompok.nama', name: 'kelompok.nama', className: 'align-content-center' },
+                { data: 'nama', name: 'nama', className: 'align-content-center' },
+                { data: 'qty_item', name: 'qty_item', className: 'text-center align-content-center' },
+                { data: 'satuan', name: 'satuan.nama', className: 'text-center align-content-center' }
+            ],
+            dom: 'Brftip',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'form-select',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Export Excel',
+                            title: 'Data Barang',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'copy',
+                            text: 'Copy',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'csv',
+                            text: 'CSV',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'PDF',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        }
+                    ]
+                }
+            ],
+            initComplete: function() {
+                // Filter untuk kelompok barang
+                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 150px;"><option value="">Semua Kelompok Barang</option></select>')
+                    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
+                    .on('change', function() {
+                        table.draw();
+                    });
 
+                // Menambahkan opsi untuk kelompok barang dari server (opsional, jika ingin dinamis)
+                @foreach($kelompoks as $kelompok)
+                    kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
+                @endforeach
+    
+                // Styling untuk select
+                $('.form-select').each(function() {
+                    $(this).css({
+                        'display': 'block',
+                        'padding': '.47rem 1.75rem .47rem .75rem',
+                        '-moz-padding-start': 'calc(.75rem - 3px)',
+                        'font-size': '.9rem',
+                        'font-weight': '500',
+                        'line-height': '1.5',
+                        'color': '#505d69',
+                        'background-color': '#fff',
+                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                        'background-repeat': 'no-repeat',
+                        'background-position': 'right .75rem center',
+                        'background-size': '16px 12px',
+                        'border': '1px solid #ced4da',
+                        'border-radius': '.25rem',
+                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        'appearance': 'none'
+                    });
+                });
+    
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                    });
+                });
+    
+                // Memulai observer pada elemen yang mengandung tombol
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+
+        $(document).ajaxComplete(function() {
+            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
+            setTimeout(function() {
+                $('.dt-button').removeClass('dt-button buttons-collection');
+                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            }, 100); // Menunggu beberapa waktu sebelum menghapus
+        });
+    });
 </script>
+
+
 
 <script>
     // Initialize Bootstrap tooltips
@@ -820,50 +882,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 easing: 'easeInOutBounce'
             }
         }
-    });
-});
-
-</script>
-
-
-
-
-<script>
-    $(document).ready(function() {
-    $('#datatablein').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{{ route('barang.data.index') }}',
-        columns: [
-            { data: 'kode', name: 'kode' },
-            { data: 'kelompok.nama', name: 'kelompok.nama' },
-            { data: 'nama', name: 'nama' },
-            { data: 'qty_item', name: 'qty_item', class: 'text-center' },
-            { data: 'satuan.nama', name: 'satuan.nama', class: 'text-center' },
-        ],
-        dom: 'Bfrtip',
-        buttons: [
-                {
-                    extend: 'copy',
-                    title: 'Rekap Stok Barang' // Set custom title for copy export
-                },
-                {
-                    extend: 'csv',
-                    title: 'Rekap Stok Barang' // Set custom title for CSV export
-                },
-                {
-                    extend: 'excel',
-                    title: 'Rekap Stok Barang' // Set custom title for Excel export
-                },
-                {
-                    extend: 'pdf',
-                    title: 'Rekap Stok Barang' // Set custom title for PDF export
-                },
-                {
-                    extend: 'print',
-                    title: 'Rekap Stok Barang' // Set custom title for print
-                }
-            ]
     });
 });
 
