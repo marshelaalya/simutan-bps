@@ -50,52 +50,108 @@ class UserController extends Controller
         return view('backend.user.user_add');
     } // End Method
 
-    public function UserStore(Request $request){
-        // Validasi input
+    public function UserStore(Request $request)
+    {
+        // Validasi input termasuk file
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
             'role' => 'required|in:admin,supervisor,pegawai',
+            'image' => 'nullable|image|mimes:png|max:2048',
+            'signature' => 'nullable|image|mimes:png|max:2048',
         ]);
-
-        // Menyimpan pengguna dengan password default
-        User::create([
+    
+        // Simpan user tanpa path file terlebih dahulu untuk mendapatkan ID user
+        $user = User::create([
             'name' => $request->name,
-            'role' => $request->role,
             'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make('password'), // Password default
+            'role' => $request->role,
+            'password' => Hash::make('password'),
         ]);
-
+    
+        // Proses upload file
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            // Menyimpan file di direktori yang benar
+            $imagePath = $image->storeAs('public/backend/assets/images/users', 'foto_' . $user->id . '.png');
+            // Mengupdate path relatif untuk disimpan di database
+            $imagePath = str_replace('public/', '', $imagePath);
+        } else {
+            $imagePath = null;
+        }
+    
+        if ($request->hasFile('signature')) {
+            $signature = $request->file('signature');
+            // Menyimpan file di direktori yang benar
+            $signaturePath = $signature->storeAs('public/backend/assets/images/users', 'ttd_' . $user->id . '.png');
+            // Mengupdate path relatif untuk disimpan di database
+            $signaturePath = str_replace('public/', '', $signaturePath);
+        } else {
+            $signaturePath = null;
+        }
+    
+        // Update user dengan path file
+        $user->update([
+            'foto' => $imagePath,
+            'ttd' => $signaturePath,
+        ]);
+    
         $notification = array(
             'message' => "Pengguna berhasil ditambahkan.",
             'alert-type' => "success"
         );
-
+    
         return redirect()->route('user.all')->with($notification);
     }
-
+    
+    
     public function UserEdit($id){
         $user = User::findOrFail($id);
         return view('backend.user.user_edit', compact('user'));
     }
 
     public function UserUpdate(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
+{
+    $user = User::findOrFail($id);
 
+    // Validate the input including files
+    $request->validate([
+        'role' => 'required|in:admin,supervisor,pegawai',
+        'image' => 'nullable|image|mimes:png|max:2048',
+        'signature' => 'nullable|image|mimes:png|max:2048',
+    ]);
+
+    // Update user role
+    $user->update([
+        'role' => strtolower($request->role),
+    ]);
+
+    // Handle file upload for photo
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imagePath = $image->storeAs('public/assets/images/users', 'foto_' . $user->id . '.png');
         $user->update([
-            'role' => strtolower($request->role),
+            'foto' => str_replace('public/', 'backend/', $imagePath)
         ]);
-
-        $notification = array(
-            'message' => 'Role pengguna berhasil diganti.',
-            'alert-type' => 'success'
-        );
-
-        return redirect()->route('user.all')->with($notification);
     }
+
+    // Handle file upload for signature
+    if ($request->hasFile('signature')) {
+        $signature = $request->file('signature');
+        $signaturePath = $signature->storeAs('public/assets/images/users', 'ttd_' . $user->id . '.png');
+        $user->update([
+            'ttd' => str_replace('public/', 'backend/', $signaturePath)
+        ]);
+    }
+
+    $notification = array(
+        'message' => 'Data pengguna berhasil diperbarui.',
+        'alert-type' => 'success'
+    );
+
+    return redirect()->route('user.all')->with($notification);
+}
+
 
     public function UserDelete($id){
         user::findOrFail($id)->delete();

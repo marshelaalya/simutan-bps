@@ -5670,7 +5670,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var url = this.getAttribute('href'); // Menggunakan confirm() untuk konfirmasi penghapusan
 
-      var isConfirmed = window.confirm('Anda yakin ingin membatalkan permintaan?');
+      var isConfirmed = window.confirm('Anda yakin ingin permintaan?');
 
       if (isConfirmed) {
         window.location.href = url; // Mengarahkan ke URL penghapusan jika dikonfirmasi
@@ -39748,7 +39748,7 @@ function _fnCalculateColumnWidths ( settings )
 	tmpTable.find('thead th, thead td').each( function () {
 		// Get the `width` from the header layout
 		var width = _fnColumnsSumWidth( settings, this, true, false );
-
+g 
 		if ( width ) {
 			this.style.width = width;
 

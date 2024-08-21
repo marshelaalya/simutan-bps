@@ -47,7 +47,7 @@
                     <h6 class="dropdown-header">Notifications</h6>
                     <div class="notification-list">
                         @forelse (session('notifications', []) as $notification)
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('permintaan.approve', ['id' => $notification->permintaan_id]) }}">
                                 <div class="d-flex align-items-center">
                                     <div class="me-3">
                                         <div class="avatar-sm">
@@ -66,6 +66,7 @@
                             <p class="text-center">No new notifications</p>
                         @endforelse
                     </div>
+                    
                     <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">View All</a>
                 </div>
             </div>

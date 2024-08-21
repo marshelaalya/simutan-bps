@@ -107,7 +107,6 @@
                                 <tr>
                                     <th>Nama Pengguna</th>
                                     <th>Role</th>
-                                    <th>Email</th>
                                     <th>Username</th>
                                     <th width="1%" class="text-center">Aksi</th>
                                 </tr>
@@ -147,8 +146,14 @@
             },
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'role', name: 'role'},
-                {data: 'email', name: 'email'},
+                {
+                    data: 'role',
+                    name: 'role',
+                    render: function(data, type, row) {
+                        // Mengubah format role menjadi huruf kapital di bagian depan
+                        return data.charAt(0).toUpperCase() + data.slice(1);
+                    }
+                },
                 {data: 'username', name: 'username'},
                 {
                     data: 'action', 
@@ -281,5 +286,6 @@
         });
     });
 </script>
+
     
 @endsection

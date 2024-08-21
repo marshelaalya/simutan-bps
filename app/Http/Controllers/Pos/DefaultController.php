@@ -26,16 +26,21 @@ class DefaultController extends Controller
 
     public function getSatuan(Request $request)
     {
-        $barang_id = $request->barang_id;
+        $barang_id = $request->input('barang_id');
     
-        $barang = Barang::where('id', $barang_id)->first(['satuan_id']);
+        // Ambil satuan dari tabel barang
+        $barang = Barang::where('id', $barang_id)->first(['satuan', 'qty_item']);
+        
+        if (!$barang) {
+            return response()->json(['error' => 'Barang tidak ditemukan'], 404);
+        }
     
-        // Ambil data satuan dari database berdasarkan barang_id
-        $satuan = Satuan::where('satuan_id', $barang->satuan_id) // Ubah query ini sesuai relasi atau struktur yang benar
-                        ->get(['satuan_id', 'nama']); // Pastikan kolom yang dibutuhkan diambil
-    
-        return response()->json($satuan);
+        return response()->json([
+            'satuan' => $barang->satuan,
+            'qty_item' => $barang->qty_item
+        ]);
     }
+    
 
 
 }

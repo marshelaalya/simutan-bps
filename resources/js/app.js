@@ -32,22 +32,57 @@ $(document).ready(function() {
 });
 
 
-// Fungsi untuk menampilkan konfirmasi sebelum menghapus
 document.addEventListener('DOMContentLoaded', function () {
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-
-    deleteButtons.forEach(button => {
+    document.querySelectorAll('.btn-delete').forEach(function (button) {
         button.addEventListener('click', function (event) {
             event.preventDefault(); // Mencegah aksi default
-
-            const url = this.getAttribute('href');
             
-            // Menggunakan confirm() untuk konfirmasi penghapusan
-            const isConfirmed = window.confirm('Anda yakin ingin membatalkan permintaan?');
+            const url = this.getAttribute('href'); // Ambil URL dari atribut href
 
-            if (isConfirmed) {
-                window.location.href = url; // Mengarahkan ke URL penghapusan jika dikonfirmasi
-            }
+            // Tampilkan konfirmasi SweetAlert2
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Tindakan ini tidak dapat dibatalkan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika dikonfirmasi, arahkan ke URL penghapusan
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            Swal.fire(
+                                'Dihapus!',
+                                'Item telah dihapus.',
+                                'success'
+                            ).then(() => {
+                                window.location.reload(); // Refresh halaman setelah penghapusan
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                'Penghapusan gagal.',
+                                'error'
+                            );
+                        }
+                    }).catch(() => {
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan.',
+                            'error'
+                        );
+                    });
+                }
+            });
         });
     });
 });
+

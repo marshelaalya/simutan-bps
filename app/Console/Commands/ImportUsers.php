@@ -3,13 +3,14 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\UsersImport;
+use Illuminate\Support\Facades\DB;
+use League\Csv\Reader;
+use League\Csv\Statement;
 
 class ImportUsers extends Command
 {
-    protected $signature = 'import:users {file}';
-    protected $description = 'Import users from an Excel or CSV file';
+    protected $signature = 'import:users';
+    protected $description = 'Import users from a CSV file';
 
     public function __construct()
     {
@@ -18,17 +19,28 @@ class ImportUsers extends Command
 
     public function handle()
     {
-        $file = $this->argument('file');
+        $csvFile = base_path('app/Console/Commands/pegawai.csv');
+        
+        // Read the CSV file
+        $reader = Reader::createFromPath($csvFile, 'r');
+        $reader->setHeaderOffset(0); // Set the header offset
+        $records = (new Statement())->process($reader);
 
-        if (!file_exists($file)) {
-            $this->error('File does not exist.');
-            return 1;
+        // Iterate over the records and insert them into the database
+        foreach ($records as $record) {
+            DB::table('users')->updateOrInsert(
+                ['id' => $record['id']], // Assume 'id' is the primary key
+                [
+                    'name' => $record['name'],
+                    'role' => $record['role'],
+                    'username' => $record['username'],
+                    'password' => bcrypt($record['password']),
+                    'ttd' => $record['ttd'],
+                    'foto' => $record['foto']
+                ]
+            );
         }
 
-        // Import the file using the UsersImport class
-        Excel::import(new UsersImport, $file);
-
-        $this->info('Data imported successfully!');
-        return 0;
+        $this->info('Users imported successfully!');
     }
 }

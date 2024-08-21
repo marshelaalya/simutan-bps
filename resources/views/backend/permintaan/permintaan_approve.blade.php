@@ -112,20 +112,18 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Nama Barang</th>
-                                        <th class="text-center">Kuantitas</th>
+                                        <th>Kuantitas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($pilihan as $item)
                                         <tr>
                                             <td>{{ $item->barang->nama }}</td>
-                                            <td class="text-center" style="white-space: nowrap; width: 1%; min-width: 400px;">
-                                                {{ $item->req_qty }} {{ $item->barang->satuan->nama }}
-                                            </td>
+                                            <td style="white-space: nowrap; width: 1%; min-width: 400px;">{{ $item->req_qty }} {{ $item->barang->satuan }}</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="2" class="text-center">Tidak ada barang terpilih</td>
+                                            <td colspan="3" class="text-center">Tidak ada barang terpilih</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

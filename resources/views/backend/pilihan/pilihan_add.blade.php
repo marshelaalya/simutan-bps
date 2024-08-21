@@ -1,5 +1,9 @@
-@extends('admin.admin_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
+         'pegawai.pegawai_master'))
+
+@section(auth()->user()->role === 'admin' ? 'admin' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
@@ -106,7 +110,6 @@
                                     <div class="label ms-2">Detail Barang Permintaan</div>
                                 </div>
                             </div>
-                        
                             
                             <!-- Step 1 -->
                             <div id="step1" class="step-content">
@@ -150,7 +153,7 @@
                                 <hr class="border border-secondary" style="border-width: 0.2px;">
                                 
                                 <div class="row g-3 mb-3">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3"  style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
                                         <div>
                                             <label for="kelompok_id" class="form-label text-info">Kelompok Barang</label>
                                             <select name="kelompok_id" class="form-select" id="kelompok_id" aria-label="Pilih Barang">
@@ -160,8 +163,8 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
-                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:38%">
+                                    </div>                                    
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:30%">
                                         <div>
                                             <label for="barang_id" class="form-label text-info">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
@@ -169,14 +172,20 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
+                                        <div>
+                                            <label for="current_qty" class="form-label text-info">Kuantitas Barang Sekarang</label>
+                                            <input type="text" id="current_qty" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3"  style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:20%">
                                         <div>
                                             <label for="req_qty" class="form-label text-info">Kuantitas Permintaan</label>
                                             <input class="form-control" name="req_qty" type="text" id="req_qty">
                                             <div id="qty_warning" class="form-text text-danger" style="display: none;">
                                                 Kuantitas permintaan tidak boleh lebih dari kuantitas barang sekarang.
                                             </div>
-                                            <span id="current_qty" class="form-text">Kuantitas barang sekarang: </span>
                                         </div>
                                     </div>
                                     <div class="col-sm-2 d-flex justify-content-end align-items-start w-auto" style="margin-top:2.8rem">
@@ -213,7 +222,9 @@
                                         <input type="hidden" name="table_data" id="table_data" value="">
                                         <input type="hidden" name="permintaan_id" id="permintaan_id" value="">
                                         <input type="hidden" id="hidden_date" name="hidden_date">
-                                        <input type="hidden" id="hidden_description" name="hidden_description">   
+                                        <input type="hidden" id="hidden_description" name="hidden_description">  
+                                        <input type="hidden" id="hidden_satuan" name="hidden_satuan">
+ 
                         
                                         <!-- Navigation Buttons -->
                                         <div class="mt-4 d-flex justify-content-between">
@@ -235,7 +246,8 @@
     <tr class="delete_add_more_item">
         <td>@{{ kelompok_nama }}</td>
         <td>@{{ barang_nama }}</td>
-        <td class="text-center">@{{ qty_req }} @{{ barang_satuan }}</td>
+        <td class="text-center">@{{ qty_req }} </td>
+        <td class="text-center">@{{ barang_satuan }}</td>
         <td style="text-align: center; vertical-align: middle;">
             
             <a href="{{ route('dashboard') }}" class="btn bg-warning btn-sm">
@@ -302,26 +314,49 @@
             });
         });
 
-        $('#barang_id').on('change', function() {
-            var selectedOption = $(this).find('option:selected');
-            availableQty = selectedOption.data('qty');
-            barang_satuan = selectedOption.data('satuan');
-            $('#current_qty').text('Kuantitas barang sekarang: ' + availableQty);
-            $('#req_qty').val('');
-            $('#qty_warning').hide();
-            validateForm();
-        });
+// Fungsi untuk menangani perubahan pada pilihan barang
+$('#barang_id').on('change', function() {
+    var barangId = $(this).val();
+    
+    if (barangId) {
+        $.ajax({
+            url: "{{ route('get-satuan') }}",
+            type: "GET",
+            data: { barang_id: barangId },
+            success: function(data) {
+                if (data.error) {
+                    console.error(data.error);
+                    return;
+                }
 
-        $('#req_qty').on('input', function() {
-            var requestedQty = $(this).val();
-            if (requestedQty > availableQty) {
-                $('#qty_warning').show();
-                $('#addMoreButton').prop('disabled', true);
-            } else {
+                // Update UI
+                barangSatuan = data.satuan;
+                availableQty = data.qty_item;
+                $('#current_qty').val(availableQty);
+                $('#req_qty').val('');
                 $('#qty_warning').hide();
                 validateForm();
+            },
+            error: function(xhr) {
+                console.error('An error occurred:', xhr.responseText);
             }
         });
+    }
+});
+
+// Fungsi untuk validasi kuantitas yang diminta
+$('#req_qty').on('input', function() {
+    var requestedQty = $(this).val();
+    if (requestedQty > availableQty) {
+        $('#qty_warning').show();
+        $('#addMoreButton').prop('disabled', true);
+    } else {
+        $('#qty_warning').hide();
+        $('#addMoreButton').prop('disabled', false);
+        validateForm();
+    }
+});
+
 
         $(document).on("click", ".removeeventmore", function() {
             $(this).closest("tr").remove();
@@ -466,31 +501,32 @@
 
         // Add row logic
         $('#addMoreButton').on('click', function() {
-            const source = $("#document-template").html();
-            const template = Handlebars.compile(source);
+    const source = $("#document-template").html();
+    const template = Handlebars.compile(source);
 
-            const context = {
-                date: $('#date').val(), 
-                barang_nama: $('#barang_id option:selected').text(),
-                kelompok_nama: $('#kelompok_id option:selected').text(),
-                qty_req: $('#req_qty').val(),
-                barang_satuan: $('#barang_id option:selected').data('satuan'), // Pastikan ini sesuai dengan data-attributes
-                description: $('#textarea').val()
-            };
+    const context = {
+        date: $('#date').val(),
+        barang_nama: $('#barang_id option:selected').text(),
+        kelompok_nama: $('#kelompok_id option:selected').text(),
+        qty_req: $('#req_qty').val(),
+        barang_satuan: barangSatuan,
+        description: $('#textarea').val()
+    };
 
-            const html = template(context);
+    const html = template(context);
+    $('#table-body').append(html);
+    checkIfTableIsEmpty();
+    
+    // Reset form fields
+    $('#kelompok_id').val('');
+    $('#current_qty').val('');
+    $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
+    $('#req_qty').val('');
+    $('#current_qty').text('');
+    validateForm();
+});
 
-            $('#table-body').append(html);
-            checkIfTableIsEmpty();
-            
-            // Reset form fields
-            $('#kelompok_id').val('');
-            $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
-            $('#req_qty').val('');
-            $('#current_qty').text('Kuantitas barang sekarang: ');
 
-            validateForm();
-        });
 
     });
 </script>

@@ -203,7 +203,7 @@ class PermintaanController extends Controller
     }
 
 
-    public function PermintaanUpdate(Request $request)
+    public function PermintaanUpdate(Request $request, $id)
     {
         $permintaan_id = $request->input('permintaan_id');
         $tableData = $request->input('table_data');
@@ -220,7 +220,6 @@ class PermintaanController extends Controller
                 // Temukan Barang dan Kelompok berdasarkan nama
                 $barang = Barang::where('nama', $item['barang_nama'])->first();
                 $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
-                $satuan = Satuan::where('nama', $item['barang_satuan'])->first();
 
                 if ($barang && $kelompok) {
                     // Ekstrak angka dari qty_req
@@ -242,7 +241,6 @@ class PermintaanController extends Controller
                     $newPilihan->description = $item['description'] ?? null;
                     $newPilihan->barang_id = $barang->id;
                     $newPilihan->req_qty = (int)$qty_req;
-                    $newPilihan->satuan_id = $satuan->satuan_id;
                     $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur sesuai kebutuhan
                     $newPilihan->created_by = Auth::user()->name;
                     $newPilihan->save(); // Simpan ke database
@@ -275,6 +273,7 @@ class PermintaanController extends Controller
             'alert-type' => 'success'
         ]);
     }
+
     public function PermintaanPrint($id)
     {
         // Ambil data permintaan dan pilihan
@@ -287,16 +286,15 @@ class PermintaanController extends Controller
         // Inisialisasi Dompdf
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true); // Jika Anda memerlukan PHP dalam HTML
-        // $options->set('defaultFont', 'Poppins'); // Atur font default
-    
+        $options->set('isPhpEnabled', true);
+        
         $dompdf = new Dompdf($options);
         
         // Load HTML ke Dompdf
         $dompdf->loadHtml($view);
         
-        // (Optional) Atur ukuran kertas dan orientasi
-        $dompdf->setPaper('A4', 'landscape');
+        // Atur ukuran kertas dan orientasi
+        $dompdf->setPaper('A4', 'portrait');
         
         // Render PDF
         $dompdf->render();
@@ -304,9 +302,7 @@ class PermintaanController extends Controller
         // Output PDF
         return $dompdf->stream('permintaan_'.$permintaan->no_permintaan.'.pdf', array('Attachment' => 0));
     }
-
-    // PermintaanController.php
-
+    
 public function getPermintaanData(Request $request)
 {
     $query = Permintaan::with('pilihan')

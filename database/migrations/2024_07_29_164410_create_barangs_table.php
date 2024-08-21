@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('nama')->nullable(); // kolom nama
             $table->integer('qty_item')->nullable(); // kolom qty_item
             $table->string('satuan'); // kolom satuan
+            $table->string('foto_barang')->nullable(); // kolom nama
             $table->timestamps(); // kolom timestamps (created_at dan updated_at)
         });
        

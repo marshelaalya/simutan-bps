@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Kelompok;
-use App\Models\Satuan;
+use App\Models\Pemasukan;
 use App\Models\Barang;
 use Auth;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
+
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class BarangController extends Controller
 {
@@ -39,49 +42,40 @@ class BarangController extends Controller
         ->toJson(); // Ensure the data is returned as JSON
 }
 
-    public function barangStore(Request $request)
+public function barangStore(Request $request)
 {
-    $validated = $request->validate([
-        'nama' => 'required|string|max:255',
-        'kode_barang' => 'required|string|max:255',
-        'kelompok_id' => 'required|integer|exists:kelompoks,id',
-        'qty_item' => 'nullable|integer',
-        'satuan_id' => 'required|string',
-        'satuanBaru' => 'nullable|string', // Validate satuanBaru
-    ]);
 
-    $satuan_id = $request->satuan_id;
-    $satuanBaru = $request->satuanBaru; // Get satuanBaru from the request
+    $satuan = $request->satuan;
+    $satuanBaru = $request->satuanBaru;
 
-    // If satuan_id is 'lainnya' and satuanBaru is not empty, add new satuan
-    if ($satuan_id === 'lainnya' && !empty($satuanBaru)) {
-        // Check if the new satuan already exists
-        $existingSatuan = Satuan::whereRaw('LOWER(nama) = ?', [strtolower($satuanBaru)])->first();
+    // Jika pilihan satuan adalah 'lainnya' dan satuanBaru tidak kosong
+    if ($satuan === 'lainnya' && !empty($satuanBaru)) {
+        // Simpan satuan baru
+        // Periksa apakah satuan baru sudah ada di database
+        $existingSatuan = Barang::where('satuan', strtolower($satuanBaru))->first();
         
         if ($existingSatuan) {
-            // If it exists, use its ID
-            $satuan_id = $existingSatuan->satuan_id;
+            // Jika sudah ada, gunakan satuan yang sudah ada
+            $satuan = $existingSatuan->satuan;
         } else {
-            // If it doesn't exist, create a new satuan
-            $satuan = new Satuan();
-            $satuan->nama = $satuanBaru;
-            $satuan->save();
-            
-            $satuan_id = $satuan->satuan_id; // Use the newly created satuan's ID
+            // Jika belum ada, simpan satuan baru ke dalam tabel barang
+            // Jika Anda ingin menyimpan satuan baru dalam tabel barang atau menggunakan langsung
+            $satuan = strtolower($satuanBaru);
         }
     }
 
-    // Create a new Barang instance and save it
+    // Simpan data barang baru
     $barang = new Barang();
     $barang->nama = $request->nama;
     $barang->kode = $request->kode_barang;
     $barang->kelompok_id = $request->kelompok_id;
-    $barang->qty_item = $request->qty_item; // Correctly assign qty_item
-    $barang->satuan_id = $satuan_id;
+    $barang->qty_item = $request->qty_item;
+    $barang->satuan = $satuan; // Simpan satuan di kolom satuan
     $barang->created_at = Carbon::now();
     $barang->updated_at = Carbon::now();
     $barang->save();
 
+    // Notifikasi sukses
     $notification = array(
         'message' => "Barang berhasil ditambahkan.",
         'alert-type' => "success"
@@ -89,10 +83,6 @@ class BarangController extends Controller
 
     return redirect()->route('barang.all')->with($notification);
 }
-
-    
-
-
 
 
     public function KelompokStore(Request $request){
@@ -146,56 +136,100 @@ class BarangController extends Controller
 
     public function barangAdd(){
         $kelompok = Kelompok::all();
-        $satuans = Satuan::all();
-        return view('backend.barang.barang_add', compact('kelompok', 'satuans'));
-    } // End Method
+        $satuan = Barang::select('satuan')
+        ->distinct()
+        ->get();
+        
+        return view('backend.barang.barang_add', compact('kelompok', 'satuan'));
+    } 
 
-    // public function barangStore(Request $request){
-    //     Barang::insert([
-    //         'nama' => $request->nama,
-    //         'kode' => $request->kode_barang,
-    //         'kelompok_id' => $request->kelompok_id,
-    //         'qty_item' => $request->qty_item,
-    //         'satuan_id' => $request->satuan_id,
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now(),
-    //     ]);
-    
-    //     $notification = array(
-    //         'message' => "Barang berhasil ditambahkan.",
-    //         'alert-type' => "Success"
-    //     );
-
-    //     return redirect()->route('barang.all')->with($notification);
-    // }
-
-    public function barangEdit($id){
-
+    public function barangEdit($id)
+    {
         $kelompok = Kelompok::all();
-
-        $barang = barang::findOrFail($id);
-        return view('backend.barang.barang_edit', compact('barang','kelompok'));
+        $satuans = Barang::select('satuan')->distinct()->pluck('satuan'); // Mengambil koleksi string
+    
+        $barang = Barang::findOrFail($id);
+        return view('backend.barang.barang_edit', compact('barang', 'kelompok', 'satuans'));
     }
+    
+    
 
-    public function barangUpdate(Request $request){
+    public function barangUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'kode_barang' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'kelompok_id' => 'required|integer|exists:kelompoks,id',
+            'qty_item' => 'nullable|integer',
+            'satuan' => 'required|string',
+            'satuanBaru' => 'nullable|string',
+        ]);
+    
         $barang_id = $request->id;
-
-        barang::findOrFail($barang_id)->update([
+        $satuan = $request->satuan;
+    
+        // Jika satuan adalah 'lainnya', periksa dan tambahkan satuan baru
+        if ($satuan === 'lainnya') {
+            $satuanBaru = $request->satuanBaru;
+    
+            if (!empty($satuanBaru)) {
+                // Check if the new satuan already exists
+                $existingSatuan = Barang::whereRaw('LOWER(satuan) = ?', [strtolower($satuanBaru)])->first();
+    
+                if ($existingSatuan) {
+                    // Use the existing satuan
+                    $satuan = $existingSatuan->satuan;
+                } else {
+                    // Create a new satuan
+                    $satuan = $satuanBaru;
+                }
+            }
+        }
+    
+        // Update the barang record
+        Barang::findOrFail($barang_id)->update([
             'kode' => $request->kode_barang,
             'nama' => $request->nama,
             'kelompok_id' => $request->kelompok_id,
             'qty_item' => $request->qty_item,
-            'satuan_id' => $request->satuan_id,
+            'satuan' => $satuan,
             'updated_at' => Carbon::now(),
         ]);
-
+    
         $notification = array(
             'message' => 'Barang berhasil di update',
             'alert-type' => 'success'
         );
-
+    
         return redirect()->route('barang.all')->with($notification);
     }
+
+    
+    public function addStock(Request $request)
+    {
+
+        try {
+            // Temukan barang
+            $barang = Barang::findOrFail($request->barang_id);
+
+            // Simpan data pemasukan
+            Pemasukan::create([
+                'barang_id' => $request->barang_id,
+                'qty' => $request->qty,
+                'tanggal' => now()->toDateString(),
+            ]);
+
+            // Tambah stok
+            $barang->qty_item += $request->qty;
+            $barang->save();
+
+            return response()->json(['success' => 'Stok berhasil ditambahkan.']);
+        } catch (Exception $e) {
+            // Log error dan kembalikan pesan error
+            // Log::error('Error adding stock:', ['exception' => $e->getMessage()]);
+            return response()->json(['error' => 'Terjadi kesalahan saat menambahkan stok.'], 500);
+        }
+    }   
 
     public function barangDelete($id){
         barang::findOrFail($id)->delete();

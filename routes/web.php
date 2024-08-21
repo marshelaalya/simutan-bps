@@ -72,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/user/add', 'UserAdd')->name('user.add');
         Route::post('/user/store', 'UserStore')->name('user.store');
         Route::get('/user/edit/{id}', 'UserEdit')->name('user.edit');
-        Route::post('/user/update/{id}', 'UserUpdate')->name('user.update');
+        Route::put('/user/update/{id}', 'UserUpdate')->name('user.update');
         Route::get('/user/delete/{id}', 'UserDelete')->name('user.delete');
     });
 
@@ -83,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('permintaan/approve/{id}', 'PermintaanApprove')->name('permintaan.approve');
         Route::patch('permintaan/update-status/{id}', 'PermintaanUpdateStatus')->name('permintaan.updateStatus');
         Route::get('/permintaan/saya', 'PermintaanSaya')->name('permintaan.saya');
-        Route::get('/permintaan/edit/{id}', 'PermintaanEdit')->name('permintaan.edit');
+        Route::get('/permintaan/{id}/edit', 'PermintaanEdit')->name('permintaan.edit');
         Route::put('/permintaan/update/{id}', 'PermintaanUpdate')->name('permintaan.update');
         Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
         Route::get('/permintaan/print/{id}', 'PermintaanPrint')->name('permintaan.print');
@@ -111,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
         Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
         Route::get('barang/data', 'data')->name('barang.data');
-
+        Route::post('/barang/add-stock', 'addStock')->name('barang.addStock');
         // web.php
 
     });

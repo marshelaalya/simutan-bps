@@ -1,26 +1,26 @@
 id,name,role,username,password,ttd,foto
-1,Favten Ari Pujiastuti,pegawai,favtenari@bps.go.id,password,backend/assets/images/users/ttd_1.jpg,backend/assets/images/users/foto_1.jpg
-2,Mohamad Rudiansyah Oktavan,supervisor,okta.rudi@bps.go.id,password,backend/assets/images/users/ttd_2.jpg,backend/assets/images/users/foto_2.jpg
-3,Almira Nathania Zaneta,pegawai,almira@bps.go.id,password,backend/assets/images/users/ttd_3.jpg,backend/assets/images/users/foto_3.jpg
-4,Juniaty Pardede,admin,juniaty.pardede@bps.go.id,password,backend/assets/images/users/ttd_4.jpg,backend/assets/images/users/foto_4.jpg
-5,Mona Vita Eclesia Br. Pasaribu,pegawai,mona.vita@bps.go.id,password,backend/assets/images/users/ttd_5.jpg,backend/assets/images/users/foto_5.jpg
-6,Ir. Nurika Parmiati,pegawai,nurikaparmi@bps.go.id,password,backend/assets/images/users/ttd_6.jpg,backend/assets/images/users/foto_6.jpg
-7,Hendriko Yanis,pegawai,hendriko@bps.go.id,password,backend/assets/images/users/ttd_7.jpg,backend/assets/images/users/foto_7.jpg
-8,Farid,pegawai,faridsap@bps.go.id,password,backend/assets/images/users/ttd_8.jpg,backend/assets/images/users/foto_8.jpg
-9,Fisilia Indriastuti W,pegawai,fisilia@bps.go.id,password,backend/assets/images/users/ttd_9.jpg,backend/assets/images/users/foto_9.jpg
-10,Budi Darmawan,pegawai,budidarma@bps.go.id,password,backend/assets/images/users/ttd_10.jpg,backend/assets/images/users/foto_10.jpg
-11,Bambang Sulistyo Hadi,pegawai,bshadi@bps.go.id,password,backend/assets/images/users/ttd_11.jpg,backend/assets/images/users/foto_11.jpg
-12,Triana Sipayung,pegawai,triana.sipayung@bps.go.id,password,backend/assets/images/users/ttd_12.jpg,backend/assets/images/users/foto_12.jpg
-13,Nuri Nasriyah,pegawai,nurin@bps.go.id,password,backend/assets/images/users/ttd_13.jpg,backend/assets/images/users/foto_13.jpg
-14,Nila Windiyarti,pegawai,artinila@bps.go.id,password,backend/assets/images/users/ttd_14.jpg,backend/assets/images/users/foto_14.jpg
-15,Ike Prasetiwi,pegawai,prasetiwi@bps.go.id,password,backend/assets/images/users/ttd_15.jpg,backend/assets/images/users/foto_15.jpg
-16,Elsia Citra,pegawai,elsia.citra@bps.go.id,password,backend/assets/images/users/ttd_16.jpg,backend/assets/images/users/foto_16.jpg
-17,Riza Andina,pegawai,riza.andina@bps.go.id,password,backend/assets/images/users/ttd_17.jpg,backend/assets/images/users/foto_17.jpg
-18,I Made Widiguna,pegawai,imade.widiguna@bps.go.id,password,backend/assets/images/users/ttd_18.jpg,backend/assets/images/users/foto_18.jpg
-19,Ulul Azmi Afrizal Rizqi,pegawai,ulul.rizqi@bps.go.id,password,backend/assets/images/users/ttd_19.jpg,backend/assets/images/users/foto_19.jpg
-20,Qhory Kusuma Satiti,pegawai,qhorykusumas@bps.go.id,password,backend/assets/images/users/ttd_20.jpg,backend/assets/images/users/foto_20.jpg
-21,Rahayu Lestari,pegawai,rahayu.lestari@bps.go.id,password,backend/assets/images/users/ttd_21.jpg,backend/assets/images/users/foto_21.jpg
-22,Sailul Azmi,pegawai,sailul.azmi@bps.go.id,password,backend/assets/images/users/ttd_22.jpg,backend/assets/images/users/foto_22.jpg
-23,Bagas Kurniawan,pegawai,bagas.kurniawan@bps.go.id,password,backend/assets/images/users/ttd_23.jpg,backend/assets/images/users/foto_23.jpg
-24,Hanifah Afuwu,pegawai,hanifah.afuwu@bps.go.id,password,backend/assets/images/users/ttd_24.jpg,backend/assets/images/users/foto_24.jpg
-25,Adi Wijaya,pegawai,adi.wijaya@bps.go.id,password,backend/assets/images/users/ttd_25.jpg,backend/assets/images/users/foto_25.jpg
+1,"Favten Ari Pujiastuti S.Si., SST, ME.",pegawai,favtenari@bps.go.id,password,backend/assets/images/users/ttd_1.png,backend/assets/images/users/foto_1.png
+2,Mohamad Rudiansyah Oktavan S.E.,supervisor,okta.rudi@bps.go.id,password,backend/assets/images/users/ttd_2.png,backend/assets/images/users/foto_2.png
+3,Almira Nathania Zaneta A.Md,pegawai,almira@bps.go.id,password,backend/assets/images/users/ttd_3.png,backend/assets/images/users/foto_3.png
+4,Juniaty Pardede A.Md,admin,juniaty.pardede@bps.go.id,password,backend/assets/images/users/ttd_4.png,backend/assets/images/users/foto_4.png
+5,Mona Vita Eclesia Br. Pasaribu A.Md.Kb.N.,pegawai,mona.vita@bps.go.id,password,backend/assets/images/users/ttd_5.png,backend/assets/images/users/foto_5.png
+6,Ir. Nurika Parmiati MAP,pegawai,nurikaparmi@bps.go.id,password,backend/assets/images/users/ttd_6.png,backend/assets/images/users/foto_6.png
+7,Hendriko Yanis S.Si,pegawai,hendriko@bps.go.id,password,backend/assets/images/users/ttd_7.png,backend/assets/images/users/foto_7.png
+8,Farid SAP,pegawai,faridsap@bps.go.id,password,backend/assets/images/users/ttd_8.png,backend/assets/images/users/foto_8.png
+9,"Fisilia Indriastuti W S.Kom., M.Kom",pegawai,fisilia@bps.go.id,password,backend/assets/images/users/ttd_9.png,backend/assets/images/users/foto_9.png
+10,Budi Darmawan SST,pegawai,budidarma@bps.go.id,password,backend/assets/images/users/ttd_10.png,backend/assets/images/users/foto_10.png
+11,"Bambang Sulistyo Hadi SST, M.Si",pegawai,bshadi@bps.go.id,password,backend/assets/images/users/ttd_11.png,backend/assets/images/users/foto_11.png
+12,Triana Sipayung A.Md.,pegawai,triana.sipayung@bps.go.id,password,backend/assets/images/users/ttd_12.png,backend/assets/images/users/foto_12.png
+13,"Nuri Nasriyah SST, M.Ec.Dev",pegawai,nurin@bps.go.id,password,backend/assets/images/users/ttd_13.png,backend/assets/images/users/foto_13.png
+14,"Nila Windiyarti SST, M.Si",pegawai,artinila@bps.go.id,password,backend/assets/images/users/ttd_14.png,backend/assets/images/users/foto_14.png
+15,Ike Prasetiwi SST,pegawai,prasetiwi@bps.go.id,password,backend/assets/images/users/ttd_15.png,backend/assets/images/users/foto_15.png
+16,Elsia Citra SST,pegawai,elsia.citra@bps.go.id,password,backend/assets/images/users/ttd_16.png,backend/assets/images/users/foto_16.png
+17,"Riza Andina SST, MA",pegawai,riza.andina@bps.go.id,password,backend/assets/images/users/ttd_17.png,backend/assets/images/users/foto_17.png
+18,I Made Widiguna SST,pegawai,imade.widiguna@bps.go.id,password,backend/assets/images/users/ttd_18.png,backend/assets/images/users/foto_18.png
+19,Ulul Azmi Afrizal Rizqi SST,pegawai,ulul.rizqi@bps.go.id,password,backend/assets/images/users/ttd_19.png,backend/assets/images/users/foto_19.png
+20,Qhory Kusuma Satiti S.Tr.Stat.,pegawai,qhorykusumas@bps.go.id,password,backend/assets/images/users/ttd_20.png,backend/assets/images/users/foto_20.png
+21,Rahayu Lestari S.Tr.Stat.,pegawai,rahayu.lestari@bps.go.id,password,backend/assets/images/users/ttd_21.png,backend/assets/images/users/foto_21.png
+22,Sailul Azmi S.Tr.Stat.,pegawai,sailul.azmi@bps.go.id,password,backend/assets/images/users/ttd_22.png,backend/assets/images/users/foto_22.png
+23,Bagas Kurniawan S.Tr.Stat.,pegawai,bagas.kurniawan@bps.go.id,password,backend/assets/images/users/ttd_23.png,backend/assets/images/users/foto_23.png
+24,Hanifah Afuwu S.Tr.Stat.,pegawai,hanifah.afuwu@bps.go.id,password,backend/assets/images/users/ttd_24.png,backend/assets/images/users/foto_24.png
+25,Adi Wijaya,pegawai,adi.wijaya@bps.go.id,password,backend/assets/images/users/ttd_25.png,backend/assets/images/users/foto_25.png

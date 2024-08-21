@@ -171,7 +171,6 @@ class PilihanController extends Controller
 
         // Decode data JSON
         $tableData = json_decode($tableData, true);
-        dd($tableData);
 
         $permintaanId = $this->PermintaanStore($request);
 
@@ -215,7 +214,7 @@ class PilihanController extends Controller
 
             // Kirimkan notifikasi sukses dan redirect
             $notification = array(
-                'message' => 'Data berhasil disimpan dan kuantitas barang berhasil diperbarui',
+                'message' => 'Permintaan berhasil ditambahkan',
                 'alert-type' => 'success'
             );
             return redirect()->back()->with($notification);

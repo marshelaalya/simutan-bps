@@ -1,6 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
 <div class="page-content">
     <div class="container-fluid">
@@ -12,8 +13,9 @@
 
                         <h4 class="card-title">Ganti Role Pengguna</h4><br><br>
                         
-                        <form method="post" action="{{ route('user.update', $user->id) }}" id="myForm">
+                        <form method="post" action="{{ route('user.update', $user->id) }}" id="myForm" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT') <!-- Use PUT method for updating resources -->
 
                             <input type="hidden" name="id" value="{{ $user->id }}">
 
@@ -32,13 +34,6 @@
                             </div>
                         
                             <div class="row mb-3">
-                                <label for="email" class="col-sm-2 col-form-label">Email</label>
-                                <div class="form-group col-sm-10">
-                                    <input name="email" value="{{ $user->email }}" class="form-control" type="email" id="email" readonly>
-                                </div>
-                            </div>
-                        
-                            <div class="row mb-3">
                                 <label for="role" class="col-sm-2 col-form-label">Role</label>
                                 <div class="col-sm-10">
                                     <select name="role" class="form-select" aria-label="Default select example" required>
@@ -47,9 +42,44 @@
                                         <option value="supervisor" {{ $user->role == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
                                         <option value="pegawai" {{ $user->role == 'pegawai' ? 'selected' : '' }}>Pegawai</option>
                                     </select>
-                                    
                                 </div>
                             </div>
+
+                            <!-- Display existing images -->
+                            <div class="row mb-4">
+                                <label class="col-sm-2 col-form-label">Foto</label>
+                                <div class="col-sm-10">
+                                    <div class="d-flex align-items-start">
+                                        <!-- Existing Image -->
+                                        <div class="me-4">
+                                            <img id="foto-preview" src="{{ asset('backend/assets/images/users/foto_' . $user->id . '.png') }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
+                                        </div>
+                                        <!-- File Input -->
+                                        <div class="flex-grow-1">
+                                            <input name="image" class="form-control mb-2" type="file" id="image" accept="image/png">
+                                            <small class="form-text text-muted">Ketentuan: File harus berupa PNG dan background telah di-remove.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <label class="col-sm-2 col-form-label">Tanda Tangan</label>
+                                <div class="col-sm-10">
+                                    <div class="d-flex align-items-start">
+                                        <!-- Existing Signature -->
+                                        <div class="me-4">
+                                            <img id="ttd-preview" src="{{ asset('backend/assets/images/users/ttd_' . $user->id . '.png') }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
+                                        </div>
+                                        <!-- File Input -->
+                                        <div class="flex-grow-1">
+                                            <input name="signature" class="form-control mb-2" type="file" id="signature" accept="image/png">
+                                            <small class="form-text text-muted">Ketentuan: File harus berupa PNG.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="d-flex justify-content-end">
                                 <input type="submit" class="btn btn-info waves-effect waves-light" value="Edit Pengguna">
                             </div>
@@ -64,35 +94,55 @@
 
 <script type="text/javascript">
     $(document).ready(function (){
+        // Validasi Form
         $('#myForm').validate({
             rules: {
-                nama: {
+                role: {
                     required : true,
                 },
-                kelompok_id: {
-                    required: true,
-                }
             },
             messages: {
-                nama: {
-                    required: "Nama barang harus diisi.",
-                },
-                kelompok_id: {
-                    required: "Kelompok barang harus dipilih.",
+                role: {
+                    required: "Role harus dipilih.",
                 }
             },
-            errorElement : 'span', 
+            errorElement: 'span',
             errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight : function(element, errorClass, validClass) {
+            highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight : function(element, errorClass, validClass) {
+            unhighlight: function(element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             },
         });
+
+        // Image preview functionality for photo
+        $('#image').change(function(){
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                $('#foto-preview').attr('src', e.target.result);
+            }
+            // Ensure there is a file selected
+            if (this.files && this.files[0]) {
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Image preview functionality for signature
+        $('#signature').change(function(){
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                $('#ttd-preview').attr('src', e.target.result);
+            }
+            // Ensure there is a file selected
+            if (this.files && this.files[0]) {
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
     });
 </script>
+
 @endsection
