@@ -16,17 +16,65 @@ use Exception;
 
 class BarangController extends Controller
 {
-    public function BarangAll(){
-        $barangs = Barang::latest()->get();
-        return view('backend.barang.barang_all', compact('barangs'));
-    } // End Method
+    public function BarangAll(Request $request) {
+        if ($request->ajax()) {
+            // Query dasar dengan relasi ke tabel 'kelompok'
+            $query = Barang::with('kelompok')
+                ->select(['barangs.id', 'barangs.kode', 'barangs.kelompok_id', 'barangs.nama', 'barangs.qty_item', 'barangs.satuan_id']);
+    
+            // Filter berdasarkan kelompok barang
+            // Filter berdasarkan kelompok barang
+if ($request->has('kelompok_id') && !empty($request->kelompok_id)) {
+    $kelompokBarang = $request->kelompok_id;
 
-    public function data()
+    // Terapkan filter berdasarkan kelompok_id yang dipilih
+    $query->where('kelompok_id', $kelompokBarang);
+}
+
+            
+            
+            
+    
+            // Eksekusi query dan kembalikan hasilnya dalam format DataTables
+            $barangs = $query->latest()->get();
+    
+            return DataTables::of($barangs)
+                ->addIndexColumn()
+                ->addColumn('kode', function ($row) {
+                    return $row->kode;
+                })
+                ->addColumn('kelompok_barang', function ($row) {
+                    return $row->kelompok->nama ?? 'Tidak ada data';
+                })
+                ->addColumn('nama_barang', function ($row) {
+                    return $row->nama;
+                })
+                ->addColumn('stok', function ($row) {
+                    return $row->qty_item;
+                })
+                ->addColumn('satuan', function ($row) {
+                    return $row->satuan->nama ?? 'Tidak ada data';
+                })
+                // ->addColumn('action', function ($row) {
+                //     $editButton = '<a href="'.route('barang.edit', $row->id).'" class="btn btn-sm text-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;" data-tooltip="Edit Barang"><i class="ti ti-pencil font-size-20 align-middle"></i></a>';
+                //     $deleteButton = '<a href="'.route('barang.delete', $row->id).'" class="btn btn-sm text-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;" data-tooltip="Hapus Barang"><i class="ti ti-trash font-size-20 align-middle"></i></a>';
+    
+                //     return '<div class="text-center d-flex justify-content-center align-items-center">' . $editButton . $deleteButton . '</div>';
+                // })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    
+        $kelompokFilt = Kelompok::select('status')->distinct()->get();
+    
+        return view('backend.barang.barang_all', compact('kelompokFilt'));
+    }
+    
+
+    public function dataForAll()
 {
-    // Fetch data with eager loading of related models
     $barangs = Barang::with('kelompok', 'satuan')->get();
 
-    // Use DataTables to format the data
     return DataTables::of($barangs)
         ->addColumn('action', function ($barang) {
             return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
@@ -39,8 +87,19 @@ class BarangController extends Controller
                     </div>';
         })
         ->rawColumns(['action'])
-        ->toJson(); // Ensure the data is returned as JSON
+        ->toJson();
 }
+
+public function dataForIndex()
+{
+    $barangs = Barang::with('kelompok', 'satuan')->get();
+
+    return DataTables::of($barangs)
+        // Do not add 'action' column
+        ->rawColumns([]) // No raw columns
+        ->toJson();
+}
+
 
 public function barangStore(Request $request)
 {
@@ -241,4 +300,6 @@ public function barangStore(Request $request)
 
         return redirect()->back()->with($notification);
     }
+
+    
 }

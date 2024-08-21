@@ -2624,8 +2624,9 @@ table.dataTable tbody td {
 }
 
 table.dataTable td, table.dataTable th {
-    border-left: none !important;
-    border-right: none; /* Menghilangkan border kanan */
+    border-left: 1px solid #eff2f7 !important;
+    border-right: 1px solid #eff2f7; /* Menghilangkan border kanan */
+    border-bottom: 1px solid #eff2f7;
 }
 
 

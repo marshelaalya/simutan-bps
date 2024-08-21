@@ -34,95 +34,21 @@
                             <h4 class="card-title mb-0">Daftar Permintaan Barang</h4>
                         </div>
 
-                        <table id="datatable" class="table table-bordered dt-responsive nowrap" 
-                    style="border-collapse: collapse; border-spacing: 0; width: 100%; table-layout: auto;">
-                 <thead>
-                     <tr>
-                         <th width="6%">Tanggal</th>
-                         <th width="12%">Nama Pegawai</th>
-                         <th style="word-wrap: break-word; word-break: break-all; white-space: normal;">Catatan</th>
-                         <th width="10%" class="text-center">Approval Admin</th>
-                         <th width="12.5%" class="text-center">Approval Supervisor</th>
-                         <th width="5%" class="text-center">Aksi</th>
-                     </tr>
-                        </thead>
+                        <table id="datatable" class="table table-bordered yajra-datatable" 
+                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th class="align-content-center">Tanggal</th>
+                                    <th class="align-content-center">Nama Pegawai</th>
+                                    <th class="align-content-center">Catatan</th>
+                                    <th width="17%" class="align-content-center" style="white-space: nowrap;">Status</th>
+                                   
+                                    <th width="1%" class="text-center align-content-center">Aksi</th>
+                                </tr>
+                            </thead>
 
                             <tbody>
-                                @foreach($permintaans as $item)
-                                    <tr>
-                                        <td style="white-space: nowrap;">{{ $item->pilihan->first()->date ?? 'Tidak ada data' }}</td>
-                                        <td style="white-space: nowrap;">{{ $item->pilihan->first()->created_by ?? 'Tidak ada data' }}</td>
-                                        <td style="word-wrap: break-word; word-break: break-all; white-space: normal;">{{ $item->pilihan->first()->description ?? 'Tidak ada data' }}</td>
-                                        <td class="text-center" style="white-space: nowrap;">
-                                            @if($item->status == 'pending')
-                                                <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                                                        style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                                                    Pending
-                                                </button>
-                                            @elseif($item->status == 'rejected by admin')
-                                                <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Rejected
-                                                </button>
-                                            @elseif($item->status == 'approved by admin')
-                                                <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Approved
-                                                </button>
-                                                @elseif($item->status == 'approved by supervisor')
-                                                <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Approved
-                                                </button>
-                                            @elseif($item->ctt_adm == NULL && $item->status == 'rejected by supervisor')
-                                                <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Approved
-                                                </button>
-                                            @endif
-                                        </td>
-                                        <td class="text-center" style="white-space: nowrap;">
-                                            @if($item->status == 'approved by admin' || $item->status == 'pending')
-                                                <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                                                        style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                                                    Pending
-                                                </button>
-                                            @elseif($item->status == 'rejected by supervisor')
-                                                <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Rejected
-                                                </button>
-                                            @elseif($item->status == 'rejected by admin')
-                                                <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Rejected
-                                                </button>
-                                            @elseif($item->status == 'approved by supervisor')
-                                                <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                        style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                    Approved
-                                                </button>
-                                            @endif
-                                        </td>
-                                        <td class="text-center d-flex justify-content-center align-items-center" style="white-space: nowrap;"> 
-                                            @if($item->status == 'pending')
-                                                <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="ri-eye-fill font-size-16 align-middle text-primary"></i>
-                                                </a>
-                                                <a href="{{ route('permintaan.edit', $item->id) }}" class="btn bg-warning btn-sm me-2" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="fas fa-edit align-middle" style="color: #ca8a04"></i>
-                                                </a>
-                                                <a href="{{ route('permintaan.delete', $item->id) }}" class="btn bg-danger btn-sm me-2 btn-delete" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="fas fa-trash-alt text-danger"></i>
-                                                </a>                                                                                              
-                                            @elseif($item->status == 'approved by admin' || $item->status == 'rejected by supervisor' || $item->status == 'approved by supervisor' || $item->status == 'rejected by admin')
-                                                <a href="{{ route('permintaan.view', $item->id) }}" class="btn bg-primary btn-sm" style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; text-decoration: none;">
-                                                    <i class="ri-eye-fill font-size-16 align-middle text-primary"></i>
-                                                </a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <!-- DataTable akan mengisi baris di sini -->
                             </tbody>
                         </table>
                     </div>
@@ -132,4 +58,191 @@
     </div>
 </div>
 
+<!-- JavaScript libraries for DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var table = $('.yajra-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            scrollX: true,
+            ajax: {
+                url: "{{ route('permintaan.saya') }}",
+                data: function(d) {
+                    d.admin_approval = $('#admin_approval_filter').val();
+                    d.supervisor_approval = $('#supervisor_approval_filter').val();
+                }
+            },
+            columns: [
+                { data: 'date', name: 'date', className: 'align-content-center' },
+                { data: 'created_by', name: 'created_by', className: 'align-content-center' },
+                { data: 'description', name: 'description', className: 'align-content-center' },
+                {
+                    data: 'approval_status',
+                    name: 'approval_status',
+                    searchable: false,
+                    className: 'text-center align-content-center'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    className: 'text-center align-content-center no-export',
+                    render: function(data, type, row) {
+                        var viewUrl = "{{ route('permintaan.view', ':id') }}".replace(':id', row.id);
+                        var approveUrl = "{{ route('permintaan.approve', ':id') }}".replace(':id', row.id);
+                        var printUrl = "{{ route('permintaan.print', ':id') }}".replace(':id', row.id);
+    
+                        var viewButton = `
+                            <a href="${viewUrl}" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan">
+                                <i class="ti ti-eye font-size-20 align-middle"></i>
+                            </a>
+                        `;
+    
+                        var approveOrPrintButton = row.status === 'approved by supervisor' ? `
+                            <a href="${printUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
+                                <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
+                            </a>
+                        ` : `
+                            <a href="${approveUrl}" class="btn btn-sm ${row.status === 'pending' ? 'hover:bg-success' : ''}" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; ${row.status === 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;'} padding: 15px;" data-tooltip="Setujui Permintaan">
+                                <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                            </a>
+                        `;
+    
+                        return `
+                            <div class="text-center d-flex justify-content-center align-items-center">
+                                ${viewButton}
+                                ${approveOrPrintButton}
+                            </div>
+                        `;
+                    }
+                }
+            ],
+            dom: 'Brftip',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'form-select',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Export Excel',
+                            title: 'Data Export',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'copy',
+                            text: 'Copy',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'csv',
+                            text: 'CSV',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'PDF',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            },
+                        }
+                    ]
+                }
+            ],
+            initComplete: function() {
+                // Filter untuk admin approval
+                // Filter untuk approval admin
+var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 150px;"><option value="">Semua Status Admin</option></select>')
+.appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
+.on('change', function() {
+table.draw();
+});
+
+// Menambahkan opsi untuk approval admin
+adminSelect.append('<option value="pending">Admin Pending</option>');
+adminSelect.append('<option value="approved by admin">Admin Approved</option>');
+adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
+
+// Filter untuk approval supervisor
+var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 150px;"><option value="">Semua Status Supervisor</option></select>')
+.appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
+.on('change', function() {
+table.draw();
+});
+
+// Menambahkan opsi untuk approval supervisor
+supervisorSelect.append('<option value="pending">Supervisor Pending</option>');
+supervisorSelect.append('<option value="approved by supervisor">Supervisor Approved</option>');
+supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejected</option>');
+
+    
+                // Styling untuk select
+                $('.form-select').each(function() {
+                    $(this).css({
+                        'display': 'block',
+                        'padding': '.47rem 1.75rem .47rem .75rem',
+                        '-moz-padding-start': 'calc(.75rem - 3px)',
+                        'font-size': '.9rem',
+                        'font-weight': '500',
+                        'line-height': '1.5',
+                        'color': '#505d69',
+                        'background-color': '#fff',
+                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                        'background-repeat': 'no-repeat',
+                        'background-position': 'right .75rem center',
+                        'background-size': '16px 12px',
+                        'border': '1px solid #ced4da',
+                        'border-radius': '.25rem',
+                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        'appearance': 'none'
+                    });
+                });
+    
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                    });
+                });
+    
+                // Memulai observer pada elemen yang mengandung tombol
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+        $(document).ajaxComplete(function() {
+// Pastikan elemen sudah ada sebelum mencoba menghapusnya
+setTimeout(function() {
+    $('.dt-button').removeClass('dt-button buttons-collection');
+    $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+    $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+}, 100); // Menunggu beberapa waktu sebelum menghapus
+});
+    });
+    </script>
 @endsection

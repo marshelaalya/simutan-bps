@@ -8,6 +8,7 @@ use App\Models\Permintaan;
 use App\Models\Notification;
 use App\Models\Barang;
 use App\Models\Kelompok;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -44,15 +45,24 @@ class DashboardController extends Controller
         return $kelompok->barangs->count();
     })->first();
 
-    if ($user->role === 'admin' || $user->role === 'supervisor') {
-        $permintaans = $query->get();
-        return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs'));
-    } elseif ($user->role === 'pegawai') {
-        $permintaans = $query->where('user_id', $user->id)->get();
-        return view('pegawai.index', compact('permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs'));
-    }
+    // Mengambil top 5 barang berdasarkan total request quantity
+    $topBarangs = DB::table('barangs')
+    ->join('pilihans', 'barangs.id', '=', 'pilihans.barang_id')
+    ->select('barangs.nama', DB::raw('SUM(pilihans.req_qty) as total_qty'))
+    ->groupBy('barangs.nama')
+    ->orderBy('total_qty', 'desc')
+    ->limit(5)
+    ->get();
 
-    return redirect()->route('home');
+if ($user->role === 'admin' || $user->role === 'supervisor') {
+    $permintaans = $query->get();
+    return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount'));
+} elseif ($user->role === 'pegawai') {
+    $permintaans = $query->where('user_id', $user->id)->get();
+    return view('pegawai.index', compact('permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs'));
+}
+
+return redirect()->route('home');
 }
    
 

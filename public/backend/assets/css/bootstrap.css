@@ -7499,7 +7499,7 @@ textarea.form-control-lg{
 }
 .text-success{
     --bs-text-opacity:1;
-    color:rgba(var(--bs-success-rgb),var(--bs-text-opacity))!important
+    color: #46cf74 !important
 }
 .text-info{
     --bs-text-opacity:1;
@@ -7578,7 +7578,7 @@ textarea.form-control-lg{
     background-color:rgba(var(--bs-secondary-rgb),var(--bs-bg-opacity))!important
 }
 .bg-success{
-    --bs-bg-opacity:0.2;
+    --bs-bg-opacity:0.1;
     background-color:rgba(var(--bs-success-rgb),var(--bs-bg-opacity))!important
 }
 .bg-info{
@@ -7586,11 +7586,11 @@ textarea.form-control-lg{
     background-color:rgba(var(--bs-info-rgb),var(--bs-bg-opacity))!important
 }
 .bg-warning{
-    --bs-bg-opacity:0.2;
+    --bs-bg-opacity:0.15;
     background-color:rgba(var(--bs-warning-rgb),var(--bs-bg-opacity))!important
 }
 .bg-danger{
-    --bs-bg-opacity:0.2;
+    --bs-bg-opacity:0.1;
     background-color:rgba(var(--bs-danger-rgb),var(--bs-bg-opacity))!important
 }
 .bg-pink{

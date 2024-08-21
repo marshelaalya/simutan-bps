@@ -8,7 +8,7 @@
                         <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-dark" height="40">
+                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-dark" height="44">
                     </span>
                 </a>
 
@@ -17,7 +17,7 @@
                         <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="logo-sm-light" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-light" height="40">
+                        <img src="{{ asset('backend/assets/images/logo-long.png') }}" alt="logo-light" height="44">
                     </span>
                 </a>
             </div>
@@ -26,13 +26,7 @@
                 <i class="ri-menu-2-line align-middle"></i>
             </button>
 
-            <!-- App Search-->
-            <form class="app-search d-none d-lg-block">
-                <div class="position-relative">
-                    <input type="text" class="form-control" placeholder="Search...">
-                    <span class="ri-search-line"></span>
-                </div>
-            </form>
+           
         </div>
 
         <div class="d-flex">
@@ -92,10 +86,8 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
+                    <a class="dropdown-item" href="{{ route('pegawai.profile') }}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
                     <a class="dropdown-item" href="{{ route('change.password') }}"><i class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
-                    <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
                     <div class="dropdown-divider"></div>
 
                     <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>

@@ -119,21 +119,25 @@
 
 <script>
     $(document).ready(function() {
-        // Initialize DataTable
-        $('#datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: '{{ route('barang.data') }}',
-            columns: [
-                { data: 'kode', name: 'kode' },
-                { data: 'kelompok.nama', name: 'kelompok.nama' },
-                { data: 'nama', name: 'nama' },
-                { data: 'qty_item', name: 'qty_item', class: 'text-center' },
-                { data: 'satuan.nama', name: 'satuan.nama', class: 'text-center' },
-                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
-            ],
-            dom: 'Bfrtip',
-            buttons: [
+
+        if ($.fn.DataTable.isDataTable('#datatable')) {
+    // Destroy the existing DataTable
+    $('#datatable').DataTable().destroy();
+}
+    $('#datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('barang.data.all') }}',
+        columns: [
+            { data: 'kode', name: 'kode' },
+            { data: 'kelompok.nama', name: 'kelompok.nama' },
+            { data: 'nama', name: 'nama' },
+            { data: 'qty_item', name: 'qty_item', class: 'text-center' },
+            { data: 'satuan.nama', name: 'satuan.nama', class: 'text-center' },
+            { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
                 {
                     text: 'Ekspor Excel',
                     action: function (e, dt, node, config) {
