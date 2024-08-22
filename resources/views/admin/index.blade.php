@@ -369,7 +369,6 @@
                         processing: true,
                         serverSide: true,
                         responsive: true,
-                        scrollX: true,
                         ajax: {
                             url: "{{ route('permintaan.all') }}",
                             data: function(d) {

@@ -77,12 +77,13 @@ class KelompokController extends Controller
     return DataTables::of($kelompoks)
     ->addColumn('action', function ($kelompok) {
         return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
-                    <a href="'.route('kelompok.edit', $kelompok->id).'" class="btn bg-warning btn-sm">
-                        <i class="fas fa-edit" style="color: #ca8a04"></i>
+                    <a href="'.route('kelompok.edit', $kelompok->id).'" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Permintaan">
+                        <i class="ti ti-edit font-size-20 align-middle"></i>
                     </a>
-                    <a href="'.route('kelompok.delete', $kelompok->id).'" class="btn bg-danger btn-sm">
-                        <i class="fas fa-trash-alt text-danger"></i>
+                    <a href="'.route('kelompok.delete', $kelompok->id).'" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Permintaan">
+                        <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
                     </a>
+                   
                 </div>';
     })
     

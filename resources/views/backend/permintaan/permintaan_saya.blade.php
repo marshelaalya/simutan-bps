@@ -6,6 +6,70 @@
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
 
+<style>
+    .filter-buttons {
+        display: flex;
+        align-items: center;
+    }
+    
+    .filter-buttons .form-select-sm {
+        min-width: 180px;
+        margin-right: 10px; /* Adjust as needed */
+    }
+    
+    .datatable-search {
+        flex-grow: 1; /* Ensure it takes the remaining space */
+    }
+    
+    a[data-tooltip] {
+        position: relative;
+    }
+    
+    a[data-tooltip]::before {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%; /* Tooltip berada di atas elemen */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.1s ease-in-out; /* Percepat transisi menjadi 0.1s */
+        pointer-events: none;
+        font-size: 12px;
+        z-index: 999;
+    }
+    
+    a[data-tooltip]:hover::before {
+        opacity: 1;
+    }
+    
+    .hover\:bg-primary:hover {
+        background-color: #e3f0fb!important; /* Sesuaikan dengan warna bg-primary */
+        color: #007bff !important;
+    }
+    
+    .hover\:bg-success:hover {
+        background-color: #e2f6e7 !important; /* Sesuaikan dengan warna bg-success */
+        color: #28a745 !important;
+    }
+    
+    .hover\:bg-danger:hover {
+        background-color: #feeaea !important; /* Sesuaikan dengan warna bg-danger */
+        color: #dc3545 !important;
+    }
+
+    .hover\:bg-warning:hover {
+        --bs-bg-opacity:0.15;
+        background-color:rgba(var(--bs-warning-rgb),var(--bs-bg-opacity))!important
+    }
+    
+    
+    </style>
+
 <script src="{{ mix('js/app.js') }}" defer></script>
 
 <div class="page-content">
@@ -73,7 +137,6 @@
             processing: true,
             serverSide: true,
             responsive: true,
-            scrollX: true,
             ajax: {
                 url: "{{ route('permintaan.saya') }}",
                 data: function(d) {
@@ -99,31 +162,43 @@
                     className: 'text-center align-content-center no-export',
                     render: function(data, type, row) {
                         var viewUrl = "{{ route('permintaan.view', ':id') }}".replace(':id', row.id);
-                        var approveUrl = "{{ route('permintaan.approve', ':id') }}".replace(':id', row.id);
-                        var printUrl = "{{ route('permintaan.print', ':id') }}".replace(':id', row.id);
-    
-                        var viewButton = `
-                            <a href="${viewUrl}" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan">
-                                <i class="ti ti-eye font-size-20 align-middle"></i>
-                            </a>
-                        `;
-    
-                        var approveOrPrintButton = row.status === 'approved by supervisor' ? `
-                            <a href="${printUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
-                                <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
-                            </a>
-                        ` : `
-                            <a href="${approveUrl}" class="btn btn-sm ${row.status === 'pending' ? 'hover:bg-success' : ''}" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; ${row.status === 'pending' ? 'color: green;' : 'color: gray; pointer-events: none; opacity: 0.5;'} padding: 15px;" data-tooltip="Setujui Permintaan">
-                                <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
-                            </a>
-                        `;
-    
-                        return `
-                            <div class="text-center d-flex justify-content-center align-items-center">
-                                ${viewButton}
-                                ${approveOrPrintButton}
-                            </div>
-                        `;
+var editUrl = "{{ route('permintaan.edit', ':id') }}".replace(':id', row.id);
+var deleteUrl = "{{ route('permintaan.delete', ':id') }}".replace(':id', row.id);
+
+var viewButton = `
+    <a href="${viewUrl}" class="btn btn-sm text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan">
+        <i class="ti ti-eye font-size-20 align-middle"></i>
+    </a>
+`;
+
+var deleteButton = row.status === 'pending' ? `
+    <a href="${deleteUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Permintaan">
+        <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
+    </a>
+` : `
+    <a href="${deleteUrl}" class="btn btn-sm text-secondary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Hapus Permintaan">
+        <i class="ti ti-trash font-size-20 align-middle"></i>
+    </a>
+`;
+
+var editButton = row.status === 'pending' ? `
+    <a href="${editUrl}" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Permintaan">
+        <i class="ti ti-edit font-size-20 align-middle"></i>
+    </a>
+` : `
+    <a href="${editUrl}" class="btn btn-sm text-secondary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Edit Permintaan">
+        <i class="ti ti-edit font-size-20 align-middle"></i>
+    </a>
+`;
+
+return `
+    <div class="text-center d-flex justify-content-center align-items-center">
+        ${viewButton}
+        ${editButton}
+        ${deleteButton}
+    </div>
+`;
+
                     }
                 }
             ],

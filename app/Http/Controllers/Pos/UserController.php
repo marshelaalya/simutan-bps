@@ -25,16 +25,15 @@ class UserController extends Controller
         return DataTables::of($users)
             ->addIndexColumn()
             ->addColumn('action', function($row){
-                $editUrl = route('user.edit', $row->id);
-                $deleteUrl = route('user.delete', $row->id);
-                return '
-                    <a href="' . $editUrl . '" class="btn bg-warning btn-sm">
-                        <i class="fas fa-edit" style="color: #ca8a04"></i>
+                return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
+                    <a href="'.route('user.edit', $row->id).'" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Permintaan">
+                        <i class="ti ti-edit font-size-20 align-middle"></i>
                     </a>
-                    <a href="' . $deleteUrl . '" class="btn bg-danger btn-sm">
-                        <i class="fas fa-trash-alt text-danger"></i>
+                    <a href="'.route('user.delete', $row->id).'" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Permintaan">
+                        <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
                     </a>
-                ';
+                   
+                </div>';
             })
             ->make(true);
     }

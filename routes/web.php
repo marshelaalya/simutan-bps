@@ -109,6 +109,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(BarangController::class)->group(function () {
         Route::get('/barang/all', 'BarangAll')->name('barang.all');
+        Route::get('/barang/all-act', 'BarangAllAct')->name('barang.allAct');
         Route::get('/barang/add', 'BarangAdd')->name('barang.add');
         Route::post('/barang/store', 'BarangStore')->name('barang.store');
         Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
