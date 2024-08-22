@@ -1,5 +1,6 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 'pegawai.pegawai_master'))
 @section(auth()->user()->role === 'admin' ? 'admin' : (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div class="page-content">
@@ -29,28 +30,27 @@
 
                         <h4 class="card-title">Tambah Barang</h4><br>
 
-                        <form method="post" action="{{ route('barang.store') }}" id="myForm">
+                        <form method="post" action="{{ route('barang.store') }}" id="myForm" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="kode_barang" class="col-sm-2 col-form-label">Kode Barang</label>
+                                <label for="kode_barang" class="col-sm-2 col-form-label">Kode Barang <span class="text-danger">*</span></label>
                                 <div class="form-group col-sm-10">
-                                    <input name="kode_barang" class="form-control" type="text" id="kode_barang">
+                                    <input name="kode_barang" class="form-control" type="text" id="kode_barang" required>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label for="nama" class="col-sm-2 col-form-label">Nama Barang</label>
+                                <label for="nama" class="col-sm-2 col-form-label">Nama Barang <span class="text-danger">*</span></label>
                                 <div class="form-group col-sm-10">
-                                    <input name="nama" class="form-control" type="text" id="nama">
+                                    <input name="nama" class="form-control" type="text" id="nama" required>
                                 </div>
                             </div>
-                            <!-- end row -->
 
                             <div class="row mb-3">
-                                <label for="kelompok_barang" class="col-sm-2 col-form-label">Kelompok Barang</label>
+                                <label for="kelompok_barang" class="col-sm-2 col-form-label">Kelompok Barang <span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
-                                    <select name="kelompok_id" class="form-select" aria-label="Default select example">
+                                    <select name="kelompok_id" class="form-select" aria-label="Default select example" required>
                                         <option selected="" disabled>Pilih jenis kelompok barang</option>
                                         @foreach($kelompok as $kel)
                                         <option value="{{$kel->id}}">{{$kel->nama}}</option>
@@ -58,7 +58,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- end row -->
 
                             <div class="row mb-3">
                                 <label for="qty_item" class="col-sm-2 col-form-label">Stok Barang</label>
@@ -68,9 +67,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="satuan" class="col-sm-2 col-form-label">Satuan Barang</label>
+                                <label for="satuan" class="col-sm-2 col-form-label">Satuan Barang <span class="text-danger">*</span></label>
                                 <div class="form-group col-sm-10">
-                                    <select name="satuan" id="satuan" class="form-select">
+                                    <select name="satuan" id="satuan" class="form-select" required>
                                         <option selected disabled>Pilih satuan barang</option>
                                         @foreach($satuan as $satuan_item)
                                             <option value="{{ $satuan_item->satuan }}">{{ $satuan_item->satuan }}</option>
@@ -85,7 +84,14 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <div class="row mb-3">
+                                <label for="foto" class="col-sm-2 col-form-label">Foto Barang</label>
+                                <div class="form-group col-sm-10">
+                                    <input name="foto" class="form-control" type="file" id="foto" accept=".jpg,.jpeg,.png">
+                                    <small class="form-text text-muted">Usahakan gambar dalam bentuk PNG atau JPG untuk hasil yang lebih baik.</small>
+                                </div>
+                            </div>
 
                             <div class="d-flex justify-content-end">
                                 <input type="submit" class="btn btn-info waves-effect waves-light" value="Tambahkan Barang">
@@ -103,46 +109,20 @@
     document.addEventListener('DOMContentLoaded', function() {
         const satuanSelect = document.getElementById('satuan');
         const satuanBaruContainer = document.getElementById('satuanBaruContainer');
-    
-        satuanSelect.addEventListener('change', function() {
-            if (satuanSelect.value === 'lainnya') {
-                // Mengubah lebar dropdown menjadi col-sm-2
-                satuanSelect.parentElement.classList.remove('col-sm-10');
-                satuanSelect.parentElement.classList.add('col-sm-3');
-                // Menampilkan container untuk satuan baru
-                satuanBaruContainer.style.display = 'block';
-            } else {
-                // Mengubah lebar dropdown menjadi col-sm-6
-                satuanSelect.parentElement.classList.remove('col-sm-2');
-                satuanSelect.parentElement.classList.add('col-sm-10');
-                // Menyembunyikan container untuk satuan baru
-                satuanBaruContainer.style.display = 'none';
-            }
-        });
-    });
-    </script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const satuanSelect = document.getElementById('satuan');
-        const satuanBaruContainer = document.getElementById('satuanBaruContainer');
         const satuanBaruInput = document.getElementById('satuanBaru');
 
         satuanSelect.addEventListener('change', function() {
             if (this.value === 'lainnya') {
                 satuanBaruContainer.style.display = 'block'; // Show the input and label
                 satuanBaruInput.disabled = false; // Enable input field
-                satuanBaru.style.marginLeft = '15px'; // Add margin-left when showing
             } else {
                 satuanBaruContainer.style.display = 'none'; // Hide the input and label
-                satuanBaruInput.disabled = true;  // Disable input field
-                satuanBaruInput.value = '';       // Clear input field
-                satuanBaruContainer.style.marginLeft = '0'; // Remove margin-left when hiding
+                satuanBaruInput.disabled = true; // Disable input field
+                satuanBaruInput.value = ''; // Clear input field
             }
         });
     });
 </script>
-
 
 <script type="text/javascript">
     $(document).ready(function (){
@@ -153,6 +133,12 @@
                 },
                 kelompok_id: {
                     required: true,
+                },
+                kode_barang: {
+                    required: true,
+                },
+                satuan: {
+                    required: true,
                 }
             },
             messages: {
@@ -161,6 +147,12 @@
                 },
                 kelompok_id: {
                     required: "Kelompok barang harus dipilih.",
+                },
+                kode_barang: {
+                    required: "Kode barang harus diisi.",
+                },
+                satuan: {
+                    required: "Satuan barang harus dipilih.",
                 }
             },
             errorElement : 'span', 

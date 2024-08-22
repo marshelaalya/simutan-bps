@@ -20,20 +20,13 @@ class BarangController extends Controller
         if ($request->ajax()) {
             // Query dasar dengan relasi ke tabel 'kelompok'
             $query = Barang::with('kelompok')
-                ->select(['barangs.id', 'barangs.kode', 'barangs.kelompok_id', 'barangs.nama', 'barangs.qty_item', 'barangs.satuan_id']);
+                ->select(['barangs.id', 'barangs.kode', 'barangs.kelompok_id', 'barangs.nama', 'barangs.qty_item', 'barangs.satuan', 'barangs.foto_barang']);
     
             // Filter berdasarkan kelompok barang
-            // Filter berdasarkan kelompok barang
-if ($request->has('kelompok_id') && !empty($request->kelompok_id)) {
-    $kelompokBarang = $request->kelompok_id;
-
-    // Terapkan filter berdasarkan kelompok_id yang dipilih
-    $query->where('kelompok_id', $kelompokBarang);
-}
-
-            
-            
-            
+            if ($request->has('kelompok_id') && !empty($request->kelompok_id)) {
+                $kelompokBarang = $request->kelompok_id;
+                $query->where('kelompok_id', $kelompokBarang);
+            }
     
             // Eksekusi query dan kembalikan hasilnya dalam format DataTables
             $barangs = $query->latest()->get();
@@ -53,22 +46,23 @@ if ($request->has('kelompok_id') && !empty($request->kelompok_id)) {
                     return $row->qty_item;
                 })
                 ->addColumn('satuan', function ($row) {
-                    return $row->satuan->nama ?? 'Tidak ada data';
+                    return $row->satuan ?? 'Tidak ada data';
                 })
-                // ->addColumn('action', function ($row) {
-                //     $editButton = '<a href="'.route('barang.edit', $row->id).'" class="btn btn-sm text-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;" data-tooltip="Edit Barang"><i class="ti ti-pencil font-size-20 align-middle"></i></a>';
-                //     $deleteButton = '<a href="'.route('barang.delete', $row->id).'" class="btn btn-sm text-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;" data-tooltip="Hapus Barang"><i class="ti ti-trash font-size-20 align-middle"></i></a>';
-    
-                //     return '<div class="text-center d-flex justify-content-center align-items-center">' . $editButton . $deleteButton . '</div>';
+                // ->addColumn('foto_barang', function ($row) {
+                //     // Misalnya, jika Anda ingin menampilkan gambar, bisa seperti ini:
+                //     return $row->foto_barang ? '<img src="' . asset('storage/' . $row->foto_barang) . '" alt="Foto Barang" style="width: 50px; height: 50px;">' : 'Tidak ada foto';
                 // })
-                ->rawColumns(['action'])
+                // ->rawColumns(['foto_barang']) // Pastikan rawColumns digunakan untuk kolom yang mengandung HTML
                 ->make(true);
         }
     
-        $kelompokFilt = Kelompok::select('status')->distinct()->get();
+        $kelompokFilt = Kelompok::select('id', 'nama')->distinct()->get();
     
-        return view('backend.barang.barang_all', compact('kelompokFilt'));
+        $barangs = Barang::with('kelompok')->latest()->get();
+    
+        return view('backend.barang.barang_all', compact('kelompokFilt', 'barangs'));
     }
+    
     
 
     public function dataForAll()
@@ -101,47 +95,54 @@ public function dataForIndex()
 }
 
 
-public function barangStore(Request $request)
-{
+    public function barangStore(Request $request)
+    {
+        $satuan = $request->satuan;
+        $satuanBaru = $request->satuanBaru;
 
-    $satuan = $request->satuan;
-    $satuanBaru = $request->satuanBaru;
-
-    // Jika pilihan satuan adalah 'lainnya' dan satuanBaru tidak kosong
-    if ($satuan === 'lainnya' && !empty($satuanBaru)) {
-        // Simpan satuan baru
-        // Periksa apakah satuan baru sudah ada di database
-        $existingSatuan = Barang::where('satuan', strtolower($satuanBaru))->first();
-        
-        if ($existingSatuan) {
-            // Jika sudah ada, gunakan satuan yang sudah ada
-            $satuan = $existingSatuan->satuan;
-        } else {
-            // Jika belum ada, simpan satuan baru ke dalam tabel barang
-            // Jika Anda ingin menyimpan satuan baru dalam tabel barang atau menggunakan langsung
-            $satuan = strtolower($satuanBaru);
+        // Jika pilihan satuan adalah 'lainnya' dan satuanBaru tidak kosong
+        if ($satuan === 'lainnya' && !empty($satuanBaru)) {
+            // Periksa apakah satuan baru sudah ada di database
+            $existingSatuan = Barang::where('satuan', strtolower($satuanBaru))->first();
+            
+            if ($existingSatuan) {
+                // Jika sudah ada, gunakan satuan yang sudah ada
+                $satuan = $existingSatuan->satuan;
+            } else {
+                // Jika belum ada, simpan satuan baru ke dalam tabel barang
+                $satuan = strtolower($satuanBaru);
+            }
         }
+
+        // Simpan data barang baru
+        $barang = new Barang();
+        $barang->nama = $request->nama;
+        $barang->kode = $request->kode_barang;
+        $barang->kelompok_id = $request->kelompok_id;
+        $barang->qty_item = $request->qty_item;
+        $barang->satuan = $satuan; // Simpan satuan di kolom satuan
+        $barang->created_at = Carbon::now();
+        $barang->updated_at = Carbon::now();
+
+        // Handle file upload
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $fileName = 'backend/assets/images/barang/foto_' . $request->kode_barang . '.png'; // Generate file name
+
+            $barang->foto_barang = $fileName; // Save file name in database
+        }
+
+        $barang->save();
+
+        // Notifikasi sukses
+        $notification = array(
+            'message' => "Barang berhasil ditambahkan.",
+            'alert-type' => "success"
+        );
+
+        return redirect()->route('barang.all')->with($notification);
     }
 
-    // Simpan data barang baru
-    $barang = new Barang();
-    $barang->nama = $request->nama;
-    $barang->kode = $request->kode_barang;
-    $barang->kelompok_id = $request->kelompok_id;
-    $barang->qty_item = $request->qty_item;
-    $barang->satuan = $satuan; // Simpan satuan di kolom satuan
-    $barang->created_at = Carbon::now();
-    $barang->updated_at = Carbon::now();
-    $barang->save();
-
-    // Notifikasi sukses
-    $notification = array(
-        'message' => "Barang berhasil ditambahkan.",
-        'alert-type' => "success"
-    );
-
-    return redirect()->route('barang.all')->with($notification);
-}
 
 
     public function KelompokStore(Request $request){

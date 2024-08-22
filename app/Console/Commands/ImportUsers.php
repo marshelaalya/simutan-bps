@@ -32,6 +32,7 @@ class ImportUsers extends Command
                 ['id' => $record['id']], // Assume 'id' is the primary key
                 [
                     'name' => $record['name'],
+                    'panggilan' => $record['panggilan'],
                     'role' => $record['role'],
                     'username' => $record['username'],
                     'password' => bcrypt($record['password']),

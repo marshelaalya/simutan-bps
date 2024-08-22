@@ -209,7 +209,7 @@ class PermintaanController extends Controller
         if (!$validStatus) {
             return redirect()->route('permintaan.all')->with('error', 'Status tidak valid untuk peran Anda');
         }
-    
+        
         // Update status permintaan dengan penyesuaian berdasarkan peran pengguna
         if ($user->role === 'admin') {
             $permintaan->status = $newStatus === 'rejected' ? 'rejected by admin' : 'approved by admin';
@@ -223,6 +223,15 @@ class PermintaanController extends Controller
                 $permintaan->ctt_adm = $request->input('reason', '');
             } elseif ($user->role === 'supervisor') {
                 $permintaan->ctt_spv = $request->input('reason', '');
+            }
+    
+            // Mengembalikan kuantitas barang yang sebelumnya dikurangi
+            foreach ($permintaan->pilihans as $pilihan) {
+                $barang = Barang::find($pilihan->barang_id);
+                if ($barang) {
+                    $barang->qty_item += $pilihan->req_qty; // Mengembalikan kuantitas
+                    $barang->save();
+                }
             }
         } else {
             if ($user->role === 'admin') {
@@ -255,7 +264,6 @@ class PermintaanController extends Controller
     
         return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
-    
     public function PermintaanSaya(Request $request)
 {
     $userId = auth()->user()->id;

@@ -101,7 +101,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelompok/add', 'KelompokAdd')->name('kelompok.add');
         Route::post('/kelompok/store', 'KelompokStore')->name('kelompok.store');
         Route::get('/kelompok/edit/{id}', 'KelompokEdit')->name('kelompok.edit');
-        Route::post('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update');
+        Route::put('/kelompok/update/{id}', 'KelompokUpdate')->name('kelompok.update');
         Route::get('/kelompok/delete/{id}', 'KelompokDelete')->name('kelompok.delete');
         Route::get('kelompok/data',  'data')->name('kelompok.data');
 
