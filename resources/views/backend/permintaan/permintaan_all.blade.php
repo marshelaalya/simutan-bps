@@ -94,14 +94,6 @@ a[data-tooltip]:hover::before {
                             </a>
                         </div>
 
-                        <!-- HTML for Filters -->
-<!-- user_all.blade.php -->
-
-
-
-
-
-
                         <table id="datatable" class="table table-bordered yajra-datatable" 
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>

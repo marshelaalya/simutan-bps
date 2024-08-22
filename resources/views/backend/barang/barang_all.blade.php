@@ -215,7 +215,7 @@
         'BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN'
     ]);
     ws_data.push([
-        `Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:`
+        Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:
     ]);
 
     // Tambahkan header tabel
