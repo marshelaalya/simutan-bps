@@ -76,21 +76,21 @@ class PermintaanController extends Controller
                     // Status Admin
                     $adminStatus = '';
                     if ($row->status == 'pending') {
-                        $adminStatus = '<button class="btn btn-secondary bg-dark text-gray btn-sm font-size-13" style="border: 1px solid #505D69; color: #6b7280; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.7; padding: .1rem .25rem;">Admin Pending</button>';                    
+                        $adminStatus = '<button class="btn btn-secondary text-gray btn-sm font-size-13" style="border: 1px solid #505D69; color: #6b7280; background-color:#edeef0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.7; padding: .1rem .25rem;">Admin Pending</button>';                    
                     } elseif (($row->status == 'rejected by admin') || ($row->status == 'rejected by supervisor' && $row->ctt_adm !== NULL)) {
-                        $adminStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Admin Rejected</button>';
+                        $adminStatus = '<button class="btn btn-secondary text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; pointer-events: none; background-color: #feeef1; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Admin Rejected</button>';
                     } elseif ($row->status == 'approved by admin' || ($row->status == 'rejected by supervisor' && $row->ctt_adm == NULL) || $row->status == 'approved by supervisor') {
-                        $adminStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 1px solid #46cf74; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Admin Approved</button>';
+                        $adminStatus = '<button class="btn btn-secondary text-success btn-sm font-size-13" style="border: 1px solid #46cf74; background-color:#f3fbf5; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Admin Approved</button>';
                     }
         
                     // Status Supervisor
                     $supervisorStatus = '';
                     if ($row->status == 'approved by admin' || $row->status == 'pending') {
-                        $supervisorStatus = '<button class="btn btn-secondary bg-dark text-gray btn-sm font-size-13" style="border: 1px solid #505D69; color: #6b7280; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.7; padding: .1rem .25rem;">Supervisor Pending</button>';
+                        $supervisorStatus = '<button class="btn btn-secondary text-gray btn-sm font-size-13" style="border: 1px solid #505D69; background-color:#edeef0; color: #6b7280; pointer-events: none; cursor: not-allowed; opacity:0.7; padding: .1rem .25rem;">Supervisor Pending</button>';
                     } elseif ($row->status == 'rejected by supervisor' || $row->status == 'rejected by admin') {
-                        $supervisorStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; pointer-events: none; cursor: not-allowed;; opacity:0.8; padding: .1rem .25rem;">Supervisor Rejected</button>';
+                        $supervisorStatus = '<button class="btn btn-secondary text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; background-color: #feeef1; pointer-events: none; cursor: not-allowed;; opacity:0.8; padding: .1rem .25rem;">Supervisor Rejected</button>';
                     } elseif ($row->status == 'approved by supervisor') {
-                        $supervisorStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 1px solid #46cf74; pointer-events: none; cursor: not-allowed;; opacity:0.8; padding: .1rem .25rem;">Supervisor Approved</button>';
+                        $supervisorStatus = '<button class="btn btn-secondary text-success btn-sm font-size-13" style="border: 1px solid #46cf74; background-color:#f3fbf5; pointer-events: none; cursor: not-allowed;; opacity:0.8; padding: .1rem .25rem;">Supervisor Approved</button>';
                     }
         
                     // Menggabungkan status admin dan supervisor
@@ -315,23 +315,23 @@ class PermintaanController extends Controller
                 // Status Admin
                 $adminStatus = '';
                 if ($row->status == 'pending') {
-                    $adminStatus = '<button class="btn btn-secondary bg-warning btn-sm font-size-13" style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Pending</button>';
-                } elseif ($row->status == 'rejected by admin') {
-                    $adminStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Rejected</button>';
-                } elseif ($row->status == 'approved by admin' || $row->status == 'rejected by supervisor') {
-                    $adminStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem">Admin Approved</button>';
+                    $adminStatus = '<button class="btn btn-secondary text-gray btn-sm font-size-13" style="border: 1px solid #505D69; color: #6b7280; background-color:#edeef0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.7; padding: .1rem .25rem;">Admin Pending</button>';                    
+                } elseif (($row->status == 'rejected by admin') || ($row->status == 'rejected by supervisor' && $row->ctt_adm !== NULL)) {
+                    $adminStatus = '<button class="btn btn-secondary text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; pointer-events: none; background-color: #feeef1; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Admin Rejected</button>';
+                } elseif ($row->status == 'approved by admin' || ($row->status == 'rejected by supervisor' && $row->ctt_adm == NULL) || $row->status == 'approved by supervisor') {
+                    $adminStatus = '<button class="btn btn-secondary text-success btn-sm font-size-13" style="border: 1px solid #46cf74; background-color:#f3fbf5; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Admin Approved</button>';
                 }
-
+    
                 // Status Supervisor
                 $supervisorStatus = '';
                 if ($row->status == 'approved by admin' || $row->status == 'pending') {
-                    $supervisorStatus = '<button class="btn btn-secondary bg-warning btn-sm font-size-13" style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">Supervisor Pending</button>';
+                    $supervisorStatus = '<button class="btn btn-secondary text-gray btn-sm font-size-13" style="border: 1px solid #505D69; background-color:#edeef0; color: #6b7280; pointer-events: none; cursor: not-allowed; opacity:0.7; padding: .1rem .25rem;">Supervisor Pending</button>';
                 } elseif ($row->status == 'rejected by supervisor' || $row->status == 'rejected by admin') {
-                    $supervisorStatus = '<button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed;">Supervisor Rejected</button>';
+                    $supervisorStatus = '<button class="btn btn-secondary text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; background-color: #feeef1; pointer-events: none; cursor: not-allowed;; opacity:0.8; padding: .1rem .25rem;">Supervisor Rejected</button>';
                 } elseif ($row->status == 'approved by supervisor') {
-                    $supervisorStatus = '<button class="btn btn-secondary bg-success text-success btn-sm font-size-13" style="border: 0; pointer-events: none; cursor: not-allowed;">Supervisor Approved</button>';
+                    $supervisorStatus = '<button class="btn btn-secondary text-success btn-sm font-size-13" style="border: 1px solid #46cf74; background-color:#f3fbf5; pointer-events: none; cursor: not-allowed;; opacity:0.8; padding: .1rem .25rem;">Supervisor Approved</button>';
                 }
-
+    
                 // Menggabungkan status admin dan supervisor
                 return '<div class="d-flex flex-column align-items-start">' . $adminStatus . $supervisorStatus . '</div>';
             })

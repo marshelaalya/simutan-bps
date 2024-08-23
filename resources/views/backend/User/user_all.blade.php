@@ -241,7 +241,7 @@
             buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export',
+                    text: 'Export &nbsp',
                     className: 'form-select',
                     buttons: [
                         {

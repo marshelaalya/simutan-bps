@@ -24,6 +24,10 @@
     a[data-tooltip] {
         position: relative;
     }
+
+    #datatable_filter {
+    justify-content: end;
+}
     
     a[data-tooltip]::before {
         content: attr(data-tooltip);
@@ -206,7 +210,7 @@ return `
             buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export',
+                    text: 'Export &nbsp',
                     className: 'form-select',
                     buttons: [
                         {
@@ -251,7 +255,7 @@ return `
             initComplete: function() {
                 // Filter untuk admin approval
                 // Filter untuk approval admin
-var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 150px;"><option value="">Semua Status Admin</option></select>')
+var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 20%;"><option value="">Semua Status Admin</option></select>')
 .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
 .on('change', function() {
 table.draw();
@@ -263,7 +267,7 @@ adminSelect.append('<option value="approved by admin">Admin Approved</option>');
 adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
 
 // Filter untuk approval supervisor
-var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 150px;"><option value="">Semua Status Supervisor</option></select>')
+var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 23%;"><option value="">Semua Status Supervisor</option></select>')
 .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
 .on('change', function() {
 table.draw();

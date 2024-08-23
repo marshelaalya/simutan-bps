@@ -8,6 +8,10 @@
         justify-content: center;
         align-items: center;
     }
+
+    #datatable_filter {
+    justify-content: end;
+}
 </style>
 
 <div class="page-content">
@@ -149,8 +153,8 @@
             buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export',
-                    className: 'btn btn-primary', // Ganti kelas sesuai kebutuhan
+                    text: 'Export &nbsp',
+                    className: 'form-select', // Ganti kelas sesuai kebutuhan
                     buttons: [
                         {
                             extend: 'excelHtml5',
@@ -195,7 +199,7 @@
                 }
             ],
             initComplete: function() {
-                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 150px;"><option value="">Semua Kelompok Barang</option></select>')
+                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 33%;"><option value="">Semua Kelompok Barang</option></select>')
                     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
                     .on('change', function() {
                         table.draw();
@@ -208,27 +212,50 @@
     
                 // Styling untuk select
                 $('.form-select').each(function() {
-                    $(this).css({
-                        'display': 'block',
-                        'padding': '.47rem 1.75rem .47rem .75rem',
-                        '-moz-padding-start': 'calc(.75rem - 3px)',
-                        'font-size': '.9rem',
-                        'font-weight': '500',
-                        'line-height': '1.5',
-                        'color': '#505d69',
-                        'background-color': '#fff',
-                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
-                        'background-repeat': 'no-repeat',
-                        'background-position': 'right .75rem center',
-                        'background-size': '16px 12px',
-                        'border': '1px solid #ced4da',
-                        'border-radius': '.25rem',
-                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
-                        'appearance': 'none'
-                    });
+                                $(this).css({
+                                    'display': 'block',
+                                    'padding': '.47rem 1.75rem .47rem .75rem',
+                                    '-moz-padding-start': 'calc(.75rem - 3px)',
+                                    'font-size': '.9rem',
+                                    'font-weight': '500',
+                                    'line-height': '1.5',
+                                    'color': '#505d69',
+                                    'background-color': '#fff',
+                                    'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                                    'background-repeat': 'no-repeat',
+                                    'background-position': 'right .75rem center',
+                                    'background-size': '16px 12px',
+                                    'border': '1px solid #ced4da',
+                                    'border-radius': '.25rem',
+                                    'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                                    'appearance': 'none'
+                                });
+                            
                 });
+
+                var observer = new MutationObserver(function(mutations) {
+                                mutations.forEach(function(mutation) {
+                                    $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                                });
+                            });
+                
+                            // Memulai observer pada elemen yang mengandung tombol
+                            observer.observe(document.body, {
+                                childList: true,
+                                subtree: true
+                            });
             }
         });
+
+        $(document).ajaxComplete(function() {
+            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
+            setTimeout(function() {
+                $('.dt-button').removeClass('dt-button buttons-collection');
+                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            }, 100); // Menunggu beberapa waktu sebelum menghapus
+        });
+            
 
         // Handle the Add Stock button click
         $('#datatable').on('click', '.add-stock-btn', function() {

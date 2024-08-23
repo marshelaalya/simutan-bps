@@ -2660,8 +2660,12 @@ table.dataTable tbody>tr.selected,table.dataTable tbody>tr>.selected{
 }
 /* Menyesuaikan header tabel DataTables */
 table.dataTable thead th {
-    background-color: #f8f9fa; /* Ganti dengan warna yang Anda inginkan */
-    color: #505d69; /* Warna teks */
+    background-color: #043277; /* Ganti dengan warna yang Anda inginkan */
+    color: white; /* Warna teks */
+}
+
+table.dataTable tbody>tr.even {
+    background-color: #e2f3fe; /* Ganti dengan warna yang Anda inginkan */
 }
 
 table.dataTable tbody>tr.selected td,table.dataTable tbody>tr>.selected td{

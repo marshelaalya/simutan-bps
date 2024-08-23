@@ -251,6 +251,10 @@
         border-radius: 0.375rem;
     }
 
+    #datatable_filter {
+    justify-content: end;
+}
+
     .gradient-background3::before {
         content: "";
         position: absolute;
@@ -705,7 +709,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             buttons: [
                 {
                     extend: 'collection',
-                    text: 'Export',
+                    text: 'Export &nbsp',
                     className: 'form-select',
                     buttons: [
                         {
@@ -749,7 +753,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             ],
             initComplete: function() {
                 // Filter untuk kelompok barang
-                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 150px;"><option value="">Semua Kelompok Barang</option></select>')
+                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 33%;"><option value="">Semua Kelompok Barang</option></select>')
                     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
                     .on('change', function() {
                         table.draw();
