@@ -368,8 +368,14 @@ public function dataForIndex()
     }
 
     public function exportToExcel()
-{
-    $barang = Barang::all(); // Retrieve all barang data
-    return Excel::download(new BarangExport($barang), 'data_barang.xlsx');
-}
+    {
+        $barang = Barang::all(); 
+        
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->format('m');
+
+        $filename = "BA Stock Opname {$currentYear} bulan {$currentMonth}.xlsx";
+
+        return Excel::download(new BarangExport($barang), $filename);
+    }
 }

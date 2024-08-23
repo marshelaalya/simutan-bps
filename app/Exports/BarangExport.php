@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Carbon\Carbon;
 
 class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCustomStartCell, WithStyles
 {
@@ -38,9 +39,26 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
         });
     }
 
+    private function convertNumberToWords($number)
+    {
+        $words = array(
+            '', 'Satu', 'Dua', 'Tiga', 'Empat', 'Lima', 'Enam', 'Tujuh', 'Delapan', 'Sembilan', 'Sepuluh', 'Sebelas',
+            'Dua Belas', 'Tiga Belas', 'Empat Belas', 'Lima Belas', 'Enam Belas', 'Tujuh Belas', 'Delapan Belas', 'Sembilan Belas', 'Dua Puluh'
+        );
+
+        if ($number <= 20) {
+            return $words[$number];
+        } elseif ($number < 100) {
+            $tens = $words[intval($number / 10)] . ' Puluh';
+            $units = $words[$number % 10];
+            return $units ? $tens . ' ' . $units : $tens;
+        } else {
+            return $number; // Handle for larger numbers if needed
+        }
+    }
+
     public function headings(): array
     {
-        // We don't need to return anything here because we'll set the headers manually in the styles method
         return [];
     }
 
@@ -63,40 +81,50 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
 
     public function styles(Worksheet $sheet)
     {
-        // Logo and header text (unchanged)
+        // Logo and header text
         $sheet->mergeCells('B1:F1');
         $sheet->setCellValue('B1', '              Badan Pusat Statistik');
         $sheet->getStyle('B1')->getFont()->setBold(true)->setSize(20);
-    
+
         $sheet->mergeCells('B2:F2');
         $sheet->setCellValue('B2', '              Kota Jakarta Utara');
         $sheet->getStyle('B2')->getFont()->setBold(true)->setSize(20);
-    
+
         $sheet->mergeCells('B4:F4');
         $sheet->setCellValue('B4', 'Jl. Berdikari No. 1 Rawa Badak Utara');
         $sheet->getStyle('B4')->getFont()->setSize(12);
-    
+
         $sheet->mergeCells('B5:F5');
         $sheet->setCellValue('B5', 'Jakarta Utara');
         $sheet->getStyle('B5')->getFont()->setSize(12);
-    
+
         $sheet->setCellValue('H4', 'Telp. : (021) 22494346');
         $sheet->getStyle('H4')->getFont()->setSize(12);
-    
+
         $sheet->setCellValue('H5', 'Faks  : (021) 22494346');
         $sheet->getStyle('H5')->getFont()->setSize(12);
-    
+
+        Carbon::setLocale('id');
+
         // Additional text below the address
         $sheet->mergeCells('A7:J7');
-        $sheet->setCellValue('A7', 'BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN');
+        $sheet->setCellValue('A7', 'BERITA ACARA HASIL OPNAME FISIK (STOCK OPNAME) PERSEDIAAN');
         $sheet->getStyle('A7')->getFont()->setBold(true)->setSize(12)->setUnderline(true)->setName('Cambria');
         $sheet->getStyle('A7')->getAlignment()->setHorizontal('center');
-    
+
+        // Mengambil tanggal dan mengkonversinya ke format yang diinginkan
+        $lastDayOfMonth = Carbon::now()->endOfMonth();
+        $dayName = $this->getDayName($lastDayOfMonth);
+        $day = $this->convertNumberToWords($lastDayOfMonth->day);
+        $monthName = $lastDayOfMonth->locale('id')->isoFormat('MMMM');
+        $year = 'Dua Ribu ' . $this->convertNumberToWords($lastDayOfMonth->year % 1000);
+        $dateInWords = "{$dayName} {$day} {$monthName} tahun {$year}";
+
         $sheet->mergeCells('A8:J8');
-        $sheet->setCellValue('A8', 'Pada hari ini, ' . date('d F Y') . ', kami telah melaksanakan opname fisik saldo barang persediaan Bulan ' . date('F') . ' Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:');
+        $sheet->setCellValue('A8', "Pada hari ini, {$dateInWords}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan {$monthName} Tahun Anggaran {$lastDayOfMonth->year} dengan hasil rincian sebagai berikut:");
         $sheet->getStyle('A8')->getFont()->setSize(12)->setName('Cambria');
         $sheet->getStyle('A8')->getAlignment()->setWrapText(true);
-    
+
         // Headers with merged cells
         $sheet->mergeCells('A11:A13'); // NO
         $sheet->setCellValue('A11', 'No');
@@ -292,95 +320,111 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
         // Start adding approval information 2 rows after the data ends
         $approvalStartRow = $dataEndRow + 4;
 
- // Set approval text before the stamp and signature
-$sheet->setCellValue("B$approvalStartRow", "Disetujui tanggal, 31 Juli 2024");
-$sheet->setCellValue("B" . ($approvalStartRow + 1), "Kuasa Pengguna Anggaran");
-$sheet->setCellValue("B" . ($approvalStartRow + 2), "Kepala BPS Kota Jakarta Utara");
+        // Set approval text before the stamp and signature
+        $formattedDate = $lastDayOfMonth->isoFormat('D MMMM Y'); // Format tanggal dalam bahasa Indonesia
 
-// Apply center alignment and Cambria font
-$sheet->getStyle("B$approvalStartRow:B" . ($approvalStartRow + 2))->applyFromArray([
-    'font' => [
-        'name' => 'Cambria',
-        'size' => 12,
-    ],
-    'alignment' => [
-        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-    ],
-]);
+        // Gunakan tanggal tersebut pada cell yang diinginkan
+        $sheet->setCellValue("B$approvalStartRow", "Disetujui tanggal, $formattedDate");
+        $sheet->setCellValue("B" . ($approvalStartRow + 1), "Kuasa Pengguna Anggaran");
+        $sheet->setCellValue("B" . ($approvalStartRow + 2), "Kepala BPS Kota Jakarta Utara");
 
-// Add the stamp image (centered in column B)
-$drawingStamp = new Drawing();
-$drawingStamp->setPath(public_path('backend/assets/images/stampel-jakut.png')); // Path to your stamp image
-$drawingStamp->setHeight(160); // Adjust height to make it bigger
-$drawingStamp->setCoordinates("B" . ($approvalStartRow + 3)); // Position stamp in column B
-$drawingStamp->setOffsetX(60); // Center the stamp horizontally in the cell
-$drawingStamp->setOffsetY(-40); // Move the stamp up a bit
-$drawingStamp->setWorksheet($sheet);
+        // Apply center alignment and Cambria font
+        $sheet->getStyle("B$approvalStartRow:B" . ($approvalStartRow + 2))->applyFromArray([
+            'font' => [
+                'name' => 'Cambria',
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
 
-// Add the signature image (aligned to the right in column B)
-$drawingSignature1 = new Drawing();
-$drawingSignature1->setPath(public_path('backend/assets/images/users/ttd_1.png')); // Path to the signature image
-$drawingSignature1->setHeight(150); // Increase the height for a bigger signature
-$drawingSignature1->setCoordinates("B" . ($approvalStartRow + 4)); // Position signature in column B
-$drawingSignature1->setOffsetX(150); // Move the signature to the right in the cell
-$drawingSignature1->setOffsetY(-50); // Move the signature up a bit
-$drawingSignature1->setWorksheet($sheet);
+        // Add the stamp image (centered in column B)
+        $drawingStamp = new Drawing();
+        $drawingStamp->setPath(public_path('backend/assets/images/stampel-jakut.png')); // Path to your stamp image
+        $drawingStamp->setHeight(160); // Adjust height to make it bigger
+        $drawingStamp->setCoordinates("B" . ($approvalStartRow + 3)); // Position stamp in column B
+        $drawingStamp->setOffsetX(60); // Center the stamp horizontally in the cell
+        $drawingStamp->setOffsetY(-40); // Move the stamp up a bit
+        $drawingStamp->setWorksheet($sheet);
 
-// Set the name and NIP after the stamp and signature
-$sheet->setCellValue("B" . ($approvalStartRow + 8), "Favten Ari Pujiastuti, S.Si, S.ST, M.E");
-$sheet->setCellValue("B" . ($approvalStartRow + 9), "NIP. 197804112000122002");
+        // Add the signature image (aligned to the right in column B)
+        $drawingSignature1 = new Drawing();
+        $drawingSignature1->setPath(public_path('backend/assets/images/users/ttd_1.png')); // Path to the signature image
+        $drawingSignature1->setHeight(150); // Increase the height for a bigger signature
+        $drawingSignature1->setCoordinates("B" . ($approvalStartRow + 4)); // Position signature in column B
+        $drawingSignature1->setOffsetX(150); // Move the signature to the right in the cell
+        $drawingSignature1->setOffsetY(-50); // Move the signature up a bit
+        $drawingSignature1->setWorksheet($sheet);
 
-// Apply center alignment and Cambria font for name and NIP
-$sheet->getStyle("B" . ($approvalStartRow + 8) . ":B" . ($approvalStartRow + 9))->applyFromArray([
-    'font' => [
-        'name' => 'Cambria',
-        'size' => 12,
-    ],
-    'alignment' => [
-        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-    ],
-]);
-// Add another signature block in columns G-J (split into separate lines)
-$sheet->mergeCells("G$approvalStartRow:J" . ($approvalStartRow + 1));
-$sheet->setCellValue("G$approvalStartRow", "Jakarta, 31 Juli 2024");
+        // Set the name and NIP after the stamp and signature
+        $sheet->setCellValue("B" . ($approvalStartRow + 8), "Favten Ari Pujiastuti, S.Si, S.ST, M.E");
+        $sheet->setCellValue("B" . ($approvalStartRow + 9), "NIP. 197804112000122002");
 
-$sheet->mergeCells("G" . ($approvalStartRow + 1) . ":J" . ($approvalStartRow + 1));
-$sheet->setCellValue("G" . ($approvalStartRow + 1), "Petugas Pengelola Persediaan,");
+        // Apply center alignment and Cambria font for name and NIP
+        $sheet->getStyle("B" . ($approvalStartRow + 8) . ":B" . ($approvalStartRow + 9))->applyFromArray([
+            'font' => [
+                'name' => 'Cambria',
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
 
-$sheet->mergeCells("G" . ($approvalStartRow + 2) . ":J" . ($approvalStartRow + 2));
-$sheet->setCellValue("G" . ($approvalStartRow + 2), "Staf Subbagian Tata Usaha");
+        // Add another signature block in columns G-J (split into separate lines)
+        $sheet->mergeCells("G$approvalStartRow:J" . ($approvalStartRow));
+        $sheet->setCellValue("G$approvalStartRow", "Jakarta, $formattedDate");
 
-// Add spacing for the signature and name
-$sheet->mergeCells("G" . ($approvalStartRow + 7) . ":J" . ($approvalStartRow + 7));
-$sheet->setCellValue("G" . ($approvalStartRow + 7), "Juniaty Pardede, A.Md");
+        $sheet->mergeCells("G" . ($approvalStartRow + 1) . ":J" . ($approvalStartRow + 1));
+        $sheet->setCellValue("G" . ($approvalStartRow + 1), "Petugas Pengelola Persediaan,");
 
-$sheet->mergeCells("G" . ($approvalStartRow + 8) . ":J" . ($approvalStartRow + 8));
-$sheet->setCellValue("G" . ($approvalStartRow + 8), "NIP. 199006302012122004");
+        $sheet->mergeCells("G" . ($approvalStartRow + 2) . ":J" . ($approvalStartRow + 2));
+        $sheet->setCellValue("G" . ($approvalStartRow + 2), "Staf Subbagian Tata Usaha");
 
-// Apply center alignment and Cambria font for the signature block
-$sheet->getStyle("G$approvalStartRow:J" . ($approvalStartRow + 8))->applyFromArray([
-    'font' => [
-        'name' => 'Cambria',
-        'size' => 12,
-    ],
-    'alignment' => [
-        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-        'wrapText' => true,
-    ],
-]);
+        // Add spacing for the signature and name
+        $sheet->mergeCells("G" . ($approvalStartRow + 8) . ":J" . ($approvalStartRow + 8));
+        $sheet->setCellValue("G" . ($approvalStartRow + 8), "Juniaty Pardede, A.Md");
 
-// Add the second signature image (aligned in column G)
-$drawingSignature2 = new Drawing();
-$drawingSignature2->setPath(public_path('backend/assets/images/users/ttd_4.png')); // Path to the second signature image
-$drawingSignature2->setHeight(150); // Increase the height for a bigger signature
-$drawingSignature2->setCoordinates("H" . ($approvalStartRow + 4)); // Position signature in column G
-$drawingSignature2->setOffsetX(20); // Move the signature to the right in the cell
-$drawingSignature2->setOffsetY(-50); // Move the signature up a bit
-$drawingSignature2->setWorksheet($sheet);
+        $sheet->mergeCells("G" . ($approvalStartRow + 9) . ":J" . ($approvalStartRow + 9));
+        $sheet->setCellValue("G" . ($approvalStartRow + 9), "NIP. 199006302012122004");
 
+        // Apply center alignment and Cambria font for the signature block
+        $sheet->getStyle("G$approvalStartRow:J" . ($approvalStartRow + 9))->applyFromArray([
+            'font' => [
+                'name' => 'Cambria',
+                'size' => 12,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'wrapText' => true,
+            ],
+        ]);
+
+        // Add the second signature image (aligned in column G)
+        $drawingSignature2 = new Drawing();
+        $drawingSignature2->setPath(public_path('backend/assets/images/users/ttd_4.png')); // Path to the second signature image
+        $drawingSignature2->setHeight(150); // Increase the height for a bigger signature
+        $drawingSignature2->setCoordinates("H" . ($approvalStartRow + 4)); // Position signature in column G
+        $drawingSignature2->setOffsetX(20); // Move the signature to the right in the cell
+        $drawingSignature2->setOffsetY(-50); // Move the signature up a bit
+        $drawingSignature2->setWorksheet($sheet);
     }
     
+    private function getDayName($date)
+    {
+        $days = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+        return $days[$date->format('l')];
+    }
 }
