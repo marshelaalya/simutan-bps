@@ -10,6 +10,8 @@ use App\Models\Barang;
 use Auth;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
+use App\Exports\BarangExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -365,5 +367,9 @@ public function dataForIndex()
         return redirect()->back()->with($notification);
     }
 
-    
+    public function exportToExcel()
+{
+    $barang = Barang::all(); // Retrieve all barang data
+    return Excel::download(new BarangExport($barang), 'data_barang.xlsx');
+}
 }

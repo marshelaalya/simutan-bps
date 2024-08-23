@@ -117,8 +117,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
         Route::get('barang/data-all', 'dataForAll')->name('barang.data.all');
         Route::get('barang/data-index', 'dataForIndex')->name('barang.data.index');    
+        Route::post('/barang/add-stock', 'addStock')->name('barang.addStock');
+        Route::get('/barang/export', 'exportToExcel')->name('barang.export');
 
-                Route::post('/barang/add-stock', 'addStock')->name('barang.addStock');
         // web.php
 
     });
