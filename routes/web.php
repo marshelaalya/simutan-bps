@@ -51,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin.index');
     Route::get('/pegawai/index', [DashboardController::class, 'index'])->name('pegawai.index');
 
-    
+    Route::get('/pegawai/index', [UserController::class, 'topUsers'])->name('pegawai.index');
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('/admin/logout', 'destroy')->name('admin.logout');
