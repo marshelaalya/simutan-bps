@@ -47,11 +47,12 @@
                                     <th>Nama Barang</th>
                                     <th width="1%" class="text-center">Stok</th>
                                     <th width="1%" class="text-center">Satuan</th>
+                                    <th width="1%" class="text-center">Gambar</th>
                                     <th width="1%" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($barangs as $item)
+                                {{-- @foreach($barangs as $item)
                                     <tr>
                                         <td class="text-center">{{ $item->kode }}</td>
                                         <td>{{ $item->kelompok->nama ?? 'N/A' }}</td>
@@ -72,7 +73,7 @@
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -97,7 +98,7 @@
                         <label for="stok_qty" class="form-label">Tambah Stok</label>
                         <input type="number" class="form-control" id="stok_qty" min="1" step="1" value="1">
                     </div>
-                    <button type="submit" class="btn btn-primary">Tambah Stok</button>
+                    <button type="submit" class="btn btn-info">Tambah Stok</button>
                 </form>
             </div>
         </div>
@@ -117,39 +118,116 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
+
+
 <script>
     $(document).ready(function() {
+    $('[data-tooltip]').tooltip();
+});
 
-        if ($.fn.DataTable.isDataTable('#datatable')) {
-    // Destroy the existing DataTable
-    $('#datatable').DataTable().destroy();
-}
-    $('#datatable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: '{{ route('barang.data.all') }}',
-        columns: [
-            { data: 'kode', name: 'kode' },
-            { data: 'kelompok.nama', name: 'kelompok.nama' },
-            { data: 'nama', name: 'nama' },
-            { data: 'qty_item', name: 'qty_item', class: 'text-center' },
-            { data: 'satuan.nama', name: 'satuan.nama', class: 'text-center' },
-            { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center' }
-        ],
-        dom: 'Bfrtip',
-        buttons: [
+    $(document).ready(function() {
+        var table = $('.yajra-datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: {
+                url: "{{ route('barang.allAct') }}",  // Pastikan route ini sesuai dengan yang ada di web.php
+                data: function(d) {
+                    d.kelompok_id = $('#kelompok_filter').val();  // Filter berdasarkan kelompok barang
+                }
+            },
+            columns: [
+                { data: 'kode', name: 'kode', className: 'text-center' },
+                { data: 'kelompok.nama', name: 'kelompok.nama' },
+                { data: 'nama', name: 'nama' },
+                { data: 'qty_item', name: 'qty_item', className: 'text-center' },
+                { data: 'satuan', name: 'satuan.nama', className: 'text-center' },
+                { data: 'foto_barang', name: 'foto_barang', className: 'text-center' },
+                { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
+            ],
+            dom: 'Bfrtip',
+            buttons: [
                 {
-                    text: 'Ekspor Excel',
-                    action: function (e, dt, node, config) {
-                        exportToExcel();
-                    }
-                },
-                { extend: 'copy', title: 'Rekap Stok Barang' },
-                { extend: 'csv', title: 'Rekap Stok Barang' },
-                { extend: 'excel', title: 'Rekap Stok Barang' },
-                { extend: 'pdf', title: 'Rekap Stok Barang' },
-                { extend: 'print', title: 'Rekap Stok Barang' }
-            ]
+                    extend: 'collection',
+                    text: 'Export',
+                    className: 'btn btn-primary', // Ganti kelas sesuai kebutuhan
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: 'Export Excel',
+                            title: 'Data Barang',
+                            action: function (e, dt, node, config) {
+                                exportToExcel(); // Fungsi custom untuk eksport Excel
+                            },
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            }
+                        },
+                        {
+                            extend: 'copy',
+                            text: 'Copy',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            text: 'CSV',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'PDF',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Print',
+                            exportOptions: {
+                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            }
+                        }
+                    ]
+                }
+            ],
+            initComplete: function() {
+                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 150px;"><option value="">Semua Kelompok Barang</option></select>')
+                    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
+                    .on('change', function() {
+                        table.draw();
+                    });
+
+                // Menambahkan opsi untuk kelompok barang dari server (opsional, jika ingin dinamis)
+                @foreach($kelompokFilt as $kelompok)
+                    kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
+                @endforeach
+    
+                // Styling untuk select
+                $('.form-select').each(function() {
+                    $(this).css({
+                        'display': 'block',
+                        'padding': '.47rem 1.75rem .47rem .75rem',
+                        '-moz-padding-start': 'calc(.75rem - 3px)',
+                        'font-size': '.9rem',
+                        'font-weight': '500',
+                        'line-height': '1.5',
+                        'color': '#505d69',
+                        'background-color': '#fff',
+                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                        'background-repeat': 'no-repeat',
+                        'background-position': 'right .75rem center',
+                        'background-size': '16px 12px',
+                        'border': '1px solid #ced4da',
+                        'border-radius': '.25rem',
+                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        'appearance': 'none'
+                    });
+                });
+            }
         });
 
         // Handle the Add Stock button click
@@ -205,16 +283,16 @@
     ws_data.push(['BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN']);
     ws_data.push([`Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:`]);
 
-    // Tambahkan header tabel
-    ws_data.push([
-        'NO', 'Uraian Barang', 'Satuan', 'Harga Beli Satuan (Rupiah)', 'Total Persediaan', '', 'Barang Rusak', '', 'Barang Usang', ''
-    ]);
-    ws_data.push([
-        '', 'Satuan', 'Jumlah', 'Harga Total', 'Jumlah', 'Harga Total', 'Jumlah', 'Harga Total', 'Jumlah', 'Harga Total'
-    ]);
-    ws_data.push([
-        '', '', '', '', '', '(Rupiah)', '', '(Rupiah)', '', '(Rupiah)'
-    ]);
+            // Tambahkan header tabel
+            ws_data.push([
+                'NO', 'Uraian Barang', 'Satuan', 'Harga Beli Satuan (Rupiah)', 'Total Persediaan', '', 'Barang Rusak', '', 'Barang Usang', ''
+            ]);
+            ws_data.push([
+                '', 'Satuan', 'Jumlah', 'Harga Total', 'Jumlah', 'Harga Total', 'Jumlah', 'Harga Total', 'Jumlah', 'Harga Total'
+            ]);
+            ws_data.push([
+                '', '', '', '', '', '(Rupiah)', '', '(Rupiah)', '', '(Rupiah)'
+            ]);
 
     // Ambil data dari tabel HTML
     var rows = document.querySelectorAll('#datatable tbody tr');
@@ -235,24 +313,16 @@
         ]);
     });
 
-    // Konversi data ke worksheet
-    var ws = XLSX.utils.aoa_to_sheet(ws_data);
+            // Konversi data ke worksheet
+            var ws = XLSX.utils.aoa_to_sheet(ws_data);
 
-    // Mengatur merge dan format
-    ws['!merges'] = [
-        // Merge cells for the logo and information
-        { s: {r: 0, c: 0}, e: {r: 0, c: 9} }, // Badan Pusat Statistik
-        { s: {r: 1, c: 0}, e: {r: 1, c: 9} }, // Kota Jakarta Utara
-        { s: {r: 2, c: 0}, e: {r: 2, c: 9} }, // Alamat
-        { s: {r: 3, c: 0}, e: {r: 3, c: 9} }, // Alamat
-        { s: {r: 5, c: 0}, e: {r: 5, c: 9} }, // Kop Surat
-        { s: {r: 6, c: 0}, e: {r: 6, c: 9} }, // Baris Kop Surat
-
-        // Merge cells for the table headers
-        { s: {r: 7, c: 0}, e: {r: 9, c: 0} }, // NO
-        { s: {r: 7, c: 1}, e: {r: 9, c: 1} }, // Uraian Barang
-        { s: {r: 7, c: 2}, e: {r: 9, c: 2} }, // Satuan
-        { s: {r: 7, c: 3}, e: {r: 9, c: 3} }, // Harga Beli Satuan (Rupiah)
+            // Mengatur merge dan format
+            ws['!merges'] = [
+                // Merge cells for the table headers
+                { s: {r: 0, c: 0}, e: {r: 0, c: 9} }, // NO
+                { s: {r: 1, c: 1}, e: {r: 1, c: 1} }, // Uraian Barang
+                { s: {r: 1, c: 2}, e: {r: 1, c: 2} }, // Satuan
+                { s: {r: 1, c: 3}, e: {r: 1, c: 3} }, // Harga Beli Satuan (Rupiah)
 
         // Merge cells for the sub-headers
         { s: {r: 7, c: 4}, e: {r: 7, c: 5} }, // Total Persediaan
@@ -313,11 +383,11 @@
 
     XLSX.utils.book_append_sheet(wb, ws, "Persediaan Barang");
 
-    // Simpan file Excel
-    XLSX.writeFile(wb, 'Rekap_Stok_Barang.xlsx');
-}
-
+            // Simpan workbook ke file Excel
+            XLSX.writeFile(wb, 'Data_Barang.xlsx');
+        }
     });
 </script>
+
 
 @endsection

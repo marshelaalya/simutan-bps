@@ -67,6 +67,66 @@
     outline: none !important;
     background-color: #e9ecef !important;
 }
+
+.filter-buttons {
+        display: flex;
+        align-items: center;
+    }
+    
+    .filter-buttons .form-select-sm {
+        min-width: 180px;
+        margin-right: 10px; /* Adjust as needed */
+    }
+    
+    .datatable-search {
+        flex-grow: 1; /* Ensure it takes the remaining space */
+    }
+    
+    a[data-tooltip] {
+        position: relative;
+    }
+    
+    a[data-tooltip]::before {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%; /* Tooltip berada di atas elemen */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.1s ease-in-out; /* Percepat transisi menjadi 0.1s */
+        pointer-events: none;
+        font-size: 12px;
+        z-index: 999;
+    }
+    
+    a[data-tooltip]:hover::before {
+        opacity: 1;
+    }
+    
+    .hover\:bg-primary:hover {
+        background-color: #e3f0fb!important; /* Sesuaikan dengan warna bg-primary */
+        color: #007bff !important;
+    }
+    
+    .hover\:bg-success:hover {
+        background-color: #e2f6e7 !important; /* Sesuaikan dengan warna bg-success */
+        color: #28a745 !important;
+    }
+    
+    .hover\:bg-danger:hover {
+        background-color: #feeaea !important; /* Sesuaikan dengan warna bg-danger */
+        color: #dc3545 !important;
+    }
+
+    .hover\:bg-warning:hover {
+        --bs-bg-opacity:0.15;
+        background-color:rgba(var(--bs-warning-rgb),var(--bs-bg-opacity))!important
+    }
 </style>
 
 <div class="page-content">
@@ -137,7 +197,6 @@
             processing: true,
             serverSide: true,
             responsive: true,
-            scrollX: true,
             ajax: {
                 url: "{{ route('user.all') }}",
                 data: function (d) {
@@ -166,12 +225,12 @@
                         var deleteUrl = "{{ route('user.delete', ':id') }}".replace(':id', row.id);
     
                         return `
-                        <div class="table-actions" style="text-align: center; vertical-align: middle;">
-                            <a href="${editUrl}" class="btn bg-warning btn-sm">
-                                <i class="fas fa-edit" style="color: #ca8a04"></i>
+                        <div class="table-actions d-flex" style="text-align: center; vertical-align: middle;">
+                            <a href="${editUrl}" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Permintaan">
+                                <i class="ti ti-edit font-size-20 align-middle"></i>
                             </a>
-                            <a href="${deleteUrl}" class="btn bg-danger btn-sm">
-                                <i class="fas fa-trash-alt text-danger"></i>
+                            <a href="${deleteUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Permintaan">
+                                <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
                             </a>
                         </div>
                         `;

@@ -7602,7 +7602,7 @@ textarea.form-control-lg{
     background-color:rgba(var(--bs-light-rgb),var(--bs-bg-opacity))!important
 }
 .bg-dark{
-    --bs-bg-opacity:0.2;
+    --bs-bg-opacity:0.1;
     background-color:rgba(var(--bs-dark-rgb),var(--bs-bg-opacity))!important
 }
 .bg-black{
@@ -11658,6 +11658,95 @@ a,button{
     0%{
         width:0
     }
+}
+
+.filter-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.filter-buttons .form-select-sm {
+    min-width: 180px;
+    margin-right: 10px; /* Adjust as needed */
+}
+
+.datatable-search {
+    flex-grow: 1; /* Ensure it takes the remaining space */
+}
+
+a[data-tooltip] {
+    position: relative;
+}
+
+a[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%; /* Tooltip berada di atas elemen */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out; /* Percepat transisi menjadi 0.1s */
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 999;
+}
+
+a[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+button[data-tooltip] {
+    position: relative;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+button[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%; /* Tooltip berada di atas elemen */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out; /* Percepat transisi menjadi 0.1s */
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 999;
+}
+
+button[data-tooltip]:hover::before {
+    opacity: 1;
+}
+
+.hover\:bg-primary:hover {
+    background-color: #e3f0fb!important; /* Sesuaikan dengan warna bg-primary */
+    color: #007bff !important;
+}
+
+.hover\:bg-success:hover {
+    background-color: #e2f6e7 !important; /* Sesuaikan dengan warna bg-success */
+    color: #28a745 !important;
+}
+
+.hover\:bg-danger:hover {
+    background-color: #feeaea !important; /* Sesuaikan dengan warna bg-danger */
+    color: #dc3545 !important;
+}
+
+.hover\:bg-warning:hover {
+    --bs-bg-opacity:0.15;
+    background-color:rgba(var(--bs-warning-rgb),var(--bs-bg-opacity))!important
 }
 
  */

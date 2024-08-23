@@ -688,7 +688,6 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             processing: true,
             serverSide: true,
             responsive: true,
-            scrollX: true,
             ajax: {
                 url: "{{ route('barang.all') }}",  // Pastikan route ini sesuai dengan yang ada di web.php
                 data: function(d) {
