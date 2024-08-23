@@ -26,6 +26,7 @@ class KelompokController extends Controller
     public function KelompokStore(Request $request){
         Kelompok::insert([
             'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
             // 'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -44,20 +45,27 @@ class KelompokController extends Controller
         return view('backend.kelompok.kelompok_edit', compact('kelompok'));
     }
 
-    public function KelompokUpdate(Request $request){
-        $kelompok_id = $request->id;
-
-        Kelompok::findOrFail($kelompok_id)->update([
-            'nama'=>$request->nama,
+    public function KelompokUpdate(Request $request, $id)
+    {
+        // Validate request
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string|max:500',
+        ]);
+    
+        // Find the kelompok and update
+        $kelompok = Kelompok::findOrFail($id);
+        $kelompok->update([
+            'nama' => $validatedData['nama'],
+            'deskripsi' => $validatedData['deskripsi'] ?? $kelompok->deskripsi,
             'updated_at' => Carbon::now()
         ]);
-
-        $notification = array(
+    
+        // Redirect with success notification
+        return redirect()->route('kelompok.all')->with([
             'message' => 'Kelompok Barang berhasil di update',
             'alert-type' => 'success'
-        );
-
-        return redirect()->route('kelompok.all')->with($notification);
+        ]);
     }
 
     public function KelompokDelete($id){
@@ -71,9 +79,10 @@ class KelompokController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function data()
+public function data()
 {
-    $kelompoks = Kelompok::all();
+    $kelompoks = Kelompok::select(['id', 'nama', 'deskripsi']); // Specify the columns you want
+
     return DataTables::of($kelompoks)
     ->addColumn('action', function ($kelompok) {
         return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
@@ -87,7 +96,18 @@ class KelompokController extends Controller
                 </div>';
     })
     
+        ->addColumn('action', function ($kelompok) {
+            return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
+                        <a href="'.route('kelompok.edit', $kelompok->id).'" class="btn bg-warning btn-sm">
+                            <i class="fas fa-edit" style="color: #ca8a04"></i>
+                        </a>
+                        <a href="'.route('kelompok.delete', $kelompok->id).'" class="btn bg-danger btn-sm">
+                            <i class="fas fa-trash-alt text-danger"></i>
+                        </a>
+                    </div>';
+        })
         ->make(true);
 }
+
 
 }

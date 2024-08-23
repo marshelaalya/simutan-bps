@@ -51,6 +51,7 @@
                             <tr>
                                 <th width="1%">ID</th>
                                 <th>Nama</th>
+                                <th>Deskripsi</th>
                                 <th width="1%" class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -59,6 +60,7 @@
                                 <tr>
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->deskripsi }}</td>
                                     <td class="table-actions" style="text-align: center; vertical-align: middle;">
                                         <div class="table-actions">
                                             <!-- Tombol dengan link route ke halaman edit -->
@@ -101,6 +103,7 @@
         columns: [
             { data: 'id', name: 'id' },
             { data: 'nama', name: 'nama' },
+            { data: 'deskripsi', name: 'deskripsi' },
             { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
         dom: 'Bfrtip',

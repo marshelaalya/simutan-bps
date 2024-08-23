@@ -158,47 +158,54 @@ public function dataForIndex()
 }
 
 
-public function barangStore(Request $request)
-{
+    public function barangStore(Request $request)
+    {
+        $satuan = $request->satuan;
+        $satuanBaru = $request->satuanBaru;
 
-    $satuan = $request->satuan;
-    $satuanBaru = $request->satuanBaru;
-
-    // Jika pilihan satuan adalah 'lainnya' dan satuanBaru tidak kosong
-    if ($satuan === 'lainnya' && !empty($satuanBaru)) {
-        // Simpan satuan baru
-        // Periksa apakah satuan baru sudah ada di database
-        $existingSatuan = Barang::where('satuan', strtolower($satuanBaru))->first();
-        
-        if ($existingSatuan) {
-            // Jika sudah ada, gunakan satuan yang sudah ada
-            $satuan = $existingSatuan->satuan;
-        } else {
-            // Jika belum ada, simpan satuan baru ke dalam tabel barang
-            // Jika Anda ingin menyimpan satuan baru dalam tabel barang atau menggunakan langsung
-            $satuan = strtolower($satuanBaru);
+        // Jika pilihan satuan adalah 'lainnya' dan satuanBaru tidak kosong
+        if ($satuan === 'lainnya' && !empty($satuanBaru)) {
+            // Periksa apakah satuan baru sudah ada di database
+            $existingSatuan = Barang::where('satuan', strtolower($satuanBaru))->first();
+            
+            if ($existingSatuan) {
+                // Jika sudah ada, gunakan satuan yang sudah ada
+                $satuan = $existingSatuan->satuan;
+            } else {
+                // Jika belum ada, simpan satuan baru ke dalam tabel barang
+                $satuan = strtolower($satuanBaru);
+            }
         }
+
+        // Simpan data barang baru
+        $barang = new Barang();
+        $barang->nama = $request->nama;
+        $barang->kode = $request->kode_barang;
+        $barang->kelompok_id = $request->kelompok_id;
+        $barang->qty_item = $request->qty_item;
+        $barang->satuan = $satuan; // Simpan satuan di kolom satuan
+        $barang->created_at = Carbon::now();
+        $barang->updated_at = Carbon::now();
+
+        // Handle file upload
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $fileName = 'backend/assets/images/barang/foto_' . $request->kode_barang . '.png'; // Generate file name
+
+            $barang->foto_barang = $fileName; // Save file name in database
+        }
+
+        $barang->save();
+
+        // Notifikasi sukses
+        $notification = array(
+            'message' => "Barang berhasil ditambahkan.",
+            'alert-type' => "success"
+        );
+
+        return redirect()->route('barang.all')->with($notification);
     }
 
-    // Simpan data barang baru
-    $barang = new Barang();
-    $barang->nama = $request->nama;
-    $barang->kode = $request->kode_barang;
-    $barang->kelompok_id = $request->kelompok_id;
-    $barang->qty_item = $request->qty_item;
-    $barang->satuan = $satuan; // Simpan satuan di kolom satuan
-    $barang->created_at = Carbon::now();
-    $barang->updated_at = Carbon::now();
-    $barang->save();
-
-    // Notifikasi sukses
-    $notification = array(
-        'message' => "Barang berhasil ditambahkan.",
-        'alert-type' => "success"
-    );
-
-    return redirect()->route('barang.all')->with($notification);
-}
 
 
     public function KelompokStore(Request $request){
