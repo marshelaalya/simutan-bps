@@ -154,7 +154,7 @@
                     buttons: [
                         {
                             extend: 'excelHtml5',
-                            text: 'Export Excel',
+                            text: 'BA Stock Opname',
                             title: 'Data Barang',
                             action: function (e, dt, node, config) {
                                 exportToExcel(); // Fungsi custom untuk eksport Excel
@@ -270,18 +270,18 @@
         });
 
         function exportToExcel() {
-    // Buat workbook baru
-    var wb = XLSX.utils.book_new();
-    var ws_data = [];
+            // Buat workbook baru
+            var wb = XLSX.utils.book_new();
+            var ws_data = [];
 
-    // Tambahkan logo dan informasi
-    ws_data.push(['Badan Pusat Statistik']);
-    ws_data.push(['Kota Jakarta Utara']);
-    ws_data.push(['Jl. Berdikari No. 1 Rawa Badak Utara']);
-    ws_data.push(['Jakarta Utara']);
-    ws_data.push(['']);
-    ws_data.push(['BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN']);
-    ws_data.push([`Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:`]);
+            // Tambahkan logo dan informasi
+            ws_data.push(['Badan Pusat Statistik']);
+            ws_data.push(['Kota Jakarta Utara']);
+            ws_data.push(['Jl. Berdikari No. 1 Rawa Badak Utara']);
+            ws_data.push(['Jakarta Utara']);
+            ws_data.push(['']);
+            ws_data.push(['BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN']);
+            ws_data.push([`Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:`]);
 
             // Tambahkan header tabel
             ws_data.push([
@@ -294,98 +294,107 @@
                 '', '', '', '', '', '(Rupiah)', '', '(Rupiah)', '', '(Rupiah)'
             ]);
 
-    // Ambil data dari tabel HTML
-    var rows = document.querySelectorAll('#datatable tbody tr');
-    var no = 1;
-    rows.forEach(function(row) {
-        var cells = row.querySelectorAll('td');
-        ws_data.push([
-            no++, // NO
-            cells[2] ? cells[2].textContent : '', // Uraian Barang
-            cells[4] ? cells[4].textContent : '', // Satuan
-            '', // Harga Beli Satuan (Rupiah) - Kosongkan jika tidak tersedia
-            cells[3] ? cells[3].textContent : '', // Total Persediaan Jumlah
-            '', // Total Persediaan Harga Total - Kosongkan jika tidak tersedia
-            '', // Barang Rusak Jumlah
-            '', // Barang Rusak Harga Total
-            '', // Barang Usang Jumlah
-            ''  // Barang Usang Harga Total
-        ]);
-    });
+            // Ambil data dari tabel HTML
+            var rows = document.querySelectorAll('#datatable tbody tr');
+            var no = 1;
+            rows.forEach(function(row) {
+                var cells = row.querySelectorAll('td');
+                ws_data.push([
+                    no++, // NO
+                    cells[0] ? cells[0].textContent : '', // Uraian Barang
+                    cells[1] ? cells[1].textContent : '', // Satuan
+                    '', // Harga Beli Satuan (Rupiah) - Kosongkan jika tidak tersedia
+                    cells[2] ? cells[2].textContent : '', // Total Persediaan Jumlah
+                    '', // Total Persediaan Harga Total - Kosongkan jika tidak tersedia
+                    '', // Barang Rusak Jumlah
+                    '', // Barang Rusak Harga Total
+                    '', // Barang Usang Jumlah
+                    ''  // Barang Usang Harga Total
+                ]);
+            });
 
             // Konversi data ke worksheet
             var ws = XLSX.utils.aoa_to_sheet(ws_data);
 
             // Mengatur merge dan format
             ws['!merges'] = [
+                // Merge cells for the logo and information
+                { s: {r: 0, c: 0}, e: {r: 0, c: 9} }, // Badan Pusat Statistik
+                { s: {r: 1, c: 0}, e: {r: 1, c: 9} }, // Kota Jakarta Utara
+                { s: {r: 2, c: 0}, e: {r: 2, c: 9} }, // Alamat
+                { s: {r: 3, c: 0}, e: {r: 3, c: 9} }, // Alamat
+                { s: {r: 5, c: 0}, e: {r: 5, c: 9} }, // Kop Surat
+                { s: {r: 6, c: 0}, e: {r: 6, c: 9} }, // Baris Kop Surat
+
                 // Merge cells for the table headers
-                { s: {r: 0, c: 0}, e: {r: 0, c: 9} }, // NO
-                { s: {r: 1, c: 1}, e: {r: 1, c: 1} }, // Uraian Barang
-                { s: {r: 1, c: 2}, e: {r: 1, c: 2} }, // Satuan
-                { s: {r: 1, c: 3}, e: {r: 1, c: 3} }, // Harga Beli Satuan (Rupiah)
+                { s: {r: 7, c: 0}, e: {r: 9, c: 0} }, // NO
+                { s: {r: 7, c: 1}, e: {r: 9, c: 1} }, // Uraian Barang
+                { s: {r: 7, c: 2}, e: {r: 9, c: 2} }, // Satuan
+                { s: {r: 7, c: 3}, e: {r: 9, c: 3} }, // Harga Beli Satuan (Rupiah)
 
-        // Merge cells for the sub-headers
-        { s: {r: 7, c: 4}, e: {r: 7, c: 5} }, // Total Persediaan
-        { s: {r: 8, c: 4}, e: {r: 9, c: 4} }, // Total Persediaan Jumlah
-        { s: {r: 8, c: 5}, e: {r: 8, c: 5} }, // Total Persediaan Harga Total
+                // Merge cells for the sub-headers
+                { s: {r: 7, c: 4}, e: {r: 7, c: 5} }, // Total Persediaan
+                { s: {r: 8, c: 4}, e: {r: 9, c: 4} }, // Total Persediaan Jumlah
+                { s: {r: 8, c: 5}, e: {r: 8, c: 5} }, // Total Persediaan Harga Total
 
-        { s: {r: 7, c: 6}, e: {r: 7, c: 7} }, // Barang Rusak
-        { s: {r: 8, c: 6}, e: {r: 9, c: 6} }, // Barang Rusak Jumlah
-        { s: {r: 8, c: 7}, e: {r: 8, c: 7} }, // Barang Rusak Harga Total
+                { s: {r: 7, c: 6}, e: {r: 7, c: 7} }, // Barang Rusak
+                { s: {r: 8, c: 6}, e: {r: 9, c: 6} }, // Barang Rusak Jumlah
+                { s: {r: 8, c: 7}, e: {r: 8, c: 7} }, // Barang Rusak Harga Total
 
-        { s: {r: 7, c: 8}, e: {r: 7, c: 9} }, // Barang Usang
-        { s: {r: 8, c: 8}, e: {r: 9, c: 8} }, // Barang Usang Jumlah
-        { s: {r: 8, c: 9}, e: {r: 8, c: 9} }  // Barang Usang Harga Total
-    ];
+                { s: {r: 7, c: 8}, e: {r: 7, c: 9} }, // Barang Usang
+                { s: {r: 8, c: 8}, e: {r: 9, c: 8} }, // Barang Usang Jumlah
+                { s: {r: 8, c: 9}, e: {r: 8, c: 9} }  // Barang Usang Harga Total
+            ];
 
-    // Set font to Calibri and other formatting
-    for (var cell in ws) {
-        if (cell[0] === '!') continue;
-        if (!ws[cell].s) ws[cell].s = {};
-        
-        // Set font to Calibri
-        ws[cell].s.font = {
-            name: 'Calibri',
-            sz: 11, // Font size
-            color: { rgb: "000000" } // Font color (black)
-        };
-        
-        ws[cell].s.align = { horizontal: 'center', vertical: 'middle' };
+            // Set font to Calibri and other formatting
+            for (var cell in ws) {
+                if (cell[0] === '!') continue;
+                if (!ws[cell].s) ws[cell].s = {};
+                
+                // Set font to Calibri
+                ws[cell].s.font = {
+                    name: 'Calibri',
+                    sz: 11, // Font size
+                    color: { rgb: "000000" } // Font color (black)
+                };
+                
+                ws[cell].s.align = { horizontal: 'center', vertical: 'middle' };
 
-        // Set wrap text for all cells
-        ws[cell].s.alignment = { wrapText: true };
+                // Set wrap text for all cells
+                ws[cell].s.alignment = { wrapText: true };
 
-        // Set background color to light blue for header row
-        if (parseInt(cell[1]) >= 7) { // Header row
-            ws[cell].s.fill = {
-                fgColor: { rgb: "ADD8E6" } // Light Blue color for header
-            };
-        } else if (ws[cell].v && ws[cell].v !== '') {
-            ws[cell].s.fill = {
-                fgColor: { rgb: "ADD8E6" } // Light Blue color for data cells
-            };
+                // Set background color to light blue for header row
+                if (parseInt(cell[1]) >= 7) { // Header row
+                    ws[cell].s.fill = {
+                        fgColor: { rgb: "ADD8E6" } // Light Blue color for header
+                    };
+                } else if (ws[cell].v && ws[cell].v !== '') {
+                    ws[cell].s.fill = {
+                        fgColor: { rgb: "ADD8E6" } // Light Blue color for data cells
+                    };
+                }
+            }
+
+            // Set column widths
+            ws['!cols'] = [
+                { wpx: 30 }, // NO
+                { wpx: 150 }, // Uraian Barang
+                { wpx: 60 }, // Satuan
+                { wpx: 80 }, // Harga Beli Satuan
+                { wpx: 60 }, // Total Persediaan Jumlah
+                { wpx: 60 }, // Total Persediaan Harga Total
+                { wpx: 60 }, // Barang Rusak Jumlah
+                { wpx: 60 }, // Barang Rusak Harga Total
+                { wpx: 60 }, // Barang Usang Jumlah
+                { wpx: 60 }  // Barang Usang Harga Total
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, "Persediaan Barang");
+
+            // Simpan file Excel
+            XLSX.writeFile(wb, 'Rekap_Stok_Barang.xlsx');
         }
-    }
 
-    // Set column widths
-    ws['!cols'] = [
-        { wpx: 30 }, // NO
-        { wpx: 150 }, // Uraian Barang
-        { wpx: 60 }, // Satuan
-        { wpx: 80 }, // Harga Beli Satuan
-        { wpx: 60 }, // Total Persediaan Jumlah
-        { wpx: 60 }, // Total Persediaan Harga Total
-        { wpx: 60 }, // Barang Rusak Jumlah
-        { wpx: 60 }, // Barang Rusak Harga Total
-        { wpx: 60 }, // Barang Usang Jumlah
-        { wpx: 60 }  // Barang Usang Harga Total
-    ];
-
-    XLSX.utils.book_append_sheet(wb, ws, "Persediaan Barang");
-
-            // Simpan workbook ke file Excel
-            XLSX.writeFile(wb, 'Data_Barang.xlsx');
-        }
     });
 </script>
 
