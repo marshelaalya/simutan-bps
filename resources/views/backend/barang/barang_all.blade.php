@@ -192,31 +192,18 @@
         });
 
         function exportToExcel() {
+    // Buat workbook baru
     var wb = XLSX.utils.book_new();
     var ws_data = [];
 
     // Tambahkan logo dan informasi
-    ws_data.push([
-        'Badan Pusat Statistik'
-    ]);
-    ws_data.push([
-        'Kota Jakarta Utara'
-    ]);
-    ws_data.push([
-        'Jl. Berdikari No. 1 Rawa Badak Utara'
-    ]);
-    ws_data.push([
-        'Jakarta Utara'
-    ]);
-    ws_data.push([
-        ''
-    ]);
-    ws_data.push([
-        'BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN'
-    ]);
-    ws_data.push([
-        `Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:`
-    ]);
+    ws_data.push(['Badan Pusat Statistik']);
+    ws_data.push(['Kota Jakarta Utara']);
+    ws_data.push(['Jl. Berdikari No. 1 Rawa Badak Utara']);
+    ws_data.push(['Jakarta Utara']);
+    ws_data.push(['']);
+    ws_data.push(['BERITA ACARA HASIL OPNAME PHISIK (STOCK OPNAME) PERSEDIAAN']);
+    ws_data.push([`Pada hari ini, ${new Date().toLocaleDateString()}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan Juni Tahun Anggaran 2024 dengan hasil rincian sebagai berikut:`]);
 
     // Tambahkan header tabel
     ws_data.push([
@@ -229,16 +216,18 @@
         '', '', '', '', '', '(Rupiah)', '', '(Rupiah)', '', '(Rupiah)'
     ]);
 
-    // Ambil data dari tabel
-    $('#datatable').DataTable().rows().every(function() {
-        var data = this.data();
+    // Ambil data dari tabel HTML
+    var rows = document.querySelectorAll('#datatable tbody tr');
+    var no = 1;
+    rows.forEach(function(row) {
+        var cells = row.querySelectorAll('td');
         ws_data.push([
-            '', // NO
-            data.nama, // Uraian Barang
-            data.satuan.nama, // Satuan
-            '', // Harga Beli Satuan (Rupiah)
-            data.qty_item, // Total Persediaan Jumlah
-            '', // Total Persediaan Harga Total
+            no++, // NO
+            cells[2] ? cells[2].textContent : '', // Uraian Barang
+            cells[4] ? cells[4].textContent : '', // Satuan
+            '', // Harga Beli Satuan (Rupiah) - Kosongkan jika tidak tersedia
+            cells[3] ? cells[3].textContent : '', // Total Persediaan Jumlah
+            '', // Total Persediaan Harga Total - Kosongkan jika tidak tersedia
             '', // Barang Rusak Jumlah
             '', // Barang Rusak Harga Total
             '', // Barang Usang Jumlah
@@ -296,10 +285,14 @@
         // Set wrap text for all cells
         ws[cell].s.alignment = { wrapText: true };
 
-        // Set background color to light blue for data cells
-        if (ws[cell].v && ws[cell].v !== '') {
+        // Set background color to light blue for header row
+        if (parseInt(cell[1]) >= 7) { // Header row
             ws[cell].s.fill = {
-                fgColor: { rgb: "ADD8E6" } // Light Blue color
+                fgColor: { rgb: "ADD8E6" } // Light Blue color for header
+            };
+        } else if (ws[cell].v && ws[cell].v !== '') {
+            ws[cell].s.fill = {
+                fgColor: { rgb: "ADD8E6" } // Light Blue color for data cells
             };
         }
     }

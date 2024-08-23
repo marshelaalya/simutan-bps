@@ -52,7 +52,15 @@
                                     <div class="d-flex align-items-start">
                                         <!-- Existing Image -->
                                         <div class="me-4">
-                                            <img id="foto-preview" src="{{ asset('backend/assets/images/users/foto_' . $user->id . '.png') }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
+                                            @if($user->foto)
+                                                <p class="text-success">Foto saat ini:</p>
+                                                <div class="mt-2">
+                                                    <!-- Menggunakan path lengkap dari user->foto -->
+                                                    <img id="foto-preview" src="{{ asset($user->foto) }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
+                                                </div>
+                                            @else
+                                                <p class="text-warning">Belum ada foto</p>
+                                            @endif
                                         </div>
                                         <!-- File Input -->
                                         <div class="flex-grow-1">
@@ -67,9 +75,18 @@
                                 <label class="col-sm-2 col-form-label">Tanda Tangan</label>
                                 <div class="col-sm-10">
                                     <div class="d-flex align-items-start">
+                                        
                                         <!-- Existing Signature -->
                                         <div class="me-4">
-                                            <img id="ttd-preview" src="{{ asset('backend/assets/images/users/ttd_' . $user->id . '.png') }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
+                                            @if($user->ttd)
+                                                <p class="text-success">Tanda tangan saat ini:</p>
+                                                <div class="mt-2">
+                                                    <!-- Menggunakan path lengkap dari user->signature -->
+                                                    <img id="ttd-preview" src="{{ asset($user->ttd) }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
+                                                </div>
+                                            @else
+                                                <p class="text-warning">Belum ada tanda tangan</p>
+                                            @endif
                                         </div>
                                         <!-- File Input -->
                                         <div class="flex-grow-1">
