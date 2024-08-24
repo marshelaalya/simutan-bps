@@ -217,14 +217,14 @@ class PilihanController extends Controller
                 'message' => 'Permintaan berhasil ditambahkan',
                 'alert-type' => 'success'
             );
-            return redirect()->back()->with($notification);
+            return redirect()->route('permintaan.saya')->with($notification);
         } else {
             // Jika $tableData bukan array atau kosong
             $notification = array(
                 'message' => 'Data tabel tidak valid',
                 'alert-type' => 'error'
             );
-            return redirect()->back()->with($notification);
+            return redirect()->route('permintaan.saya')->with($notification);
         }
     } 
      
@@ -315,5 +315,23 @@ class PilihanController extends Controller
 
         return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
+
+    public function getBarangList(Request $request)
+    {
+        $query = Barang::query();
+
+        if ($request->kelompok_id) {
+            $query->where('kelompok_id', $request->kelompok_id);
+        }
+
+        if ($request->q) {
+            $query->where('nama', 'like', '%' . $request->q . '%');
+        }
+
+        $barang = $query->select('id', 'nama', 'qty_item', 'satuan')->get();
+
+        return response()->json($barang);
+    }
+
 
 }

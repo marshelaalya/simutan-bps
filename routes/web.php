@@ -132,6 +132,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/pilihan/update/{id}', 'PilihanUpdate')->name('pilihan.update');
         Route::get('/pilihan/admin-approval', 'PilihanAdminAppr')->name('pilihan.admAppr');
         Route::get('/pilihan/delete/{id}', 'PilihanDelete')->name('pilihan.delete');
+        Route::get('/get-barang-list', [PilihanController::class, 'getBarangList'])->name('get-barang-list');
+
     });
 
     Route::controller(DefaultController::class)->group(function () {

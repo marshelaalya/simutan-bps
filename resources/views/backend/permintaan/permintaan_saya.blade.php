@@ -99,7 +99,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h4 class="card-title mb-0">Daftar Permintaan Barang</h4>
+                            <h4 class="card-title mb-0">List Permintan Saya</h4>
                         </div>
 
                         <table id="datatable" class="table table-bordered yajra-datatable" 
@@ -204,52 +204,6 @@ return `
 `;
 
                     }
-                }
-            ],
-            dom: 'Brftip',
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export &nbsp',
-                    className: 'form-select',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: 'Export Excel',
-                            title: 'Data Export',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'copy',
-                            text: 'Copy',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'csv',
-                            text: 'CSV',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'pdf',
-                            text: 'PDF',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'print',
-                            text: 'Print',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        }
-                    ]
                 }
             ],
             initComplete: function() {

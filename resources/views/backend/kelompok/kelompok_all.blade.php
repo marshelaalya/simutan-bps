@@ -104,7 +104,28 @@
             { data: 'id', name: 'id' },
             { data: 'nama', name: 'nama' },
             { data: 'deskripsi', name: 'deskripsi' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
+            {
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false,
+                className: 'no-export', // Tambahkan kelas khusus pada kolom aksi
+                render: function(data, type, row) {
+                    var editUrl = "{{ route('kelompok.edit', ':id') }}".replace(':id', row.id);
+                    var deleteUrl = "{{ route('kelompok.delete', ':id') }}".replace(':id', row.id);
+
+                    return `
+                    <div class="table-actions d-flex" style="text-align: center; vertical-align: middle;">
+                        <a href="${editUrl}" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Kelompok Barang">
+                            <i class="ti ti-edit font-size-20 align-middle"></i>
+                        </a>
+                        <a href="${deleteUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Kelompok Barang">
+                            <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
+                        </a>
+                    </div>
+                    `;
+                }
+            },
         ],
         dom: 'Bfrtip',
         buttons: [
