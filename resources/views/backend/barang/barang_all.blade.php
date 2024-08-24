@@ -161,31 +161,9 @@
                             }
                         },
                         {
-                            extend: 'copy',
-                            text: 'Copy',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            }
-                        },
-                        {
-                            extend: 'csv',
-                            text: 'CSV',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            }
-                        },
-                        {
-                            extend: 'pdf',
-                            text: 'PDF',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            }
-                        },
-                        {
-                            extend: 'print',
-                            text: 'Print',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                            text: 'Laporan Rincian Persediaan',
+                            action: function (e, dt, node, config) {
+                                window.location.href = "{{ route('barang.pemasukan.export') }}"; // Laravel route for exporting Excel
                             }
                         }
                     ]

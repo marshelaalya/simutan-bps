@@ -11,6 +11,7 @@ use Auth;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
 use App\Exports\BarangExport;
+use App\Exports\PemasukanExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 use Illuminate\Support\Facades\DB;
@@ -378,4 +379,27 @@ public function dataForIndex()
 
         return Excel::download(new BarangExport($barang), $filename);
     }
+    
+    public function exportPemasukan()
+    {
+        // Tentukan path file Excel yang akan diakses
+        $filePath = realpath(resource_path('excel/Laporan_Rincian_Persediaan.xlsx'));
+    
+        // Pastikan file Excel benar-benar ada
+        if (file_exists($filePath)) {
+            // Panggil fungsi untuk memproses file Excel
+            $exporter = new PemasukanExport();
+            $newFilePath = $exporter->export($filePath);
+    
+            // Tentukan nama file untuk di-download
+            $filename = "Laporan_Rincian_Persediaan_Updated.xlsx";
+    
+            // Return download file
+            return response()->download($newFilePath, $filename)->deleteFileAfterSend(true);
+        }
+    
+        return redirect()->back()->with('error', 'File Excel tidak ditemukan!');
+    }
+    
+    
 }

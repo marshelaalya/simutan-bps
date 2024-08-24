@@ -16,13 +16,10 @@ use App\Models\Permintaan;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Auth\LoginController;
 
-
-// Halaman login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-// Rute umum yang tidak memerlukan otentikasi
 Route::get('/', function () {
     return view('auth/login');
 });
@@ -34,24 +31,15 @@ Route::get('/index', function () {
     return view('index', ['totalPermintaanBulanIni' => $totalPermintaanBulanIni]);
 });
 
-// Routes that require authentication
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Tambahkan di dalam grup middleware auth
-
-    // Rute untuk menandai semua notifikasi sebagai dibaca
     Route::post('/notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
     
-
-    // Rute untuk melihat semua notifikasi (opsional)
     Route::get('/notifications', [DashboardController::class, 'viewAllNotifications'])->name('notifications.viewAll');
-    
     
     Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin.index');
     Route::get('/pegawai/index', [DashboardController::class, 'index'])->name('pegawai.index');
-
-    
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('/admin/logout', 'destroy')->name('admin.logout');
@@ -119,9 +107,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('barang/data-index', 'dataForIndex')->name('barang.data.index');    
         Route::post('/barang/add-stock', 'addStock')->name('barang.addStock');
         Route::get('/barang/export', 'exportToExcel')->name('barang.export');
-
-        // web.php
-
+        Route::get('/barang/pemasukan-export', 'exportPemasukan')->name('barang.pemasukan.export');
     });
 
     Route::controller(PilihanController::class)->group(function () {
