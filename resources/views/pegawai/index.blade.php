@@ -579,36 +579,54 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                         <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
                         <div class="leaderboard-container" style="position: relative;">
             
-                            @foreach($topUsers as $index => $user)
-                                <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                                    <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                        <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                            <!-- Wave 1 -->
-                                            <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                            <!-- Wave 2 -->
-                                            <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                            <!-- Wave 3 -->
-                                            <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                            <!-- Wave 4 -->
-                                            <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                        <img src="{{ asset($user->foto) }}" class="img-fluid rounded animate-up" alt="{{ $user->name }}" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                                        <div class="quarter-circle large-circle"></div>
-                                        <div class="quarter-circle small-circle">{{ $index + 1 }}</div>
-                                        <div class="overlay-label position-absolute">
-                                            <strong>{{ $user->name }}</strong><br>
-                                            {{ $user->requests }} requests
+                            @for($i = 0; $i < 3; $i++)
+                                @if(isset($topUsers[$i]) && $topUsers[$i]->requests > 0)
+                                    @php $user = $topUsers[$i]; @endphp
+                                    <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%); aspect-ratio: 9/16;">
+                                        <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                            <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                                <!-- Wave Paths -->
+                                                <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                                <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                                <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                                <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="position-relative" style="overflow: hidden; margin: 0; padding: 0; position: relative; width: 100%; height: 100%;">
+                                            <img src="{{ asset($user->foto) }}" class="img-fluid rounded animate-up" alt="{{ $user->name }}" style="width: 350px; height: auto; object-fit: cover; object-position: center;">
+                                            <div class="quarter-circle large-circle"></div>
+                                            <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
+                                            <div class="overlay-label position-absolute">
+                                                <strong>{{ $user->name }}</strong><br>
+                                                {{ $user->requests }} requests
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                            
+                                @else
+                                    <div class="leaderboard-item d-flex align-items-center justify-content-center" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%); aspect-ratio: 9/16;">
+                                        <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                            <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                                <!-- Wave Paths -->
+                                                <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                                <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                                <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                                <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                            </svg>
+                                        </div>
+                                        <div style="color: white; text-align: center; width: 350px; height: auto;">
+                                            <div class="quarter-circle large-circle"></div>
+                                            <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
+                                            <p style="color: white; margin: 0px; font-size:16px">Belum Ada<br>Top User #{{ $i + 1 }}</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endfor
+            
                         </div>
                     </div>
                 </div>
             </div>
+            
             
             
         <div class="row">
@@ -756,6 +774,21 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                         'appearance': 'none'
                     });
                 });
+
+                $('.form-control').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                    });
+                });
+
+                $('label').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                        'font-weight': '600',
+                    });
+                });
     
                 var observer = new MutationObserver(function(mutations) {
                     mutations.forEach(function(mutation) {
@@ -771,14 +804,13 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             }
         });
 
-        $(document).ajaxComplete(function() {
-            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
-            setTimeout(function() {
-                $('.dt-button').removeClass('dt-button buttons-collection');
-                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
-                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
-            }, 100); // Menunggu beberapa waktu sebelum menghapus
-        });
+        $(document).ready(function() {
+    $('.dt-button').removeClass('dt-button buttons-collection');
+    $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+    $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+    $('.form-control').removeClass('form-control-sm');
+});
+
     });
 </script>
 
@@ -862,73 +894,70 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var topUsers = @json($topUsers); // Data pengguna yang dikirim dari Laravel
+document.addEventListener('DOMContentLoaded', function() {
+    var topUsers = @json($topUsers); // Data pengguna yang dikirim dari Laravel
     
-        var labels = topUsers.map(user => user.name);
-        var data = topUsers.map(user => user.requests);
-        var images = topUsers.map(user => user.foto); // Mengambil URL foto dari database
+    var labels = topUsers.map(user => user.name);
+    var data = topUsers.map(user => user.requests);
     
-        var ctxUser = document.getElementById('myChartUser').getContext('2d');
+    var ctxUser = document.getElementById('myChartUser').getContext('2d');
     
-        var myChartUser = new Chart(ctxUser, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Jumlah Permintaan',
-                    data: data,
-                    backgroundColor: 'rgba(0,0,0,0)' // Tidak digunakan
-                }]
+    var myChartUser = new Chart(ctxUser, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah Permintaan',
+                data: data,
+                backgroundColor: 'rgba(0,0,0,0)' // Tidak digunakan
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                x: {
+                    display: true
+                },
+                y: {
+                    beginAtZero: true
+                }
             },
-            options: {
-                indexAxis: 'x',
-                scales: {
-                    x: {
-                        display: true
-                    },
-                    y: {
-                        beginAtZero: true
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ' - Permintaan: ' + context.raw;
+                        }
                     }
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ' - Permintaan: ' + context.raw;
-                            }
-                        }
-                    },
-                    // Custom plugin to draw images
-                    afterDraw: function(chart, easing) {
-                        var ctx = chart.ctx;
-                        var chartArea = chart.chartArea;
+                afterDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    var chartArea = chart.chartArea;
+                    
+                    topUsers.forEach((user, index) => {
+                        var meta = chart.getDatasetMeta(0);
+                        var dataPoint = meta.data[index];
+                        var x = dataPoint.x - dataPoint.width / 2; // Posisi x gambar
+                        var y = dataPoint.y - 50; // Adjust y to position image correctly above the bar
     
-                        // Draw images as bars
-                        topUsers.forEach((user, index) => {
-                            var meta = chart.getDatasetMeta(0);
-                            var dataPoint = meta.data[index];
-                            var x = dataPoint.x;
-                            var y = dataPoint.y;
-                            var width = dataPoint.width;
-                            var height = dataPoint.height;
-    
-                            var img = new Image();
-                            img.src = user.foto; // Use the photo URL from the database
-                            img.onload = function() {
-                                ctx.save();
-                                ctx.translate(x - width / 2, y - height / 2); // Adjust y to center image
-                                ctx.drawImage(img, 0, 0, width, height);
-                                ctx.restore();
-                            };
-                        });
-                    }
+                        var img = new Image();
+                        img.src = user.foto;
+                        img.onload = function() {
+                            var imgWidth = 50; // Lebar gambar
+                            var imgHeight = 50; // Tinggi gambar
+                            ctx.save();
+                            ctx.drawImage(img, x, y, imgWidth, imgHeight);
+                            ctx.restore();
+                        };
+                    });
                 }
             }
-        });
+        }
     });
+});
+
 </script>
     
 

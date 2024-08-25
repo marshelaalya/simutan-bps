@@ -233,6 +233,21 @@
                             
                 });
 
+                $('.form-control').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                    });
+                });
+
+                $('label').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                        'font-weight': '600',
+                    });
+                });
+
                 var observer = new MutationObserver(function(mutations) {
                                 mutations.forEach(function(mutation) {
                                     $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
@@ -247,13 +262,11 @@
             }
         });
 
-        $(document).ajaxComplete(function() {
-            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
-            setTimeout(function() {
-                $('.dt-button').removeClass('dt-button buttons-collection');
-                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
-                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
-            }, 100); // Menunggu beberapa waktu sebelum menghapus
+        $(document).ready(function() {
+            $('.dt-button').removeClass('dt-button buttons-collection');
+            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            $('.form-control').removeClass('form-control-sm');
         });
             
 
