@@ -34,12 +34,16 @@ class PermintaanController extends Controller
                 } elseif ($request->admin_approval === 'approved by admin') {
                     $query->where(function($q) {
                         $q->where('status', 'approved by admin')
-                          ->orWhere('status', 'approved by supervisor');
+                          ->orWhere('status', 'approved by supervisor')
+                          ->orWhere(function($query) {
+                              $query->where('status', 'rejected by supervisor')
+                                    ->whereNull('ctt_adm');
+                          });
                     });
                 } elseif ($request->admin_approval === 'rejected by admin') {
                     $query->where('status', 'rejected by admin');
                 }
-            }
+            }            
         
             // Filter berdasarkan status persetujuan supervisor
             if ($request->has('supervisor_approval') && !empty($request->supervisor_approval)) {

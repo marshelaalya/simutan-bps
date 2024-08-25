@@ -619,6 +619,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                     </div>
                 </div>
             </div>
+        </div>
             
             
             
