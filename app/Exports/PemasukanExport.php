@@ -10,6 +10,11 @@ class PemasukanExport
 {
     public function export($filePath, $saveAwalBulan = false)
     {
+        // Jika ini bukan save awal bulan, gunakan file Laporan_Rincian_Persediaan_Awal_Bulan.xlsx
+        if (!$saveAwalBulan) {
+            $filePath = resource_path('excel/Laporan_Rincian_Persediaan_Awal_Bulan.xlsx');
+        }
+
         // Muat spreadsheet
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
@@ -21,9 +26,14 @@ class PemasukanExport
         if ($changesMade) {
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
-            // Buat nama file baru berdasarkan waktu saat ini
-            $newFileName = $saveAwalBulan ? 'Laporan_Rincian_Persediaan_Awal_Bulan_' . now()->format('Ymd_His') . '.xlsx' 
-                                          : 'Laporan_Rincian_Persediaan_Updat_' . now()->format('Ymd_His') . '.xlsx';
+            if ($saveAwalBulan) {
+                // Jika save awal bulan, simpan dengan nama file "Laporan_Rincian_Persediaan_Awal_Bulan"
+                $newFileName = 'Laporan_Rincian_Persediaan_Awal_Bulan.xlsx';
+            } else {
+                // Jika export akhir bulan, simpan dengan nama file "Laporan_Rincian_Persediaan_Akhir_Bulan"
+                $newFileName = 'Laporan_Rincian_Persediaan_Akhir_Bulan_' . now()->format('Ymd_His') . '.xlsx';
+            }
+            
             $newFilePath = resource_path('excel/' . $newFileName);
 
             // Simpan ke file baru
@@ -70,18 +80,17 @@ class PemasukanExport
                     $barang = DB::table('barangs')->where('kode', $kode_barang_full)->first();
 
                     if ($barang) {
-                        $sheet->setCellValue('AL' . $rowIndex, $barang->qty_item);
-                        // Jika saveAwalBulan diaktifkan dan kolom Q kosong, simpan qty_item di awal bulan ke kolom Q
-                        if ($saveAwalBulan && !$sheet->getCell('Q' . $rowIndex)->getValue()) {
+                        // Jika saveAwalBulan diaktifkan, simpan qty_item di awal bulan ke kolom Q
+                        if ($saveAwalBulan) {
                             $sheet->setCellValue('Q' . $rowIndex, $barang->qty_item);
                             $changesMade = true; // Tanda bahwa ada perubahan yang dilakukan
                             Log::info("Data awal bulan disimpan di kolom Q untuk baris $rowIndex");
+                        } else {
+                            // Jika ini adalah akhir bulan, simpan qty_item ke kolom AB
+                            $sheet->setCellValue('AB' . $rowIndex, $barang->qty_item);
+                            $changesMade = true; // Tanda bahwa ada perubahan yang dilakukan
+                            Log::info("Data akhir bulan disimpan di kolom AB untuk baris $rowIndex");
                         }
-
-                        // Selalu update qty_item di akhir bulan ke kolom U
-                        $sheet->setCellValue('U' . $rowIndex, $barang->qty_item);
-                        $changesMade = true; // Tanda bahwa ada perubahan yang dilakukan
-                        Log::info("Data akhir bulan disimpan di kolom U untuk baris $rowIndex");
                     } else {
                         Log::warning("Barang tidak ditemukan untuk kode: $kode_barang_full pada baris $rowIndex");
                     }
