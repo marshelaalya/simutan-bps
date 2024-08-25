@@ -17,8 +17,5 @@ class Barang extends Model
     public function kelompok(){
         return $this->belongsTo(Kelompok::class,'kelompok_id','id');
     }
-    public function satuan()
-    {
-        return $this->belongsTo(Satuan::class, 'satuan_id', 'satuan_id');
-    }
+
 }

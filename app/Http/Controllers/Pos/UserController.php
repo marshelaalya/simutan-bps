@@ -123,6 +123,7 @@ class UserController extends Controller
     // Update user role
     $user->update([
         'role' => strtolower($request->role),
+        'panggilan' => $request->panggilan,
     ]);
 
     // Handle file upload for photo

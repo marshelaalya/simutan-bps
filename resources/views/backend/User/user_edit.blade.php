@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <h4 class="card-title">Ganti Role Pengguna</h4><br><br>
+                        <h4 class="card-title">Edit Profile Pengguna</h4><br><br>
                         
                         <form method="post" action="{{ route('user.update', $user->id) }}" id="myForm" enctype="multipart/form-data">
                             @csrf
@@ -30,6 +30,13 @@
                                 <label for="username" class="col-sm-2 col-form-label">Username</label>
                                 <div class="form-group col-sm-10">
                                     <input name="username" value="{{ $user->username }}" class="form-control" type="text" id="username" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="panggilan" class="col-sm-2 col-form-label">Username</label>
+                                <div class="form-group col-sm-10">
+                                    <input name="panggilan" value="{{ $user->panggilan }}" class="form-control" type="text" id="username">
                                 </div>
                             </div>
                         

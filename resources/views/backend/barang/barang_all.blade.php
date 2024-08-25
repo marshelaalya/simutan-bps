@@ -144,7 +144,7 @@
                 { data: 'kelompok_barang', name: 'kelompok_barang' },
                 { data: 'nama', name: 'nama' },
                 { data: 'qty_item', name: 'qty_item', className: 'text-center' },
-                { data: 'satuan', name: 'satuan.nama', className: 'text-center' },
+                { data: 'satuan', name: 'satuan', className: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
             ],
             dom: 'Bfrtip',

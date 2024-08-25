@@ -20,7 +20,7 @@
                     <br><br>
                     <hr>
                     <center>
-                        <a href="{{ route('edit.profile') }}" class="btn btn-info btn-rounded waves-effect waves-light" > Edit Profile</a>
+                        <a href="{{ route('user.edit', Auth::user()->id) }}" class="btn btn-info btn-rounded waves-effect waves-light" > Edit Profile</a>
     
                     </center>
                     

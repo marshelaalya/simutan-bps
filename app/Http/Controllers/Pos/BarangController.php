@@ -127,13 +127,9 @@ public function BarangAllAct(Request $request)
     return view('backend.barang.barang_all', compact('kelompokFilt'));
 }
 
-    
-    
-    
-
-    public function dataForAll()
+public function dataForAll()
 {
-    $barangs = Barang::with('kelompok', 'satuan')->get();
+    $barangs = Barang::with('kelompok')->get(); // Hapus 'satuan'
 
     return DataTables::of($barangs)
         ->addColumn('action', function ($barang) {
@@ -149,17 +145,14 @@ public function BarangAllAct(Request $request)
         ->rawColumns(['action'])
         ->toJson();
 }
-
 public function dataForIndex()
 {
-    $barangs = Barang::with('kelompok', 'satuan')->get();
+    $barangs = Barang::with('kelompok')->get(); // Hapus 'satuan'
 
     return DataTables::of($barangs)
-        // Do not add 'action' column
         ->rawColumns([]) // No raw columns
         ->toJson();
 }
-
 
     public function barangStore(Request $request)
     {
