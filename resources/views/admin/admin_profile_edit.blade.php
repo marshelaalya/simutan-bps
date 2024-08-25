@@ -52,7 +52,8 @@
               <div class="row mb-3">
                  <label for="example-text-input" class="col-sm-2 col-form-label">  </label>
                 <div class="col-sm-10">
-                    <img id="showImage" class="rounded avatar-lg" src="{{ (!empty($editData->profile_image))? url('upload/admin_images/'.$editData->profile_image):url('upload/no_image.jpg') }}" alt="Card image cap">
+                    <img class="rounded-circle" style="object-fit: cover; object-position: top center; height: 120px; width: 120px;" src="{{ !empty($adminData->foto) ? url($adminData->foto) : url('upload/no_image.jpg') }}"
+                    alt="Header Avatar">                
                 </div>
             </div>
             <!-- end row -->
