@@ -379,7 +379,7 @@ public function dataForIndex()
 
         return Excel::download(new BarangExport($barang), $filename);
     }
-    
+
     public function exportPemasukan()
     {
         // Tentukan path file Excel yang akan diakses
@@ -399,7 +399,5 @@ public function dataForIndex()
         }
     
         return redirect()->back()->with('error', 'File Excel tidak ditemukan!');
-    }
-    
-    
+    }    
 }

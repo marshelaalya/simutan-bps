@@ -108,6 +108,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/barang/add-stock', 'addStock')->name('barang.addStock');
         Route::get('/barang/export', 'exportToExcel')->name('barang.export');
         Route::get('/barang/pemasukan-export', 'exportPemasukan')->name('barang.pemasukan.export');
+        Route::get('/barang/all', [BarangController::class, 'BarangAll'])
+            ->middleware('save_awal_bulan')
+            ->name('barang.all');
     });
 
     Route::controller(PilihanController::class)->group(function () {

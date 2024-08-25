@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check' => \App\Http\Middleware\CheckAge::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class, // Pindahkan ke sini
+        'save_awal_bulan' => \App\Http\Middleware\SaveAwalBulan::class,
         
     ];
 }
