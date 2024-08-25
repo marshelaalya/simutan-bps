@@ -52,17 +52,17 @@ class PemasukanExport
         $kelompok_kode = '';
         $rowIndex = 0;
         $changesMade = false;
-
+    
         foreach ($sheet->getRowIterator() as $row) {
             $rowIndex++;
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false);
-
+    
             $rowData = [];
             foreach ($cellIterator as $cell) {
                 $rowData[] = $cell->getValue();
             }
-
+    
             // Deteksi jika baris adalah kode kelompok (10 digit) atau 6 digit kode barang
             if (strlen($rowData[2]) == 10) {  // Asumsikan kode kelompok ada di kolom C (index 2)
                 $kelompok_kode = $rowData[2];
@@ -71,15 +71,27 @@ class PemasukanExport
                 
                 // Mencari kolom mana yang berisi 6 digit kode barang
                 $kode_barang = $this->getKodeBarangFromMergedCells($rowData, [2, 3, 5]); // Asumsikan kolom yang di-merge adalah C, D, F (index 2, 3, 5)
-
+    
                 if ($kode_barang && strlen($kode_barang) == 6) {
                     // Menggabungkan kelompok_kode dan kode_barang
                     $kode_barang_full = "{$kelompok_kode}{$kode_barang}";
-
+    
                     // Cari barang di database berdasarkan kode yang digabungkan
                     $barang = DB::table('barangs')->where('kode', $kode_barang_full)->first();
-
+    
                     if ($barang) {
+                        // Deteksi pemasukan untuk barang ini
+                        $pemasukan = DB::table('pemasukans')
+                            ->where('barang_id', $barang->id)
+                            ->sum('qty');
+    
+                        // Jika ada pemasukan, simpan ke kolom S
+                        if ($pemasukan) {
+                            $sheet->setCellValue('S' . $rowIndex, $pemasukan);
+                            $changesMade = true; // Tanda bahwa ada perubahan yang dilakukan
+                            Log::info("Pemasukan barang disimpan di kolom S untuk baris $rowIndex");
+                        }
+    
                         // Jika saveAwalBulan diaktifkan, simpan qty_item di awal bulan ke kolom Q
                         if ($saveAwalBulan) {
                             $sheet->setCellValue('Q' . $rowIndex, $barang->qty_item);
@@ -91,6 +103,22 @@ class PemasukanExport
                             $changesMade = true; // Tanda bahwa ada perubahan yang dilakukan
                             Log::info("Data akhir bulan disimpan di kolom AB untuk baris $rowIndex");
                         }
+    
+                        // Hitung pengeluaran: stok awal + pemasukan - stok akhir
+                        $stok_awal = $sheet->getCell('Q' . $rowIndex)->getValue();
+                        $stok_akhir = $sheet->getCell('AB' . $rowIndex)->getValue();
+    
+                        if ($stok_awal !== null && $stok_akhir !== null) {
+                            $pengeluaran = ($stok_awal + $pemasukan) - $stok_akhir;
+                            $sheet->setCellValue('V' . $rowIndex, -$pengeluaran);  // Pengeluaran disimpan sebagai negatif
+                            $changesMade = true;
+                            Log::info("Pengeluaran disimpan di kolom V untuk baris $rowIndex");
+    
+                            // Hitung total pemasukan dan pengeluaran, simpan di kolom X
+                            $total_pemasukan_pengeluaran = $pemasukan - $pengeluaran;
+                            $sheet->setCellValue('Y' . $rowIndex, $total_pemasukan_pengeluaran);
+                            Log::info("Total pemasukan dan pengeluaran disimpan di kolom X untuk baris $rowIndex");
+                        }
                     } else {
                         Log::warning("Barang tidak ditemukan untuk kode: $kode_barang_full pada baris $rowIndex");
                     }
@@ -99,11 +127,11 @@ class PemasukanExport
                 }
             }
         }
-
+    
         // Kembalikan apakah ada perubahan yang dilakukan
         return $changesMade;
     }
-
+    
     private function getKodeBarangFromMergedCells($rowData, $indices)
     {
         // Cek setiap indeks yang mungkin untuk nilai kode barang
