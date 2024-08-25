@@ -46,12 +46,13 @@
 }
 
 .swiper-container {
-    width: calc(100% - 7rem); Reduce container width to fit within buttons
+    width: calc(100% - 7rem);
     height: fit-content; /* Adjust slider height */
     position: relative;
     overflow: hidden; /* Ensure no elements overflow */
     margin: 0 auto; /* Center the container */
     padding-bottom: 20px;
+
 }
 
 .swiper-slide {
@@ -63,9 +64,9 @@
 
 .card-slider {
     width: 180px; /* Adjust card width */
+    height: 240px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
     border-radius: 8px; /* Rounded corners */
     overflow: hidden;
@@ -80,19 +81,23 @@
 }
 
 .card-slider-body {
-    padding: 15px;
-    text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    text-align: center;
+    height: 105px;
 }
 
 .card-slider-img-top {
     width: 100%;
+    height: 95px;
     /* height: 120px; */
     object-fit: cover;
-    padding: 15px 15px 0 15px;
+    /* padding: 15px 15px 0 15px; */
+    border: 1px solid black;
 }
+
+
 
 .card-slider-title {
     font-size: 14px;
@@ -101,6 +106,7 @@
 
 .card-slider-text {
     font-size: 12px;
+    margin-bottom: 0px;
 }
 
 .swiper-pagination-bullet {
@@ -219,6 +225,16 @@
         top: 0;
         right: 0;
         transform: translate(0, 0);
+    }
+
+    .swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .swiper-button-next:after, .swiper-rtl .swiper-button-prev:after {
+        font-size: 14px;
+        font-weight: 600;
     }
 
     .card, .gradient-background2{
@@ -410,21 +426,14 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                     <div class="card mb-0" style="background-color: rgba(4, 50, 119, 0); box-shadow:none">
                         <div class="card-body">
                             @foreach($kelompoks as $index => $kelompok)
-                            <div class="kelompok-definisi {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="definisi-{{ $index }}" style="display: {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'block' : 'none' }};">
-                                <h4 class="mb-2" style="color: white; ">{{ $kelompok->nama }}</h4>
-                                <p style="color: white; font-size: 18px; font-weight:400">
-                                    @if($kelompok->nama === 'Barang Pemeliharaan')
-                                        Barang pemeliharaan adalah barang-barang yang digunakan untuk pemeliharaan dan perawatan fasilitas, gedung, dan peralatan kantor agar tetap berfungsi dengan baik.
-                                    @elseif($kelompok->nama === 'Barang Konsumsi')
-                                        Barang konsumsi adalah barang-barang yang habis pakai dalam jangka waktu tertentu dan perlu diganti secara rutin, seperti kertas, tinta, dan alat tulis lainnya.
-                                    @elseif($kelompok->nama === 'Alat Kegiatan Kantor Lainnya')
-                                        Alat kegiatan kantor mencakup peralatan yang digunakan untuk mendukung berbagai kegiatan operasional kantor, seperti komputer, printer, mesin fotokopi, dan peralatan presentasi.
-                                    @else
-                                        Definisi untuk kelompok ini belum tersedia.
-                                    @endif
-                                </p>
-                            </div>
-                            @endforeach
+    <div class="kelompok-definisi {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="definisi-{{ $index }}" style="display: {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'block' : 'none' }};">
+        <h4 class="mb-2" style="color: white;">{{ $kelompok->nama }}</h4>
+        <p style="color: white; font-size: 18px; font-weight:400">
+            {{ $kelompok->deskripsi ?? 'Definisi untuk kelompok ini belum tersedia.' }}
+        </p>
+    </div>
+@endforeach
+
                         </div>
                     </div>
                 </div>
@@ -439,11 +448,15 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                                         <div class="swiper-wrapper">
                                             @foreach($kelompok->barangs as $item)
                                                 <div class="swiper-slide">
-                                                    <div class="card-slider">
-                                                        <img src="https://cdn-icons-png.flaticon.com/128/2659/2659360.png" class="card-slider-img-top" alt="Gambar Barang"> 
+                                                    <div class="card-slider" style="padding: 15px">
+                                                        @if($item->foto_barang)
+                                                        <img src="{{ $item->foto_barang }}" class="card-slider-img-top" alt="Gambar Barang">
+                                                        @else
+                                                        <img src="http://127.0.0.1:8000/upload/no_image.jpg" class="card-slider-img-top" alt="No Image">
+                                                    @endif
                                                         <div class="card-slider-body">
                                                             <h5 class="card-slider-title">{{ $item->nama }}</h5>
-                                                            <p class="card-slider-text">Stok: {{ $item->qty_item }} {{ $item->satuan->nama ?? 'N/A' }}</p>
+                                                            <p class="card-slider-text">Stok: {{ $item->qty_item }} {{ $item->satuan ?? 'N/A' }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -452,11 +465,12 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
         
                                         <!-- Add Pagination -->
                                         <div class="swiper-pagination"></div>
+                                        
                                     </div>
-        
                                     <!-- Add Navigation -->
                                     <div class="swiper-button-next"></div>
                                     <div class="swiper-button-prev"></div>
+                                    
                                 </div>
                             @endforeach
                         </div>
@@ -557,89 +571,57 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                     <div class="card-body">
                         <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
                         <div class="leaderboard-container" style="position: relative;">
-                            <!-- User 1 -->
-                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                        <!-- Wave 1 -->
-                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                        <!-- Wave 2 -->
-                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                        <!-- Wave 3 -->
-                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                        <!-- Wave 4 -->
-                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                    </svg>
-                                    
-                                </div>
-                                <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                    <img src="{{ asset('backend/assets/images/users/16.png') }}" class="img-fluid rounded animate-up" alt="User 1" style="width: 100%; height: auto; aspect-ratio: 9/16; z-index: 2; position: relative;">
-                                    <div class="quarter-circle large-circle"></div>
-                                    <div class="quarter-circle small-circle">1</div>
-                                    <div class="overlay-label position-absolute">
-                                        <strong>Juni</strong><br>
-                                        15 requests
-                                    </div>
-                                </div>
-                            </div>
-                            
             
-                            <!-- User 2 -->
-                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                        <!-- Wave 1 -->
-                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                        <!-- Wave 2 -->
-                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                        <!-- Wave 3 -->
-                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                        <!-- Wave 4 -->
-                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                    </svg>
-                                    
-                                </div>
-                                <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                    <img src="{{ asset('backend/assets/images/users/6.png') }}" class="img-fluid rounded animate-up" alt="User 2" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                                    <div class="quarter-circle large-circle"></div>
-                                    <div class="quarter-circle small-circle">2</div>
-                                    <div class="overlay-label position-absolute" >
-                                        <strong>Adi</strong><br>
-                                        12 requests
+                            @for($i = 0; $i < 3; $i++)
+                                @if(isset($topUsers[$i]) && $topUsers[$i]->requests > 0)
+                                    @php $user = $topUsers[$i]; @endphp
+                                    <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%); aspect-ratio: 9/16;">
+                                        <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                            <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                                <!-- Wave Paths -->
+                                                <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                                <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                                <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                                <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="position-relative" style="overflow: hidden; margin: 0; padding: 0; position: relative; width: 100%; height: 100%;">
+                                            <img src="{{ asset($user->foto) }}" class="img-fluid rounded animate-up" alt="{{ $user->name }}" style="width: 350px; height: auto; object-fit: cover; object-position: center;">
+                                            <div class="quarter-circle large-circle"></div>
+                                            <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
+                                            <div class="overlay-label position-absolute">
+                                                <strong>{{ $user->name }}</strong><br>
+                                                {{ $user->requests }} requests
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                @else
+                                    <div class="leaderboard-item d-flex align-items-center justify-content-center" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%); aspect-ratio: 9/16;">
+                                        <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                            <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                                <!-- Wave Paths -->
+                                                <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                                <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                                <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                                <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                            </svg>
+                                        </div>
+                                        <div style="color: white; text-align: center; width: 350px; height: auto;">
+                                            <div class="quarter-circle large-circle"></div>
+                                            <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
+                                            <p style="color: white; margin: 0px; font-size:16px">Belum Ada<br>Top User #{{ $i + 1 }}</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endfor
             
-                            <!-- User 3 -->
-                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%);">
-                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
-                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                                        <!-- Wave 1 -->
-                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
-                                        <!-- Wave 2 -->
-                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
-                                        <!-- Wave 3 -->
-                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
-                                        <!-- Wave 4 -->
-                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
-                                    </svg>
-                                    
-                                </div>
-                                <div class="position-relative" style="border-radius: 0 0.25rem 0.25rem 0.25rem; overflow: hidden; margin: 0; padding: 0; position: relative;">
-                                    <img src="{{ asset('backend/assets/images/users/7.png') }}" class="img-fluid rounded animate-up" alt="User 3" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                                    <div class="quarter-circle large-circle"></div>
-                                    <div class="quarter-circle small-circle">3</div>
-                                    <div class="overlay-label position-absolute">
-                                        <strong>Rudi</strong><br>
-                                        10 requests
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-            </div>   
-        </div>
+            </div>
+            
+            
+            
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -785,6 +767,21 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                         'appearance': 'none'
                     });
                 });
+
+                $('.form-control').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                    });
+                });
+
+                $('label').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                        'font-weight': '600',
+                    });
+                });
     
                 var observer = new MutationObserver(function(mutations) {
                     mutations.forEach(function(mutation) {
@@ -800,14 +797,13 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             }
         });
 
-        $(document).ajaxComplete(function() {
-            // Pastikan elemen sudah ada sebelum mencoba menghapusnya
-            setTimeout(function() {
-                $('.dt-button').removeClass('dt-button buttons-collection');
-                $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
-                $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
-            }, 100); // Menunggu beberapa waktu sebelum menghapus
+        $(document).ready(function() {
+            $('.dt-button').removeClass('dt-button buttons-collection');
+            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            $('.form-control').removeClass('form-control-sm');
         });
+
     });
 </script>
 
@@ -825,7 +821,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var barangs = @json($topBarangs);
 
     var labels = barangs.map(function(barang) {
-        return barang.nama;
+        // Mengambil kata pertama dari nama barang
+        return barang.nama.split(' ')[0];
     });
 
     var data = barangs.map(function(barang) {
@@ -839,12 +836,9 @@ document.addEventListener('DOMContentLoaded', function() {
     gradientBackground.addColorStop(0, 'rgba(255, 255, 255, 0.5)');  // Biru dengan opacity 0.5
     gradientBackground.addColorStop(0.3, 'rgba(54, 113, 172, 0.5)');  // Ungu dengan opacity 0.5
     gradientBackground.addColorStop(1, 'rgba(4, 50, 119, 1)');
-    
 
     // Membuat gradient horizontal untuk border dengan opacity 1
     var gradientBorder = ctxBarang.createLinearGradient(0, 0, 400, 0);
-    // gradientBorder.addColorStop(0, 'rgba(4, 50, 119, 1)');  // Biru dengan opacity 1
-    // gradientBorder.addColorStop(1, 'rgba(111, 66, 193, 1)');  // Ungu dengan opacity 1
     gradientBorder.addColorStop(1, 'rgba(4, 50, 119, 0.5)');  // Biru dengan opacity 0.5
     gradientBorder.addColorStop(0.5, 'rgba(0, 123, 255, 0.5)');  // Ungu dengan opacity 0.5
     gradientBorder.addColorStop(0, 'rgba(0, 123, 255, 0.5)');
@@ -860,6 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 borderColor: gradientBorder,
                 borderWidth: 1,
                 borderRadius: 5,
+                barThickness: 25, // Menentukan lebar bar
                 borderSkipped: false
             }]
         },
@@ -892,141 +887,148 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Data pengguna
-        var topUsers = [
-            { name: 'User 1', requests: 25, img: 'https://via.placeholder.com/1080x1920?text=User+1' },
-            { name: 'User 2', requests: 30, img: 'https://via.placeholder.com/1080x1920?text=User+2' },
-            { name: 'User 3', requests: 22, img: 'https://via.placeholder.com/1080x1920?text=User+3' }
-        ];
-
-        var labels = topUsers.map(user => user.name);
-        var data = topUsers.map(user => user.requests);
-        var images = topUsers.map(user => user.img);
-
-        var ctxUser = document.getElementById('myChartUser').getContext('2d');
-
-        var myChartUser = new Chart(ctxUser, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Jumlah Permintaan',
-                    data: data,
-                    backgroundColor: 'rgba(0,0,0,0)' // Tidak digunakan
-                }]
-            },
-            options: {
-                indexAxis: 'x',
-                scales: {
-                    x: {
-                        display: true
-                        
-                    },
-                    y: {
-                        beginAtZero: true
-                         // Tampilkan label y
-                    }
+document.addEventListener('DOMContentLoaded', function() {
+    var topUsers = @json($topUsers); // Data pengguna yang dikirim dari Laravel
+    
+    var labels = topUsers.map(user => user.name);
+    var data = topUsers.map(user => user.requests);
+    
+    var ctxUser = document.getElementById('myChartUser').getContext('2d');
+    
+    var myChartUser = new Chart(ctxUser, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah Permintaan',
+                data: data,
+                backgroundColor: 'rgba(0,0,0,0)' // Tidak digunakan
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                x: {
+                    display: true
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ' - Permintaan: ' + context.raw;
-                            }
+                y: {
+                    beginAtZero: true
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ' - Permintaan: ' + context.raw;
                         }
                     }
                 },
-                animation: {
-                    onComplete: function() {
-                        var chart = this.chart;
-                        var ctx = chart.ctx;
-                        var chartArea = chart.chartArea;
-
-                        // Draw images as bars
-                        topUsers.forEach((user, index) => {
-                            var x = chart.getDatasetMeta(0).data[index].x;
-                            var y = chart.getDatasetMeta(0).data[index].y;
-                            var width = chart.getDatasetMeta(0).data[index].width;
-                            var height = chart.getDatasetMeta(0).data[index].height;
-
-                            var img = new Image();
-                            img.src = user.img;
-                            img.onload = function() {
-                                ctx.save();
-                                ctx.translate(x - width / 2, y - height / 2); // Adjust y to center image
-                                ctx.drawImage(img, 0, 0, width, height);
-                                ctx.restore();
-                            };
-                        });
-                    }
+                afterDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    var chartArea = chart.chartArea;
+                    
+                    topUsers.forEach((user, index) => {
+                        var meta = chart.getDatasetMeta(0);
+                        var dataPoint = meta.data[index];
+                        var x = dataPoint.x - dataPoint.width / 2; // Posisi x gambar
+                        var y = dataPoint.y - 50; // Adjust y to position image correctly above the bar
+    
+                        var img = new Image();
+                        img.src = user.foto;
+                        img.onload = function() {
+                            var imgWidth = 50; // Lebar gambar
+                            var imgHeight = 50; // Tinggi gambar
+                            ctx.save();
+                            ctx.drawImage(img, x, y, imgWidth, imgHeight);
+                            ctx.restore();
+                        };
+                    });
                 }
             }
-        });
+        }
     });
+});
+
 </script>
+    
 
 
 
 <script>
-    $(document).ready(function() {
-        // Initialize Swipers
-        var swipers = [];
-        $('.swiper-container').each(function() {
-            swipers.push(new Swiper(this, {
-                loop: true,
-                slidesPerView: 3,
-                spaceBetween: 10,
-                pagination: {
-                    el: $(this).find('.swiper-pagination')[0],
-                    clickable: true,
+    document.addEventListener('DOMContentLoaded', function() {
+    // Simpan semua Swiper instances
+    var swipers = {};
+    
+    document.querySelectorAll('.swiper-container-wrapper').forEach(function(wrapper) {
+        var container = wrapper.querySelector('.swiper-container');
+        var swiperInstance = new Swiper(container, {
+            loop: true,
+            slidesPerView: 3,
+            spaceBetween: 10,
+            pagination: {
+                el: wrapper.querySelector('.swiper-pagination'),
+                dynamicBullets: true,
+            },
+            navigation: {
+                nextEl: wrapper.querySelector('.swiper-button-next'),
+                prevEl: wrapper.querySelector('.swiper-button-prev'),
+            },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 1,
                 },
-                navigation: {
-                    nextEl: $(this).find('.swiper-button-next')[0],
-                    prevEl: $(this).find('.swiper-button-prev')[0],
+                768: {
+                    slidesPerView: 2,
                 },
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false,
+                1024: {
+                    slidesPerView: 3,
                 },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 1,
-                    },
-                    768: {
-                        slidesPerView: 2,
-                    },
-                    1024: {
-                        slidesPerView: 3,
-                    },
-                }
-            }));
+            }
         });
+        
+        // Simpan instance dalam objek
+        swipers[wrapper.id] = swiperInstance;
+    });
 
-        // Handle button clicks
-        $('.kelompok-button').click(function() {
-            var target = $(this).data('target');
-            var definisiTarget = $(this).data('definisi');
+    // Handle button clicks
+    document.querySelectorAll('.kelompok-button').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var target = this.getAttribute('data-target');
+            var definisiTarget = this.getAttribute('data-definisi');
 
             // Fade out all Swiper containers and definisi
-            $('.swiper-container-wrapper.active, .kelompok-definisi.active').removeClass('active').css('display', 'none');
+            document.querySelectorAll('.swiper-container-wrapper.active, .kelompok-definisi.active').forEach(function(el) {
+                el.classList.remove('active');
+                el.style.display = 'none';
+            });
 
             // Show the targeted Swiper container and definisi
-            $(target).css('display', 'block').addClass('active');
-            $(definisiTarget).css('display', 'block').addClass('active');
+            document.querySelector(target).style.display = 'block';
+            document.querySelector(target).classList.add('active');
+            document.querySelector(definisiTarget).style.display = 'block';
+            document.querySelector(definisiTarget).classList.add('active');
 
             // Mark the clicked button as active
-            $('.kelompok-button').removeClass('active');
-            $(this).addClass('active');
+            document.querySelectorAll('.kelompok-button').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            this.classList.add('active');
         });
-
-        // Show the Swiper container and definisi with the most barangs by default
-        if ($('.kelompok-button').length) {
-            $('.kelompok-button.active').click();
-        }
     });
+
+    // Show the Swiper container and definisi with the most barangs by default
+    var defaultButton = document.querySelector('.kelompok-button.active');
+    if (defaultButton) {
+        defaultButton.click();
+    }
+});
+
 </script>
 
 

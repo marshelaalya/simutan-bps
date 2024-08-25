@@ -155,7 +155,7 @@
                                             </select>
                                         </div>
                                     </div>                                    
-                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:30%">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:29%">
                                         <div>
                                             <label for="barang_id" class="form-label text-info">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
@@ -189,7 +189,7 @@
                                 <label for="mainForm" class="text-info"> Tabel Permintaan Barang</label>
                                 <form id="mainForm" method="post" action="{{ route('pilihan.store') }}">
                                     @csrf
-                                    <div class="table-responsive">
+                                    <div>
                                         <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
                                             <thead class="table-light">
                                                 <tr>
@@ -231,14 +231,14 @@
 
 <script id="document-template" type="text/x-handlebars-template">
     <tr class="delete_add_more_item">
-        <td>@{{ kelompok_nama }}</td>
-        <td>@{{ barang_nama }}</td>
-        <td class="text-center">@{{ qty_req }}</td>
-        <td class="text-center">@{{ barang_satuan }}</td>
+        <td style="vertical-align: middle;">@{{ kelompok_nama }}</td>
+        <td style="vertical-align: middle;">@{{ barang_nama }}</td>
+        <td class="text-center" style="vertical-align: middle;">@{{ qty_req }}</td>
+        <td class="text-center" style="vertical-align: middle;">@{{ barang_satuan }}</td>
         <td style="text-align: center; vertical-align: middle;">
 
-            <a href="javascript:void(0);" class="btn bg-danger btn-sm delete-button" data-id="@{{ id }}">
-                <i class="fas fa-trash text-danger"></i>
+            <a href="javascript:void(0);" class="btn btn-sm delete-button hover:bg-danger" data-id="@{{ id }}" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Pilihan">
+                <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
             </a>          
         </td>
     </tr>
@@ -415,6 +415,14 @@
                 var circleStep = $(this).parent().data('step');
                 $(this).toggleClass('completed', circleStep < step);
             });
+
+             // Atur tombol Add More Button pada langkah 2
+             if (step === 2) {
+                $('#addMoreButton').prop('disabled', true);
+            }
+
+            // Pastikan tombol Add More Button aktif jika input valid
+            validateForm();
         }
 
         // Navigasi menggunakan tombol "Next" di Step 1
@@ -488,6 +496,7 @@
 
         // Add row logic
         $('#addMoreButton').on('click', function() {
+            $(this).prop('disabled', true);
             const source = $("#document-template").html();
             const template = Handlebars.compile(source);
 
