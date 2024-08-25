@@ -151,6 +151,52 @@ class UserController extends Controller
     return redirect()->route('user.all')->with($notification);
 }
 
+public function UpdateProfile(Request $request, $id)
+{
+    $user = User::findOrFail($id);
+
+    // Validate the input including files
+    $request->validate([
+        'role' => 'required|in:admin,supervisor,pegawai',
+        'name' => 'required|string|max:255',
+        'panggilan' => 'nullable|string|max:255',
+        'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+        'image' => 'nullable|image|mimes:png|max:2048',
+        'signature' => 'nullable|image|mimes:png|max:2048',
+    ]);
+
+    $user->update([
+        'name' => $request->input('name'),
+        'panggilan' => $request->input('panggilan'),
+        'username' => $request->input('username'),
+    ]);
+
+    // Handle file upload for photo
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imagePath = $image->storeAs('public/assets/images/users', 'foto_' . $user->id . '.png');
+        $user->update([
+            'foto' => str_replace('public/', 'backend/', $imagePath)
+        ]);
+    }
+
+    // Handle file upload for signature
+    if ($request->hasFile('signature')) {
+        $signature = $request->file('signature');
+        $signaturePath = $signature->storeAs('public/assets/images/users', 'ttd_' . $user->id . '.png');
+        $user->update([
+            'ttd' => str_replace('public/', 'backend/', $signaturePath)
+        ]);
+    }
+
+    $notification = array(
+        'message' => 'Data Anda berhasil diperbarui.',
+        'alert-type' => 'success'
+    );
+
+    return redirect()->route('edit.profile')->with($notification);
+}
+
 
     public function UserDelete($id){
         user::findOrFail($id)->delete();

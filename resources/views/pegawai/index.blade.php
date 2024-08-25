@@ -426,21 +426,14 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                     <div class="card mb-0" style="background-color: rgba(4, 50, 119, 0); box-shadow:none">
                         <div class="card-body">
                             @foreach($kelompoks as $index => $kelompok)
-                            <div class="kelompok-definisi {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="definisi-{{ $index }}" style="display: {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'block' : 'none' }};">
-                                <h4 class="mb-2" style="color: white; ">{{ $kelompok->nama }}</h4>
-                                <p style="color: white; font-size: 18px; font-weight:400">
-                                    @if($kelompok->nama === 'Barang Pemeliharaan')
-                                        Barang pemeliharaan adalah barang-barang yang digunakan untuk pemeliharaan dan perawatan fasilitas, gedung, dan peralatan kantor agar tetap berfungsi dengan baik.
-                                    @elseif($kelompok->nama === 'Barang Konsumsi')
-                                        Barang konsumsi adalah barang-barang yang habis pakai dalam jangka waktu tertentu dan perlu diganti secara rutin, seperti kertas, tinta, dan alat tulis lainnya.
-                                    @elseif($kelompok->nama === 'Alat Kegiatan Kantor Lainnya')
-                                        Alat kegiatan kantor mencakup peralatan yang digunakan untuk mendukung berbagai kegiatan operasional kantor, seperti komputer, printer, mesin fotokopi, dan peralatan presentasi.
-                                    @else
-                                        Definisi untuk kelompok ini belum tersedia.
-                                    @endif
-                                </p>
-                            </div>
-                            @endforeach
+    <div class="kelompok-definisi {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'active' : '' }}" id="definisi-{{ $index }}" style="display: {{ $kelompok->id === $kelompokWithMostBarangs->id ? 'block' : 'none' }};">
+        <h4 class="mb-2" style="color: white;">{{ $kelompok->nama }}</h4>
+        <p style="color: white; font-size: 18px; font-weight:400">
+            {{ $kelompok->deskripsi ?? 'Definisi untuk kelompok ini belum tersedia.' }}
+        </p>
+    </div>
+@endforeach
+
                         </div>
                     </div>
                 </div>
