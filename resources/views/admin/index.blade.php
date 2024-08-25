@@ -257,7 +257,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-3 text-info">Top 5 Barang Diminta</h4>
+                <h4 class="card-title mb-3 text-info">Top 5 Barang dengan Permintaan Tertinggi</h4>
                 <canvas id="myChartBarang" width="400" height="237" style="max-width: 100%;"></canvas>
             </div>
         </div>
@@ -266,7 +266,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
+                <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top 3 Pegawai dengan Permintaan Terbanyak</h4>
                 <div class="leaderboard-container" style="position: relative;">
     
                     @for($i = 0; $i < 3; $i++)
