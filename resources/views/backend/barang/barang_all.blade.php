@@ -141,7 +141,7 @@
             },
             columns: [
                 { data: 'kode', name: 'kode', className: 'text-center' },
-                { data: 'kelompok.nama', name: 'kelompok.nama' },
+                { data: 'kelompok_barang', name: 'kelompok_barang' },
                 { data: 'nama', name: 'nama' },
                 { data: 'qty_item', name: 'qty_item', className: 'text-center' },
                 { data: 'satuan', name: 'satuan.nama', className: 'text-center' },

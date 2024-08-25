@@ -805,11 +805,11 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
         });
 
         $(document).ready(function() {
-    $('.dt-button').removeClass('dt-button buttons-collection');
-    $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
-    $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
-    $('.form-control').removeClass('form-control-sm');
-});
+            $('.dt-button').removeClass('dt-button buttons-collection');
+            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            $('.form-control').removeClass('form-control-sm');
+        });
 
     });
 </script>
