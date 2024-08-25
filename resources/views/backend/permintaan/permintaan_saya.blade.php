@@ -85,9 +85,10 @@
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                     <h4 class="mb-sm-0">Permintaan Saya</h4>
                     <div class="page-title-right">
-                        <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light">
-                            <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
-                        </a>
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Permintaan</a></li>
+                            <li class="breadcrumb-item active">Permintaan Saya</li>
+                        </ol>
                     </div>
                 </div>
             </div>
@@ -100,6 +101,11 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h4 class="card-title mb-0">List Permintan Saya</h4>
+                            <div class="page-title-right">
+                                <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light">
+                                    <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
+                                </a>
+                            </div>
                         </div>
 
                         <table id="datatable" class="table table-bordered yajra-datatable" 
@@ -267,11 +273,17 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                         'margin-bottom': '0px',
                         'height': '2.38rem',
                         'font-weight': '600',
+                        'display': 'flex',
+                        'gap': '10px',
+                        'align-items': 'center',
                     });
                 });
 
                 $('select[name="datatable_length"]').css({
                     'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
+                    'height': '2.38rem',
+                    'border': '1px solid #ced4da',
+                    'border-radius': '.25rem',
                 });
     
                 var observer = new MutationObserver(function(mutations) {

@@ -290,56 +290,56 @@ a[data-tooltip]:hover::before {
                                 }
                             }
                         ],
-                        dom: 'Brftip',
-                        buttons: [
-                            {
-                                extend: 'collection',
-                                text: 'Export &nbsp',
-                                className: 'form-select',
-                                buttons: [
-                                    {
-                                        extend: 'excelHtml5',
-                                        text: 'Export Excel',
-                                        title: 'Data Export',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'copy',
-                                        text: 'Copy',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'csv',
-                                        text: 'CSV',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'pdf',
-                                        text: 'PDF',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'print',
-                                        text: 'Print',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    }
-                                ]
-                            }
-                        ],
+                        // dom: 'Brftip',
+                        // buttons: [
+                        //     {
+                        //         extend: 'collection',
+                        //         text: 'Export &nbsp',
+                        //         className: 'form-select',
+                        //         buttons: [
+                        //             {
+                        //                 extend: 'excelHtml5',
+                        //                 text: 'Export Excel',
+                        //                 title: 'Data Export',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'copy',
+                        //                 text: 'Copy',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'csv',
+                        //                 text: 'CSV',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'pdf',
+                        //                 text: 'PDF',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'print',
+                        //                 text: 'Print',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             }
+                        //         ]
+                        //     }
+                        // ],
                         initComplete: function() {
                             // Filter untuk admin approval
                             // Filter untuk approval admin
-var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 20%;"><option value="">Semua Status Admin</option></select>')
+var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 24%;"><option value="">Semua Status Admin</option></select>')
     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
     .on('change', function() {
         table.draw();
@@ -351,7 +351,7 @@ adminSelect.append('<option value="approved by admin">Admin Approved</option>');
 adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
 
 // Filter untuk approval supervisor
-var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 23%;"><option value="">Semua Status Supervisor</option></select>')
+var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 28%;"><option value="">Semua Status Supervisor</option></select>')
     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
     .on('change', function() {
         table.draw();
@@ -397,7 +397,17 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                         'margin-bottom': '0px',
                         'height': '2.38rem',
                         'font-weight': '600',
+                        'display': 'flex',
+                        'gap': '10px',
+                        'align-items': 'center',
                     });
+                });
+
+                $('select[name="datatable_length"]').css({
+                    'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
+                    'height': '2.38rem',
+                    'border': '1px solid #ced4da',
+                    'border-radius': '.25rem',
                 });
                 
                             var observer = new MutationObserver(function(mutations) {
@@ -413,11 +423,15 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                             });
                         }
                     });
-                   $(document).ready(function() {
+                    $(document).ready(function() {
+            $('#datatable_wrapper .row').first().children().eq(0).removeClass('col-md-6').addClass('col-md-3');
+            $('#datatable_wrapper .row').first().children().eq(1).removeClass('col-md-6').addClass('col-md-9');
             $('.dt-button').removeClass('dt-button buttons-collection');
             $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
             $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
             $('.form-control').removeClass('form-control-sm');
+            $('select[name="datatable_length"]').removeClass('form-control p-0');
+            $('.custom-select').removeClass('custom-select-sm');
         });
                 });
                 </script>

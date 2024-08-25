@@ -127,13 +127,60 @@
                 }
             },
         ],
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'excel', 'csv', 'pdf', 'print'
-        ]
-    });
-});
+        initComplete: function() {
+            // Styling untuk select
+        
 
-</script>
+                $('.form-control').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                    });
+                });
+
+                $('label').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '2.38rem',
+                        'font-weight': '600',
+                        'gap': '10px',
+                        'align-items': 'center',
+                    });
+                });
+
+                $('select[name="datatable_length"]').css({
+                    'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
+                    'height': '2.38rem',
+                    'border': '1px solid #ced4da',
+                    'border-radius': '.25rem',
+                });
+    
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                    });
+                });
+    
+                // Memulai observer pada elemen yang mengandung tombol
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+            }
+        });
+        $(document).ready(function() {
+            $('#datatable_wrapper .row').first().children().eq(0).removeClass('col-md-6').addClass('col-md-3');
+            $('#datatable_wrapper .row').first().children().eq(1).removeClass('col-md-6').addClass('col-md-9');
+            $('.dt-button').removeClass('dt-button buttons-collection');
+            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            $('.form-control').removeClass('form-control-sm');
+            $('select[name="datatable_length"]').removeClass('form-control p-0');
+            $('.custom-select').removeClass('custom-select-sm');
+            $('#datatable_length').css('display', 'flex');
+            $('#datatable_length').find('label').css('display', 'flex'); 
+        });
+    });
+    </script>
 
 @endsection

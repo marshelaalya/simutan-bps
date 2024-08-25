@@ -263,60 +263,55 @@
         </div>
     </div>
 
-    <!-- Top Score Request User -->
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px">Top Score Request User</h4>
-                <div class="leaderboard-container">
-                    <!-- User 1 -->
-                    <div class="leaderboard-item">
-                        <div class="position-relative gradient-background">
-                            <img src="{{ asset('backend/assets/images/users/16.png') }}" class="img-fluid rounded animate-up" alt="User 1" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                            <div class="quarter-circle large-circle"></div>
-                            <div class="quarter-circle small-circle">1</div>
-                            <div class="overlay-label position-absolute">
-                                <strong>Juni</strong><br>
-                                15 requests
+                <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
+                <div class="leaderboard-container" style="position: relative;">
+    
+                    @for($i = 0; $i < 3; $i++)
+                        @if(isset($topUsers[$i]) && $topUsers[$i]->requests > 0)
+                            @php $user = $topUsers[$i]; @endphp
+                            <div class="leaderboard-item" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%); aspect-ratio: 9/16;">
+                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                        <!-- Wave Paths -->
+                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                    </svg>
+                                </div>
+                                <div class="position-relative" style="overflow: hidden; margin: 0; padding: 0; position: relative; width: 100%; height: 100%;">
+                                    <img src="{{ asset($user->foto) }}" class="img-fluid rounded animate-up" alt="{{ $user->name }}" style="width: 350px; height: auto; object-fit: cover; object-position: center;">
+                                    <div class="quarter-circle large-circle"></div>
+                                    <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
+                                    <div class="overlay-label position-absolute">
+                                        <strong>{{ $user->name }}</strong><br>
+                                        {{ $user->requests }} requests
+                                    </div>
+                                </div>
                             </div>
-                            {{-- <div class="tooltip-text position-absolute bg-dark text-white p-2 rounded">
-                                <strong>Juni</strong><br>
-                                15 requests
-                            </div> --}}
-                        </div>
-                    </div>
-                    <!-- User 2 -->
-                    <div class="leaderboard-item">
-                        <div class="position-relative gradient-background">
-                            <img src="{{ asset('backend/assets/images/users/6.png') }}" class="img-fluid rounded animate-up" alt="User 2" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                            <div class="quarter-circle large-circle"></div>
-                            <div class="quarter-circle small-circle">2</div>
-                            <div class="overlay-label position-absolute">
-                                <strong>Adi</strong><br>
-                                12 requests
+                        @else
+                            <div class="leaderboard-item d-flex align-items-center justify-content-center" style="border-radius: 0.375rem; overflow: hidden; position: relative; background: linear-gradient(to top right, #3671ac 30%, rgba(54, 113, 172, 0.608) 100%); aspect-ratio: 9/16;">
+                                <div class="svg-wave" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;">
+                                    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                                        <!-- Wave Paths -->
+                                        <path d="M 0 70 C 150 40 350 60 500 40 L 500 0 L 0 0 Z" fill="#043277" opacity="0.4"></path>
+                                        <path d="M 0 60 C 150 30 350 50 500 30 L 500 0 L 0 0 Z" fill="#043277" opacity="0.6"></path>
+                                        <path d="M 0 50 C 150 20 350 40 500 20 L 500 0 L 0 0 Z" fill="#043277" opacity="0.1"></path>
+                                        <path d="M 0 40 C 150 10 350 30 500 10 L 500 0 L 0 0 Z" fill="#043277"></path>
+                                    </svg>
+                                </div>
+                                <div style="color: white; text-align: center; width: 350px; height: auto;">
+                                    <div class="quarter-circle large-circle"></div>
+                                    <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
+                                    <p style="color: white; margin: 0px; font-size:16px">Belum Ada<br>Top User #{{ $i + 1 }}</p>
+                                </div>
                             </div>
-                            {{-- <div class="tooltip-text position-absolute bg-dark text-white p-2 rounded">
-                                <strong>Adi</strong><br>
-                                12 requests
-                            </div> --}}
-                        </div>
-                    </div>
-                    <!-- User 3 -->
-                    <div class="leaderboard-item">
-                        <div class="position-relative gradient-background">
-                            <img src="{{ asset('backend/assets/images/users/7.png') }}" class="img-fluid rounded animate-up" alt="User 3" style="width: 100%; height: auto; aspect-ratio: 9/16;">
-                            <div class="quarter-circle large-circle"></div>
-                            <div class="quarter-circle small-circle">3</div>
-                            <div class="overlay-label position-absolute">
-                                <strong>Rudi</strong><br>
-                                10 requests
-                            </div>
-                            {{-- <div class="tooltip-text position-absolute bg-dark text-white p-2 rounded">
-                                <strong>Rudi</strong><br>
-                                10 requests
-                            </div> --}}
-                        </div>
-                    </div>
+                        @endif
+                    @endfor
+    
                 </div>
             </div>
         </div>
@@ -359,6 +354,12 @@
 </div>
 
 </div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-images"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -426,56 +427,56 @@
                                 }
                             }
                         ],
-                        dom: 'Brftip',
-                        buttons: [
-                            {
-                                extend: 'collection',
-                                text: 'Export &nbsp',
-                                className: 'form-select',
-                                buttons: [
-                                    {
-                                        extend: 'excelHtml5',
-                                        text: 'Export Excel',
-                                        title: 'Data Export',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'copy',
-                                        text: 'Copy',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'csv',
-                                        text: 'CSV',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'pdf',
-                                        text: 'PDF',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    },
-                                    {
-                                        extend: 'print',
-                                        text: 'Print',
-                                        exportOptions: {
-                                            columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                                        },
-                                    }
-                                ]
-                            }
-                        ],
+                        // dom: 'Brftip',
+                        // buttons: [
+                        //     {
+                        //         extend: 'collection',
+                        //         text: 'Export &nbsp',
+                        //         className: 'form-select',
+                        //         buttons: [
+                        //             {
+                        //                 extend: 'excelHtml5',
+                        //                 text: 'Export Excel',
+                        //                 title: 'Data Export',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'copy',
+                        //                 text: 'Copy',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'csv',
+                        //                 text: 'CSV',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'pdf',
+                        //                 text: 'PDF',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: 'print',
+                        //                 text: 'Print',
+                        //                 exportOptions: {
+                        //                     columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
+                        //                 },
+                        //             }
+                        //         ]
+                        //     }
+                        // ],
                         initComplete: function() {
                             // Filter untuk admin approval
                             // Filter untuk approval admin
-var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 20%;"><option value="">Semua Status Admin</option></select>')
+var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 24%;"><option value="">Semua Status Admin</option></select>')
     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
     .on('change', function() {
         table.draw();
@@ -487,7 +488,7 @@ adminSelect.append('<option value="approved by admin">Admin Approved</option>');
 adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
 
 // Filter untuk approval supervisor
-var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 23%;"><option value="">Semua Status Supervisor</option></select>')
+var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 28%;"><option value="">Semua Status Supervisor</option></select>')
     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
     .on('change', function() {
         table.draw();
@@ -533,7 +534,17 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                         'margin-bottom': '0px',
                         'height': '2.38rem',
                         'font-weight': '600',
+                        'display': 'flex',
+                        'gap': '10px',
+                        'align-items': 'center',
                     });
+                });
+
+                $('select[name="datatable_length"]').css({
+                    'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
+                    'height': '2.38rem',
+                    'border': '1px solid #ced4da',
+                    'border-radius': '.25rem',
                 });
                 
                             var observer = new MutationObserver(function(mutations) {
@@ -550,10 +561,14 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                         }
                     });
                     $(document).ready(function() {
+            $('#datatable_wrapper .row').first().children().eq(0).removeClass('col-md-6').addClass('col-md-3');
+            $('#datatable_wrapper .row').first().children().eq(1).removeClass('col-md-6').addClass('col-md-9');
             $('.dt-button').removeClass('dt-button buttons-collection');
             $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
             $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
             $('.form-control').removeClass('form-control-sm');
+            $('select[name="datatable_length"]').removeClass('form-control p-0');
+            $('.custom-select').removeClass('custom-select-sm');
         });
                 });
                 </script>
@@ -570,7 +585,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var barangs = @json($topBarangs);
 
     var labels = barangs.map(function(barang) {
-        return barang.nama;
+        // Mengambil kata pertama dari nama barang
+        return barang.nama.split(' ')[0];
     });
 
     var data = barangs.map(function(barang) {
@@ -582,14 +598,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Membuat gradient horizontal untuk background
     var gradientBackground = ctxBarang.createLinearGradient(0, 0, 400, 0);
     gradientBackground.addColorStop(0, 'rgba(255, 255, 255, 0.5)');  // Biru dengan opacity 0.5
-    gradientBackground.addColorStop(0.5, 'rgba(0, 123, 255, 0.5)');  // Ungu dengan opacity 0.5
-    gradientBackground.addColorStop(1, 'rgba(0, 123, 255, 0.7)');
-    
+    gradientBackground.addColorStop(0.3, 'rgba(54, 113, 172, 0.5)');  // Ungu dengan opacity 0.5
+    gradientBackground.addColorStop(1, 'rgba(4, 50, 119, 1)');
 
     // Membuat gradient horizontal untuk border dengan opacity 1
     var gradientBorder = ctxBarang.createLinearGradient(0, 0, 400, 0);
-    // gradientBorder.addColorStop(0, 'rgba(4, 50, 119, 1)');  // Biru dengan opacity 1
-    // gradientBorder.addColorStop(1, 'rgba(111, 66, 193, 1)');  // Ungu dengan opacity 1
     gradientBorder.addColorStop(1, 'rgba(4, 50, 119, 0.5)');  // Biru dengan opacity 0.5
     gradientBorder.addColorStop(0.5, 'rgba(0, 123, 255, 0.5)');  // Ungu dengan opacity 0.5
     gradientBorder.addColorStop(0, 'rgba(0, 123, 255, 0.5)');
@@ -605,6 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 borderColor: gradientBorder,
                 borderWidth: 1,
                 borderRadius: 5,
+                barThickness: 25, // Menentukan lebar bar
                 borderSkipped: false
             }]
         },
@@ -635,86 +649,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
-{{-- <script>
 
-
-    document.addEventListener('DOMContentLoaded', function() {
-    var barangs = @json($topBarangs);
-
-    var labels = barangs.map(function(barang) {
-        return barang.nama;
-    });
-
-    var data = barangs.map(function(barang) {
-        return barang.total_qty;
-    });
-
-    var ctxBarang = document.getElementById('myChartBarang').getContext('2d');
-
-
-    // Membuat gradient horizontal untuk background
-    // var gradientBackground = ctxBarang.createLinearGradient(0, 0, 400, 0);
-    // gradientBackground.addColorStop(0, 'rgba(4, 50, 119, 0.5)');  // Biru dengan opacity 0.2
-    // gradientBackground.addColorStop(0.5, 'rgba(111, 66, 193, 0.5)');  // Ungu dengan opacity 0.2
-    // gradientBackground.addColorStop(1, 'rgba(111, 66, 193, 0.5)');
-
-    // // Membuat gradient horizontal untuk border dengan opacity 0.2
-    // var gradientBorder = ctxBarang.createLinearGradient(0, 0, 400, 0);
-    // gradientBorder.addColorStop(0, 'rgba(4, 50, 119, 1)');  // Biru dengan opacity 0.2
-    // gradientBorder.addColorStop(1, 'rgba(111, 66, 193, 1)');  // Ungu dengan opacity 0.2
-    var myChartBarang = new Chart(ctxBarang, {
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var topUsers = @json($topUsers); // Data pengguna yang dikirim dari Laravel
+    
+    var labels = topUsers.map(user => user.name);
+    var data = topUsers.map(user => user.requests);
+    
+    var ctxUser = document.getElementById('myChartUser').getContext('2d');
+    
+    var myChartUser = new Chart(ctxUser, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [{
-                label: 'Jumlah Barang Diminta',
+                label: 'Jumlah Permintaan',
                 data: data,
-                backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                borderWidth: 1,
-                borderRadius: 5,
-                borderSkipped: false
+                backgroundColor: 'rgba(0,0,0,0)' // Tidak digunakan
             }]
         },
         options: {
-            indexAxis: 'y',
+            indexAxis: 'x',
             scales: {
-                y: {
-                    beginAtZero: true,
+                x: {
+                    display: true
                 },
-            },
-            plugins: {
-                tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.dataset.label + ': ' + tooltipItem.formattedValue;
-                        }
-                    }
+                y: {
+                    beginAtZero: true
                 }
             },
-            animation: {
-                duration: 2000,
-                easing: 'easeInOutBounce'
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ' - Permintaan: ' + context.raw;
+                        }
+                    }
+                },
+                afterDraw: function(chart) {
+                    var ctx = chart.ctx;
+                    var chartArea = chart.chartArea;
+                    
+                    topUsers.forEach((user, index) => {
+                        var meta = chart.getDatasetMeta(0);
+                        var dataPoint = meta.data[index];
+                        var x = dataPoint.x - dataPoint.width / 2; // Posisi x gambar
+                        var y = dataPoint.y - 50; // Adjust y to position image correctly above the bar
+    
+                        var img = new Image();
+                        img.src = user.foto;
+                        img.onload = function() {
+                            var imgWidth = 50; // Lebar gambar
+                            var imgHeight = 50; // Tinggi gambar
+                            ctx.save();
+                            ctx.drawImage(img, x, y, imgWidth, imgHeight);
+                            ctx.restore();
+                        };
+                    });
+                }
             }
         }
     });
-    });
-</script> --}}
+});
+
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

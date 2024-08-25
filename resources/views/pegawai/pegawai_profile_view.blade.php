@@ -1,10 +1,3 @@
-@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
-         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
-         'pegawai.pegawai_master'))
-
-@section(auth()->user()->role === 'admin' ? 'admin' : 
-         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
-
 <div class="page-content">
 <div class="container-fluid">
 
