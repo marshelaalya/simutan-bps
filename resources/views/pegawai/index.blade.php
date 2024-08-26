@@ -384,7 +384,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
     <div class="container-fluid">
 
         <!-- start page title -->
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                     <h4 class="mb-sm-0 text-info">Dashboard</h4>
@@ -398,10 +398,24 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
 
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- end page title -->
 
-        <h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-info mb-3" style="font-weight: 700">Halo {{ $user->panggilan }}, Selamat Datang di SIMUTAN!</h3>
+                <div>
+                    <p style="font-size: 16px; margin-bottom:0.5rem;">Sistem Mutasi Persediaan (SIMUTAN) adalah sistem yang digunakan untuk mengetahui jumlah dan mutasi barang serta menilai dari selisih kelebihan atau kekurangan barang</p>
+                </div>
+                {{-- <p class="text-muted fs-5">
+                    Selamat datang di <strong>SIMUTAN</strong>, sistem mutasi persediaan yang dirancang untuk memberikan visibilitas lengkap terhadap jumlah dan perubahan barang Anda. Dengan fitur mutasi barang yang terperinci, SIMUTAN memudahkan Anda untuk memantau kelebihan dan kekurangan persediaan, serta memastikan efisiensi dalam manajemen stok. Jelajahi fitur-fitur kami dan tingkatkan kontrol Anda terhadap persediaan dengan lebih mudah!
+                </p> --}}
+            </div>
+            {{-- <div class="greeting-actions">
+                <button class="btn btn-primary" onclick="showMoreInfo()">Pelajari Lebih Lanjut</button>
+                <button class="btn btn-outline-secondary" onclick="viewStats()">Lihat Statistik</button>
+            </div> --}}
+        </div>
 
         <div>
             @foreach($kelompoks as $index => $kelompok)
@@ -672,7 +686,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('.yajra-datatable').DataTable({
-            processing: true,
+            // processing: true,
             serverSide: true,
             responsive: true,
             ajax: {

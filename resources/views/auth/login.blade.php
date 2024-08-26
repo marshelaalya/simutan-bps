@@ -115,7 +115,8 @@
                         </div>
                     </div>
 
-                    <h1 class="text-center font-size-34"><b>Masuk</b></h1>
+                    <h1 class="text-center font-size-34 mb-0"><b>SIMUTAN</b></h1>
+                    <h3 class="text-center font-size-34 mt-0">Masuk</h3>
 
                     <div class="p-3">
                         <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}">
@@ -135,12 +136,12 @@
                                 <button class="btn btn-info w-auto waves-effect waves-light" type="submit">Masuk</button>
                             </div>
 
-                            <div class="form-group mb-0 mt-2">
+                            {{-- <div class="form-group mb-0 mt-2">
                                 <div class="d-flex justify-content-between">
                                     <a href="{{ route('password.request') }}" class="text-muted"><i class="mdi mdi-lock"></i> Forgot your password?</a>
-                                    {{-- <a href="{{ route('register') }}" class="text-muted"><i class="mdi mdi-account-circle"></i> Create an account</a> --}}
+                                    <a href="{{ route('register') }}" class="text-muted"><i class="mdi mdi-account-circle"></i> Create an account</a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </form>
                     </div>
                 </div>

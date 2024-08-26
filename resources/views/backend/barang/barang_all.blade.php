@@ -130,7 +130,7 @@
 
     $(document).ready(function() {
         var table = $('.yajra-datatable').DataTable({
-            processing: true,
+            // processing: true,
             serverSide: true,
             responsive: true,
             ajax: {

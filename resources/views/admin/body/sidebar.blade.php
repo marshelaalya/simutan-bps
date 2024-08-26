@@ -22,7 +22,7 @@
 
         <li>
             <a href="javascript:void(0);" class="has-arrow waves-effect">
-                <i class="ri-mail-send-line"></i>
+                <i class="ti ti-package font-size-20" style="margin-left: -1.5px"></i>
                 <span>Barang</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">
@@ -46,7 +46,7 @@
 
         <li>
             <a href="javascript: void(0);" class="has-arrow waves-effect">
-                <i class="ri-mail-send-line"></i>
+                <i class="ri-group-line"></i>
                 <span>Pengguna</span>
             </a>
             <ul class="sub-menu" aria-expanded="false">

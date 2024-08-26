@@ -5,6 +5,9 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
     .filter-buttons {
@@ -144,7 +147,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         var table = $('.yajra-datatable').DataTable({
-            processing: true,
+            // processing: true,
             serverSide: true,
             responsive: true,
             ajax: {
@@ -302,13 +305,24 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
         $(document).ready(function() {
             $('#datatable_wrapper .row').first().children().eq(0).removeClass('col-md-6').addClass('col-md-3');
             $('#datatable_wrapper .row').first().children().eq(1).removeClass('col-md-6').addClass('col-md-9');
-            $('.dt-button').removeClass('dt-button buttons-collection');
-            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
-            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            // $('.dt-button').removeClass('dt-button buttons-collection');
+            // $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+            // $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
             $('.form-control').removeClass('form-control-sm');
             $('select[name="datatable_length"]').removeClass('form-control p-0');
             $('.custom-select').removeClass('custom-select-sm');
         });
+
+        
     });
     </script>
+
+<script>
+$('#page-header-user-dropdown').on('click', function() {
+    console.log('Dropdown clicked, aria-expanded:', $(this).attr('aria-expanded'));
+});
+
+
+
+</script>
 @endsection

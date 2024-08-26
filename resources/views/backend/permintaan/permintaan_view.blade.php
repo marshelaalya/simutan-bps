@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Nama Pegawai</strong></td>
-                                <td>{{ $permintaan->user->name }}</td>
+                                <td>{{ $permintaan->pilihan->first()->created_by }}</td>
                             </tr>
                             <tr>
                                 <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Tanggal Permintaan</strong></td>
@@ -63,20 +63,11 @@
                                 <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Approval Admin</strong></td>
                                 <td style="white-space: nowrap;">
                                     @if($permintaan->status == 'pending')
-                                        <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                                                style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                                            Pending
-                                        </button>
-                                    @elseif($permintaan->status == 'rejected by admin')
-                                        <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                            Rejected
-                                        </button>
-                                    @elseif($permintaan->status == 'approved by admin' || $permintaan->status == 'rejected by supervisor')
-                                        <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                            Approved
-                                        </button>
+                                        <button class="btn btn-secondary text-gray btn-sm font-size-13" style="border: 1px solid #505D69; color: #6b7280; background-color:#edeef0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.7; padding: .1rem .25rem;">Pending</button>                    
+                                    @elseif(($permintaan->status == 'rejected by admin') || ($permintaan->status == 'rejected by supervisor' && $permintaan->ctt_adm !== NULL))
+                                    <button class="btn btn-secondary text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; pointer-events: none; background-color: #feeef1; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Rejected</button>
+                                    @elseif($permintaan->status == 'approved by admin' || ($permintaan->status == 'rejected by supervisor' && $permintaan->ctt_adm == NULL) || $permintaan->status == 'approved by supervisor')
+                                    <button class="btn btn-secondary text-success btn-sm font-size-13" style="border: 1px solid #46cf74; background-color:#f3fbf5; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Approved</button>
                                     @endif
                                 </td>
                             </tr>
@@ -84,20 +75,11 @@
                                 <td style="white-space: nowrap; width: 1%; min-width: 200px;"><strong>Approval Supervisor</strong></td>
                                 <td style="white-space: nowrap;">
                                         @if($permintaan->status == 'approved by admin' || $permintaan->status == 'pending')
-                                            <button class="btn btn-secondary bg-warning btn-sm font-size-13" 
-                                                    style="border: 0; color: #ca8a04; pointer-events: none; cursor: not-allowed;">
-                                                Pending
-                                            </button>
+                                        <button class="btn btn-secondary text-gray btn-sm font-size-13" style="border: 1px solid #505D69; color: #6b7280; background-color:#edeef0; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.7; padding: .1rem .25rem;">Pending</button>
                                         @elseif($permintaan->status == 'rejected by supervisor' || $permintaan->status == 'rejected by admin')
-                                            <button class="btn btn-secondary bg-danger text-danger btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Rejected
-                                            </button>
+                                            <button class="btn btn-secondary text-danger btn-sm font-size-13" style="border: 1px solid #F32F53; pointer-events: none; background-color: #feeef1; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Rejected</button>
                                         @elseif($permintaan->status == 'approved by supervisor')
-                                            <button class="btn btn-secondary bg-success text-success btn-sm font-size-13" 
-                                                    style="border: 0; pointer-events: none; cursor: not-allowed;">
-                                                Approved
-                                            </button>
+                                        <button class="btn btn-secondary text-success btn-sm font-size-13" style="border: 1px solid #46cf74; background-color:#f3fbf5; pointer-events: none; cursor: not-allowed; margin-bottom: 0.5rem; opacity:0.8; padding: .1rem .25rem;">Approved</button>                                       
                                         @endif
                                     </td>
                             </tr>
