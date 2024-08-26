@@ -97,7 +97,7 @@
 <script>
     $(document).ready(function() {
     $('#datatable').DataTable({
-        processing: true,
+        // processing: true,
         serverSide: true,
         ajax: "{{ route('kelompok.data') }}",
         columns: [
