@@ -5,7 +5,30 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<style>
+    .greeting-section {
+    background: linear-gradient(135deg, #f6f9fc, #ffffff);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+.greeting-section h2 {
+    font-size: 2.5rem;
+    color: #343a40;
+    margin-bottom: 1rem;
+}
+
+.greeting-section p {
+    font-size: 1.125rem;
+    color: #6c757d;
+}
+
+.greeting-section p strong {
+    color: #007bff;
+}
+
+</style>
 
 <div class="page-content">
 <div class="container-fluid">
@@ -27,8 +50,16 @@
 </div>
 </div>
 <!-- end page title -->
-<h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2>
+{{-- <h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2> --}}
 {{-- <p class="mb-4">Sistem Mutasi Persediaan (SIMUTAN) adalah sistem yang digunakan untuk mengetahui jumlah dan mutasi barang serta menilai dari selisih kelebihan atau kekurangan barang.</p> --}}
+
+<div class="greeting-section mb-4">
+    <h2 class="fw-bold text-dark">Selamat Datang di SIMUTAN!</h2>
+    <p class="text-muted fs-5">
+        Selamat datang di <strong>SIMUTAN</strong>, sistem mutasi persediaan yang dirancang untuk memberikan visibilitas lengkap terhadap jumlah dan perubahan barang Anda. Dengan fitur mutasi barang yang terperinci, SIMUTAN memudahkan Anda untuk memantau kelebihan dan kekurangan persediaan, serta memastikan efisiensi dalam manajemen stok. Jelajahi fitur-fitur kami dan tingkatkan kontrol Anda terhadap persediaan dengan lebih mudah!
+    </p>
+</div>
+
 <div class="row gx-4">
 <div class="col-xl-3 col-md-6">
 <div class="card">

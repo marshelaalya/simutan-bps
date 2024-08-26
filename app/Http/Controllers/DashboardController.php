@@ -65,10 +65,10 @@ class DashboardController extends Controller
 
 if ($user->role === 'admin' || $user->role === 'supervisor') {
     $permintaans = $query->get();
-    return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
+    return view('admin.index', compact('user','permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
 } elseif ($user->role === 'pegawai') {
     $permintaans = $query->where('user_id', $user->id)->get();
-    return view('pegawai.index', compact('permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
+    return view('pegawai.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
 }
 
 return redirect()->route('home');
