@@ -486,7 +486,7 @@ class PermintaanController extends Controller
         $dompdf->loadHtml($view);
         
         // Atur ukuran kertas dan orientasi
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A5', 'landscape');
         
         // Render PDF
         $dompdf->render();

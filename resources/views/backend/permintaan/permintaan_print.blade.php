@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         @page {
-            size: A4 portrait;
+            size: A5 portrait; /* Changed from A4 to A5 */
             margin: 5mm;
         }
 
@@ -39,7 +39,7 @@
         th, td {
             padding: 4px;
             text-align: left;
-            font-size: 13px; /* Menambah ukuran font tabel */
+            font-size: 13px; /* Adjusted font size for better readability on A5 */
         }
 
         .header {
@@ -56,46 +56,46 @@
         }
 
         .header img {
-            width: 100px;
+            width: 80px; /* Adjusted image size for A5 */
             height: auto;
             margin-top: 5px;
         }
 
         h1 {
-            font-size: 18px; /* Menambah ukuran font h1 */
+            font-size: 16px; /* Adjusted font size for A5 */
             margin: 2px 0;
         }
 
         h2 {
-            font-size: 14px; /* Menambah ukuran font h2 */
+            font-size: 14px; /* Adjusted font size for A5 */
             margin: 2px 0;
         }
 
         p {
-            font-size: 13px; /* Menambah ukuran font p */
+            font-size: 12px; /* Adjusted font size for A5 */
             margin: 2px 0;
         }
 
         h4 {
-            font-size: 13px; /* Menambah ukuran font h4 */
+            font-size: 12px; /* Adjusted font size for A5 */
             margin: 5px 0;
         }
 
         .date-location {
-            font-size: 13px; /* Menambah ukuran font untuk lokasi dan tanggal */
+            font-size: 12px; /* Adjusted font size for A5 */
             text-align: right;
             padding-right: 10px;
             margin: 0;
         }
 
         .signature-section {
-            margin-top: 20px; /* Memberi jarak antara tabel dan signature section */
+            margin-top: 10px; /* Adjusted margin for A5 */
         }
 
         .signature-table {
             width: 100%;
             border: none;
-            font-size: 14px;
+            font-size: 12px; /* Adjusted font size for A5 */
         }
 
         .signature-table td {
@@ -107,12 +107,12 @@
         }
 
         .signature-table .signature img {
-            max-height: 60px; /* Ukuran tinggi signature */
+            max-height: 50px; /* Adjusted image height for A5 */
             height: auto;
         }
 
         .signature-table .name {
-            font-size: 15px; /* Menambah ukuran font nama */
+            font-size: 13px; /* Adjusted font size for A5 */
             margin-top: 5px;
         }
     </style>

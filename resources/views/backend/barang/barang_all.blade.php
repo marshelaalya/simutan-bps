@@ -36,6 +36,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        
+                        
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h3 class="card-title mb-0">Persediaan Barang</h3>
                             <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">

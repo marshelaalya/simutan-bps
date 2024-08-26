@@ -209,12 +209,6 @@ a[data-tooltip]:hover::before {
                                     var viewUrl = "{{ route('permintaan.view', ':id') }}".replace(':id', row.id);
                                     var approveUrl = "{{ route('permintaan.approve', ':id') }}".replace(':id', row.id);
                                     var printUrl = "{{ route('permintaan.print', ':id') }}".replace(':id', row.id);
-
-                                var printButton = `
-                                    <a href="${printUrl}" target="_blank" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
-                                        <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
-                                    </a>
-                                `;
                 
                                     var viewButton = `
                                         <a href="${viewUrl}" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan">
@@ -224,78 +218,78 @@ a[data-tooltip]:hover::before {
                 
                                     var approveOrPrintButton;
 
-                        if (userRole === 'supervisor') {
-                            if (row.status === 'approved by admin') {
-                                // Tombol approve hijau jika statusnya approved by admin
-                                approveOrPrintButton = `
-                                    <a href="${approveUrl}" class="btn btn-sm hover:bg-success" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: green; padding: 15px;" data-tooltip="Setujui Permintaan">
-                                        <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
-                                    </a>
-                                `;
-                            } else if (row.status === 'pending') {
-                                // Tombol disabled jika statusnya pending
-                                approveOrPrintButton = `
-                                    <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
-                                        <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
-                                    </a>
-                                `;
-                            } else if (row.status === 'approved by supervisor') {
-                                // Tombol print jika statusnya approved by supervisor
-                                approveOrPrintButton = `
-                                    <a href="${printUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
-                                        <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
-                                    </a>
-                                `;
-                            }
-                            else if (row.status === 'rejected by supervisor' || row.status === 'rejected by admin') {
-        // Tombol print disabled jika statusnya rejected by supervisor
-        approveOrPrintButton = `
-            <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
-                <i class="ti ti-printer font-size-20 align-middle"></i>
-            </a>
-        `;
-    }
-                        } else if (userRole === 'admin') {
-                            if (row.status === 'pending') {
-                                // Tombol approve hijau jika statusnya pending
-                                approveOrPrintButton = `
-                                    <a href="${approveUrl}" class="btn btn-sm hover:bg-success" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: green; padding: 15px;" data-tooltip="Setujui Permintaan">
-                                        <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
-                                    </a>
-                                `;
-                            } else if (row.status === 'approved by admin') {
-                                // Tombol disabled jika statusnya approved by admin
-                                approveOrPrintButton = `
-                                    <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
-                                        <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
-                                    </a>
-                                `;
-                            } else if (row.status === 'approved by supervisor') {
-                                // Tombol print jika statusnya approved by supervisor
-                                approveOrPrintButton = `
-                                    <a href="${printUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
-                                        <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
-                                    </a>
-                                `;
-                            } else if (row.status === 'rejected by supervisor' || row.status === 'rejected by admin') {
-        // Tombol print disabled jika statusnya rejected by supervisor
-        approveOrPrintButton = `
-            <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
-                <i class="ti ti-printer font-size-20 align-middle"></i>
-            </a>
-        `;
-    }
-                        }
-
-                        return `
-                            <div class="text-center d-flex justify-content-center align-items-center">
-                                ${viewButton}
-                                ${approveOrPrintButton || ''}
-                            </div>
-                        `;
+                            if (userRole === 'supervisor') {
+                                if (row.status === 'approved by admin') {
+                                    // Tombol approve hijau jika statusnya approved by admin
+                                    approveOrPrintButton = `
+                                        <a href="${approveUrl}" class="btn btn-sm hover:bg-success" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: green; padding: 15px;" data-tooltip="Setujui Permintaan">
+                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                                } else if (row.status === 'pending') {
+                                    // Tombol disabled jika statusnya pending
+                                    approveOrPrintButton = `
+                                        <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
+                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                                } else if (row.status === 'approved by supervisor') {
+                                    // Tombol print jika statusnya approved by supervisor
+                                    approveOrPrintButton = `
+                                        <a href="${printUrl}" target="_blank" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
+                                            <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
+                                        </a>
+                                    `;
+                                }
+                                else if (row.status === 'rejected by supervisor' || row.status === 'rejected by admin') {
+                                    // Tombol print disabled jika statusnya rejected by supervisor
+                                    approveOrPrintButton = `
+                                        <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
+                                            <i class="ti ti-printer font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                                }
+                            } else if (userRole === 'admin') {
+                                if (row.status === 'pending') {
+                                    // Tombol approve hijau jika statusnya pending
+                                    approveOrPrintButton = `
+                                        <a href="${approveUrl}" class="btn btn-sm hover:bg-success" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: green; padding: 15px;" data-tooltip="Setujui Permintaan">
+                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                                } else if (row.status === 'approved by admin') {
+                                    // Tombol disabled jika statusnya approved by admin
+                                    approveOrPrintButton = `
+                                        <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
+                                            <i class="ti ti-clipboard-check font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
+                                } else if (row.status === 'approved by supervisor') {
+                                    // Tombol print jika statusnya approved by supervisor
+                                    approveOrPrintButton = `
+                                        <a href="${printUrl}" target="_blank" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
+                                            <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
+                                        </a>
+                                    `;
+                                } else if (row.status === 'rejected by supervisor' || row.status === 'rejected by admin') {
+                                    // Tombol print disabled jika statusnya rejected by supervisor
+                                    approveOrPrintButton = `
+                                        <a href="#" class="btn btn-sm" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Tombol Disabled">
+                                            <i class="ti ti-printer font-size-20 align-middle"></i>
+                                        </a>
+                                    `;
                                 }
                             }
-                        ],
+
+                            return `
+                                <div class="text-center d-flex justify-content-center align-items-center">
+                                    ${viewButton}
+                                    ${approveOrPrintButton || ''}
+                                </div>
+                            `;
+                                    }
+                                }
+                            ],
                         // dom: 'Brftip',
                         // buttons: [
                         //     {
