@@ -56,19 +56,19 @@ class DashboardController extends Controller
     ->limit(5)
     ->get();
 
-    $topUsers = User::select('users.id', 'users.name', 'users.foto', \DB::raw('COUNT(permintaans.id) as requests'))
+    $topUsers = User::select('users.id', 'users.panggilan', 'users.foto', \DB::raw('COUNT(permintaans.id) as requests'))
         ->leftJoin('permintaans', 'users.id', '=', 'permintaans.user_id')
-        ->groupBy('users.id', 'users.name', 'users.foto')
+        ->groupBy('users.id', 'users.panggilan', 'users.foto')
         ->orderBy('requests', 'desc')
         ->limit(3) // Batasi jumlah pengguna yang ditampilkan, misalnya 5 pengguna teratas
         ->get();
 
 if ($user->role === 'admin' || $user->role === 'supervisor') {
     $permintaans = $query->get();
-    return view('admin.index', compact('permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
+    return view('admin.index', compact('user','permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
 } elseif ($user->role === 'pegawai') {
     $permintaans = $query->where('user_id', $user->id)->get();
-    return view('pegawai.index', compact('permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
+    return view('pegawai.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
 }
 
 return redirect()->route('home');

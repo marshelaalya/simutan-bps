@@ -560,7 +560,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-3 text-info">Top 5 Barang Diminta</h4>
+                        <h4 class="card-title mb-3 text-info">Top 5 Barang dengan Permintaan Tertinggi</h4>
                         <canvas id="myChartBarang" width="400" height="237" style="max-width: 100%;"></canvas>
                     </div>
                 </div>
@@ -569,7 +569,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
+                        <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top 3 Pegawai dengan Permintaan Terbanyak</h4>
                         <div class="leaderboard-container" style="position: relative;">
             
                             @for($i = 0; $i < 3; $i++)
@@ -590,7 +590,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                                             <div class="quarter-circle large-circle"></div>
                                             <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
                                             <div class="overlay-label position-absolute">
-                                                <strong>{{ $user->name }}</strong><br>
+                                                <strong>{{ $user->panggilan }}</strong><br>
                                                 {{ $user->requests }} requests
                                             </div>
                                         </div>
@@ -891,7 +891,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     var topUsers = @json($topUsers); // Data pengguna yang dikirim dari Laravel
     
-    var labels = topUsers.map(user => user.name);
+    var labels = topUsers.map(user => user.panggilan);
     var data = topUsers.map(user => user.requests);
     
     var ctxUser = document.getElementById('myChartUser').getContext('2d');

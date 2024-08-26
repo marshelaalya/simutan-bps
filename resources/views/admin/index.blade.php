@@ -149,7 +149,79 @@
     .animate-up {
         animation: slide-up 1s ease-out;
     }
-    </style>
+    .greeting-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.greeting-section:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}
+
+.greeting-header h2 {
+    font-size: 2.5rem;
+    color: #343a40;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.greeting-header h2:hover {
+    color: #007bff;
+}
+
+.greeting-header p {
+    font-size: 1.125rem;
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    margin-top: -10px; /* Mengatur posisi tulisan lebih ke atas */
+    height: 2rem;
+}
+
+.marquee p {
+    display: inline-block;
+    width: 200%;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.greeting-actions {
+    margin-top: 1.5rem;
+}
+
+.greeting-actions .btn {
+    margin-right: 10px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.greeting-actions .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+</style>
 
 <div class="page-content">
 <div class="container-fluid">
@@ -171,8 +243,25 @@
 </div>
 </div>
 <!-- end page title --> --}}
-<h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2>
+{{-- <h2 class="mb-4 fw-bold">Selamat Datang di SIMUTAN! </h2> --}}
 {{-- <p class="mb-4">Sistem Mutasi Persediaan (SIMUTAN) adalah sistem yang digunakan untuk mengetahui jumlah dan mutasi barang serta menilai dari selisih kelebihan atau kekurangan barang.</p> --}}
+
+<div class="card">
+    <div class="card-body">
+        <h3 class="text-info mb-3" style="font-weight: 700">Halo {{ $user->panggilan }}, Selamat Datang di SIMUTAN!</h3>
+        <div>
+            <p style="font-size: 16px; margin-bottom:0.5rem;">Sistem Mutasi Persediaan (SIMUTAN) adalah sistem yang digunakan untuk mengetahui jumlah dan mutasi barang serta menilai dari selisih kelebihan atau kekurangan barang</p>
+        </div>
+        {{-- <p class="text-muted fs-5">
+            Selamat datang di <strong>SIMUTAN</strong>, sistem mutasi persediaan yang dirancang untuk memberikan visibilitas lengkap terhadap jumlah dan perubahan barang Anda. Dengan fitur mutasi barang yang terperinci, SIMUTAN memudahkan Anda untuk memantau kelebihan dan kekurangan persediaan, serta memastikan efisiensi dalam manajemen stok. Jelajahi fitur-fitur kami dan tingkatkan kontrol Anda terhadap persediaan dengan lebih mudah!
+        </p> --}}
+    </div>
+    {{-- <div class="greeting-actions">
+        <button class="btn btn-primary" onclick="showMoreInfo()">Pelajari Lebih Lanjut</button>
+        <button class="btn btn-outline-secondary" onclick="viewStats()">Lihat Statistik</button>
+    </div> --}}
+</div>
+
 <div class="row gx-4">
 <div class="col-xl-3 col-md-6">
 <div class="card">
@@ -257,7 +346,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-3 text-info">Top 5 Barang Diminta</h4>
+                <h4 class="card-title mb-3 text-info">Top 5 Barang dengan Permintaan Tertinggi</h4>
                 <canvas id="myChartBarang" width="400" height="237" style="max-width: 100%;"></canvas>
             </div>
         </div>
@@ -266,7 +355,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top Score Request User</h4>
+                <h4 class="card-title mb-3 text-info" style="padding-bottom: 25px;">Top 3 Pegawai dengan Permintaan Terbanyak</h4>
                 <div class="leaderboard-container" style="position: relative;">
     
                     @for($i = 0; $i < 3; $i++)
@@ -287,7 +376,7 @@
                                     <div class="quarter-circle large-circle"></div>
                                     <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
                                     <div class="overlay-label position-absolute">
-                                        <strong>{{ $user->name }}</strong><br>
+                                        <strong>{{ $user->panggilan }}</strong><br>
                                         {{ $user->requests }} requests
                                     </div>
                                 </div>
@@ -654,7 +743,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     var topUsers = @json($topUsers); // Data pengguna yang dikirim dari Laravel
     
-    var labels = topUsers.map(user => user.name);
+    var labels = topUsers.map(user => user.panggilan);
     var data = topUsers.map(user => user.requests);
     
     var ctxUser = document.getElementById('myChartUser').getContext('2d');
