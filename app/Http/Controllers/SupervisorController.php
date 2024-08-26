@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class PegawaiController extends Controller
+class SupervisorController extends Controller
 {
      public function destroy(Request $request)
     {
@@ -29,7 +29,7 @@ class PegawaiController extends Controller
     public function Profile(){
         $id = Auth::user()->id;
         $adminData = User::find($id);
-        return view('pegawai.pegawai_profile_view',compact('adminData'));
+        return view('supervisor.supervisor_profile_view',compact('adminData'));
 
     }// End Method 
 
@@ -38,7 +38,7 @@ class PegawaiController extends Controller
 
         $id = Auth::user()->id;
         $editData = User::find($id);
-        return view('pegawai.pegawai_profile_edit',compact('editData'));
+        return view('supervisor.supervisor_profile_edit',compact('editData'));
     }// End Method 
 
     public function StoreProfile(Request $request){
@@ -58,18 +58,18 @@ class PegawaiController extends Controller
         $data->save();
 
         $notification = array(
-            'message' => 'Pegawai Profile Updated Successfully', 
+            'message' => 'supervisor Profile Updated Successfully', 
             'alert-type' => 'info'
         );
 
-        return redirect()->route('pegawai.profile')->with($notification);
+        return redirect()->route('supervisor.profile')->with($notification);
 
     }// End Method
 
 
     public function ChangePassword(){
 
-        return view('pegawai.pegawai_change_password');
+        return view('supervisor.supervisor_change_password');
 
     }// End Method
 
@@ -100,7 +100,7 @@ class PegawaiController extends Controller
 
     public function dashboard()
     {
-        return view('pegawai.index');
+        return view('supervisor.index');
     }
 
 }

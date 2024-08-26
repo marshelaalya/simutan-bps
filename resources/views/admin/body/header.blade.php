@@ -79,8 +79,21 @@
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" style="object-fit: cover; object-position: top center;" src="{{ !empty($adminData->foto) ? url($adminData->foto) : url('upload/no_image.jpg') }}"
-                        alt="Header Avatar">
+                    
+                    <!-- Conditional Styling for User Avatar -->
+                    @if(Auth::user()->id == 1)
+                        <img class="rounded-circle header-profile-user" 
+                            style="object-fit: cover; object-position: center top 10%; transform: translateY(-10px);" 
+                            src="{{ !empty($adminData->foto) ? url($adminData->foto) : url('upload/no_image.jpg') }}"
+                            alt="Header Avatar">
+                    @else
+                        <img class="rounded-circle header-profile-user" 
+                            style="object-fit: cover; 
+                            {{ Auth::user()->id == 1 ? 'object-position: top center; transform: translateY(-10px);' : 'object-position: top center;' }}" 
+                            src="{{ !empty($adminData->foto) ? url($adminData->foto) : url('upload/no_image.jpg') }}"
+                            alt="Header Avatar">
+                    @endif
+                    
                     <span class="d-none d-xl-inline-block ms-1">{{ $adminData->panggilan }}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>

@@ -209,6 +209,12 @@ a[data-tooltip]:hover::before {
                                     var viewUrl = "{{ route('permintaan.view', ':id') }}".replace(':id', row.id);
                                     var approveUrl = "{{ route('permintaan.approve', ':id') }}".replace(':id', row.id);
                                     var printUrl = "{{ route('permintaan.print', ':id') }}".replace(':id', row.id);
+
+                                var printButton = `
+                                    <a href="${printUrl}" target="_blank" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Cetak Permintaan">
+                                        <i class="ti ti-printer font-size-20 align-middle text-danger"></i>
+                                    </a>
+                                `;
                 
                                     var viewButton = `
                                         <a href="${viewUrl}" class="btn btn-sm me-2 text-primary hover:bg-primary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: blue; padding: 15px;" data-tooltip="Lihat Permintaan">

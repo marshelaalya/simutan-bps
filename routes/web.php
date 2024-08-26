@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Demo\DemoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\PermintaanController;
@@ -55,6 +56,15 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(PegawaiController::class)->group(function () {
         Route::get('/pegawai/logout', 'destroy')->name('pegawai.logout');
         Route::get('/pegawai/profile', 'Profile')->name('pegawai.profile');
+        Route::get('/edit/profile', 'EditProfile')->name('edit.profile');
+        Route::post('/store/profile', 'StoreProfile')->name('store.profile');
+        Route::get('/change/password', 'ChangePassword')->name('change.password');
+        Route::post('/update/password', 'UpdatePassword')->name('update.password');
+    });
+
+    Route::controller(SupervisorController::class)->group(function () {
+        Route::get('/supervisor/logout', 'destroy')->name('supervisor.logout');
+        Route::get('/supervisor/profile', 'Profile')->name('supervisor.profile');
         Route::get('/edit/profile', 'EditProfile')->name('edit.profile');
         Route::post('/store/profile', 'StoreProfile')->name('store.profile');
         Route::get('/change/password', 'ChangePassword')->name('change.password');
