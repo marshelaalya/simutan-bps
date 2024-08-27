@@ -380,7 +380,7 @@
                                     <div class="quarter-circle small-circle">{{ $i + 1 }}</div>
                                     <div class="overlay-label position-absolute">
                                         <strong>{{ $user->panggilan }}</strong><br>
-                                        {{ $user->requests }} requests
+                                        {{ $user->requests }} permintaan
                                     </div>
                                 </div>
                             </div>
