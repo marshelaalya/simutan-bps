@@ -151,11 +151,6 @@
             ],
             dom: 'Bfrtip',
             buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export &nbsp',
-                    className: 'form-select', // Ganti kelas sesuai kebutuhan
-                    buttons: [
                         {
                             text: 'BA Stock Opname',
                             action: function (e, dt, node, config) {
@@ -168,8 +163,6 @@
                                 window.location.href = "{{ route('barang.pemasukan.export') }}"; // Laravel route for exporting Excel
                             }
                         }
-                    ]
-                }
             ],
             initComplete: function() {
                 var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 33%;"><option value="">Semua Kelompok Barang</option></select>')
