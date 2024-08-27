@@ -361,17 +361,16 @@ public function dataForIndex()
         return redirect()->back()->with($notification);
     }
 
-    public function exportToExcel()
+    public function exportToExcel(Request $request)
     {
-        $barang = Barang::all(); 
-        
-        $currentYear = Carbon::now()->year;
-        $currentMonth = Carbon::now()->format('m');
-
-        $filename = "BA Stock Opname {$currentYear} bulan {$currentMonth}.xlsx";
-
-        return Excel::download(new BarangExport($barang), $filename);
+        $validatedData = $request->validate([
+            'tanggal' => 'required|date',
+        ]);
+    
+        $tanggal = $validatedData['tanggal'];
+        return Excel::download(new BarangExport($tanggal), "BA_Stock_Opname.xlsx");
     }
+    
 
     public function exportPemasukan()
     {

@@ -230,7 +230,7 @@ class PermintaanController extends Controller
             }
     
             // Mengembalikan kuantitas barang yang sebelumnya dikurangi
-            foreach ($permintaan->pilihans as $pilihan) {
+            foreach ($permintaan->pilihan as $pilihan) {
                 $barang = Barang::find($pilihan->barang_id);
                 if ($barang) {
                     $barang->qty_item += $pilihan->req_qty; // Mengembalikan kuantitas
@@ -465,7 +465,6 @@ class PermintaanController extends Controller
             'alert-type' => 'success'
         ]);
     }
-
     public function PermintaanPrint($id)
     {
         // Ambil data permintaan dan pilihan
@@ -491,9 +490,13 @@ class PermintaanController extends Controller
         // Render PDF
         $dompdf->render();
         
-        // Output PDF
-        return $dompdf->stream('permintaan_'.$permintaan->no_permintaan.'.pdf', array('Attachment' => 0));
+        // Nama file berdasarkan no_permintaan
+        $fileName = 'permintaan_' . $permintaan->no_permintaan . '.pdf';
+        
+        // Output PDF dengan nama file yang diinginkan
+        return $dompdf->stream($fileName, array('Attachment' => 0));
     }
+    
 
     // PermintaanController.php
 

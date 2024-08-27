@@ -44,6 +44,21 @@
                                 <i class="mdi mdi-plus-circle"></i> Tambah Barang
                             </a>
                         </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                BA Stock Opname
+                            </button>
+                            <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                                <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                                    <div class="mb-3">
+                                        <label for="stockOpnameDate" class="form-label">Pilih Tanggal:</label>
+                                        <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-info">Export</button>
+                                </form>
+                            </div>
+                        </div>
                         
                         <table id="datatable" class="table table-bordered yajra-datatable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
@@ -152,10 +167,16 @@
             dom: 'Bfrtip',
             buttons: [
                         {
+                            extend: 'collection',
                             text: 'BA Stock Opname',
-                            action: function (e, dt, node, config) {
-                                window.location.href = "{{ route('barang.export') }}"; // Laravel route for exporting Excel
-                            }
+                            buttons: [
+                                {
+                                    text: 'Pilih Tanggal',
+                                    action: function (e, dt, node, config) {
+                                        $('#dropdownMenuButton').dropdown('toggle');
+                                    }
+                                }
+                            ]
                         },
                         {
                             text: 'Laporan Rincian Persediaan',
