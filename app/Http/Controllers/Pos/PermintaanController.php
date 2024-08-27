@@ -230,7 +230,7 @@ class PermintaanController extends Controller
             }
     
             // Mengembalikan kuantitas barang yang sebelumnya dikurangi
-            foreach ($permintaan->pilihans as $pilihan) {
+            foreach ($permintaan->pilihan as $pilihan) {
                 $barang = Barang::find($pilihan->barang_id);
                 if ($barang) {
                     $barang->qty_item += $pilihan->req_qty; // Mengembalikan kuantitas

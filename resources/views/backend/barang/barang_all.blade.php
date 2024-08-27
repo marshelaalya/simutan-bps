@@ -175,6 +175,8 @@
                 @foreach($kelompokFilt as $kelompok)
                     kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
                 @endforeach
+
+                $('.dt-buttons button').addClass('btn btn-danger');
     
                 // Styling untuk select
                 $('.form-select').each(function() {
