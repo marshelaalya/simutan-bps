@@ -3,6 +3,9 @@
 namespace App\Exports;
 
 use App\Models\Barang;
+use App\Models\Pilihan;
+use App\Models\Pemasukan;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithDrawings;
@@ -10,35 +13,73 @@ use Maatwebsite\Excel\Concerns\WithCustomStartCell;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Carbon\Carbon;
 
 class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCustomStartCell, WithStyles
 {
-    protected $barang;
+    protected $tanggal;
 
-    public function __construct($barang)
+    public function __construct($tanggal)
     {
-        $this->barang = $barang;
+        $this->tanggal = Carbon::parse($tanggal)->endOfDay(); // Konversi tanggal dan pastikan akhir hari
     }
 
     public function collection()
     {
-        return $this->barang->map(function ($item, $key) {
+        // Dapatkan semua barang
+        $barang = Barang::all();
+    
+        return $barang->map(function ($item, $key) {
+            $totalMasuk = 0;
+            $totalKeluar = 0;
+    
+            // Calculate the total incoming stock before or on the requested date
+            $pemasukanRecords = Pemasukan::where('barang_id', $item->id)
+                ->get();
+    
+            foreach ($pemasukanRecords as $record) {
+                if ($record->tanggal <= $this->tanggal) {
+                    // If the pemasukan date is before or on the requested date, include it
+                    $totalMasuk += $record->qty;
+                } else {
+                    // If the pemasukan date is after the requested date, do not include it
+                    $totalMasuk -= $record->qty;
+                }
+            }
+    
+            // Calculate the total outgoing stock before or on the requested date
+            $pilihanRecords = Pilihan::where('barang_id', $item->id)
+                ->whereHas('permintaan', function($query) {
+                    $query->where('tgl_request', '<=', $this->tanggal);
+                })
+                ->get();
+    
+            foreach ($pilihanRecords as $record) {
+                if ($record->permintaan->tgl_request <= $this->tanggal) {
+                    // If the permintaan date is before or on the requested date, include it
+                    $totalKeluar += $record->req_qty;
+                } else {
+                    // If the permintaan date is after the requested date, do not include it
+                    continue;
+                }
+            }
+    
+            // Calculate the remaining stock on the requested date
+            $sisaStok = $item->qty_item + $totalMasuk - $totalKeluar;
+    
             return [
                 'NO' => $key + 1,
                 'Uraian Barang' => $item->nama,
                 'Satuan' => $item->satuan,
-                'Harga Beli Satuan (Rupiah)' => 0,
-                'Total Persediaan Jumlah' => $item->qty_item,
-                'Total Persediaan Harga Total (Rupiah)' => 0,
-                'Barang Rusak Jumlah' => 0,
-                'Barang Rusak Harga Total (Rupiah)' => 0,
-                'Barang Usang Jumlah' => 0,
-                'Barang Usang Harga Total (Rupiah)' => 0,
+                'Harga Beli Satuan (Rupiah)' => 0, // Adjust if necessary
+                'Total Persediaan Jumlah' => $sisaStok,
+                'Total Persediaan Harga Total (Rupiah)' => 0, // Adjust if necessary
+                'Barang Rusak Jumlah' => 0, // Adjust if necessary
+                'Barang Rusak Harga Total (Rupiah)' => 0, // Adjust if necessary
+                'Barang Usang Jumlah' => 0, // Adjust if necessary
+                'Barang Usang Harga Total (Rupiah)' => 0, // Adjust if necessary
             ];
         });
     }
-
     private function convertNumberToWords($number)
     {
         $words = array(
@@ -221,7 +262,7 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
     
         // Apply styles to the data rows
         $startingRow = 15; // Data starts from row 15 after the header
-        $dataRowCount = $this->barang->count();
+        $dataRowCount = $sheet->getHighestRow() - $startingRow + 1;
         $dataEndRow = $startingRow + $dataRowCount - 1;
     
         $sheet->getStyle("A$startingRow:J$dataEndRow")->applyFromArray([
@@ -253,7 +294,7 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
         $sheet->mergeCells("A" . ($dataEndRow + 1) . ":D" . ($dataEndRow + 1)); 
         $sheet->setCellValue("A" . ($dataEndRow + 1), 'Jumlah');
         $sheet->getStyle("A" . ($dataEndRow + 1))->getFont()->setBold(true);
-    
+
         $sheet->setCellValue("E" . ($dataEndRow + 1), '=SUM(E' . $startingRow . ':E' . $dataEndRow . ')');
         $sheet->setCellValue("F" . ($dataEndRow + 1), '=SUM(F' . $startingRow . ':F' . $dataEndRow . ')');
         $sheet->setCellValue("H" . ($dataEndRow + 1), '=SUM(H' . $startingRow . ':H' . $dataEndRow . ')');

@@ -89,7 +89,12 @@
         }
 
         .signature-section {
-            margin-top: 10px; /* Adjusted margin for A5 */
+            position: absolute;
+            bottom: 120px; /* Adjust this value to move the section up */
+            width: 100%;
+            left: 0;
+            text-align: center; /* Ensures that the content remains centered */
+            margin-top: 0; /* Remove the margin-top to avoid extra spacing */
         }
 
         .signature-table {
@@ -121,19 +126,19 @@
     <div class="container">
         <table class="header">
             <tr>
-                <td style="width: 120px; vertical-align: top;">
+                <td style="width: 60px; height: 100px; vertical-align: top;">
                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('backend/assets/images/logo-bps.png'))) }}" alt="BPS Logo">
                 </td>
-                <td style="vertical-align: top; padding-left: 5px;">
+                <td style="vertical-align: top; text-align: left; padding-left: 10px;">
                     <h1>BADAN PUSAT STATISTIK</h1>
                     <h1>Kota Jakarta Utara</h1>
                     <p style="font-size: 12px">Jl. Berdikari No.1, Koja, Jakarta Utara 14230</p>
                     <p style="font-size: 12px">Telp/Fax: (021) 4353936</p>
-                </td>
+                </td>                
             </tr>
         </table>
 
-        <br><br>
+        <br>
         <h4>Nomor Permintaan : {{ $permintaan->no_permintaan }}</h4>
 
         <br>
@@ -172,34 +177,34 @@
             <tr>
                 <td colspan="2">
                     <div class="signature-section">
-                        <table class="signature-table">
+                        <table class="signature-table" style="font-size: 10px;">
                             <tr>
                                 <td class="signature">
                                     <br>
                                     <p>Yang Menyerahkan</p>
                                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('backend/assets/images/users/ttd_4.png'))) }}" alt="Signature Juniaty Pardede">
-                                    <div class="name" style="font-size: 14px;">Juniaty Pardede, A.Md</div>
+                                    <div class="name">Juniaty Pardede, A.Md</div>
                                 </td>
                                 <td class="signature">
                                     <br>
                                     <p>Yang Menerima</p>
                                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('backend/assets/images/users/ttd_' . auth()->user()->id . '.png'))) }}" alt="Signature {{ auth()->user()->name }}">
-                                    <div class="name" style="font-size: 14px;">{{ $pilihan->first()->created_by }}</div>
+                                    <div class="name">{{ $pilihan->first()->created_by }}</div>
                                 </td>
                                 <td class="signature">
-                                    <div class="date-location" style="text-align: center;">
+                                    <div class="date-location" style="text-align: center; font-size: 11px">
                                         Jakarta, {{ \Carbon\Carbon::parse($pilihan->first()->date)->locale('id')->translatedFormat('d F Y') }}
                                     </div>
                                     <p>Mengetahui/Menyetujui</p>
                                     <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('backend/assets/images/users/ttd_2.png'))) }}" alt="Signature Mohamad Rudiansyah Oktavan">
-                                    <div class="name" style="font-size: 14px;">Mohamad Rudiansyah Oktavan, S.E.</div>
+                                    <div class="name">Mohamad Rudiansyah Oktavan, S.E.</div>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </td>
             </tr>
-        </table>
+        </table>        
     </div>
 </body>
 </html>
