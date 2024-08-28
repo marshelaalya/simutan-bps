@@ -372,12 +372,18 @@ public function dataForIndex()
 
     public function exportToExcel(Request $request)
     {
-        $validatedData = $request->validate([
-            'tanggal' => 'required|date',
-        ]);
+        // Ambil tanggal dari input form
+        $tanggal = $request->input('tanggal');
+        
+        // Ambil semua data barang
+        $barang = Barang::all();
     
-        $tanggal = $validatedData['tanggal'];
-        return Excel::download(new BarangExport($tanggal), "BA_Stock_Opname.xlsx");
+        // Format filename sesuai dengan tanggal yang dipilih
+        $formattedDate = Carbon::parse($tanggal)->format('d M Y');
+        $filename = "BA Stock Opname {$formattedDate}.xlsx";
+    
+        // Kirim data barang dan tanggal ke BarangExport
+        return Excel::download(new BarangExport($barang, $tanggal), $filename);
     }
     
 

@@ -212,7 +212,6 @@ class PilihanController extends Controller
                         $pengeluaran->qty = $pilihan->req_qty;
                         $pengeluaran->tanggal = $date;
                         $pengeluaran->permintaan_id = $permintaanId;
-                        $pengeluaran->description = $description;
                         $pengeluaran->save();
 
                         // Kurangi kuantitas barang
