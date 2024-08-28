@@ -11,6 +11,7 @@ use App\Models\Kelompok;
 use App\Models\User;
 use App\Models\Notification;
 use App\Models\Permintaan;
+use App\Models\Pengeluaran;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log; // Import Log Facade
@@ -204,6 +205,15 @@ class PilihanController extends Controller
                         $pilihan->created_at = Carbon::now();
                         $pilihan->updated_at = Carbon::now();
                         $pilihan->save(); // Simpan ke database
+
+                        // Catat pengeluaran
+                        $pengeluaran = new Pengeluaran();
+                        $pengeluaran->barang_id = $barang->id;
+                        $pengeluaran->qty = $pilihan->req_qty;
+                        $pengeluaran->tanggal = $date;
+                        $pengeluaran->permintaan_id = $permintaanId;
+                        $pengeluaran->description = $description;
+                        $pengeluaran->save();
 
                         // Kurangi kuantitas barang
                         $barang->qty_item -= $pilihan->req_qty;

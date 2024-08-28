@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Permintaan;
+use App\Models\Pengeluaran;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
@@ -235,6 +236,11 @@ class PermintaanController extends Controller
                 if ($barang) {
                     $barang->qty_item += $pilihan->req_qty; // Mengembalikan kuantitas
                     $barang->save();
+
+                    // / Hapus entri pengeluaran yang terkait
+                    Pengeluaran::where('permintaan_id', $permintaan->id)
+                        ->where('barang_id', $barang->id)
+                        ->delete();
                 }
             }
         } else {

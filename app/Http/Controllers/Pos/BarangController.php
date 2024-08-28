@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Kelompok;
 use App\Models\Pemasukan;
 use App\Models\Barang;
+use App\Models\StokAwalBulan;
 use Auth;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
@@ -192,6 +193,14 @@ public function dataForIndex()
         }
 
         $barang->save();
+
+        // Simpan stok awal bulan
+        $stokAwalBulan = new StokAwalBulan();
+        $stokAwalBulan->barang_id = $barang->id;
+        $stokAwalBulan->qty_awal = $request->qty_item; // Set qty_awal dari qty_item yang dimasukkan
+        $stokAwalBulan->tahun = Carbon::now()->year; // Menggunakan tahun saat ini
+        $stokAwalBulan->bulan = Carbon::now()->month; // Menggunakan bulan saat ini
+        $stokAwalBulan->save();
 
         // Notifikasi sukses
         $notification = array(
