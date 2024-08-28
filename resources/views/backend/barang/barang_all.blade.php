@@ -1,6 +1,8 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 'pegawai.pegawai_master'))
 @section(auth()->user()->role === 'admin' ? 'admin' : (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
     .table-actions {
         display: inline-flex;
@@ -12,6 +14,20 @@
     #datatable_filter {
     justify-content: end;
 }
+
+.dropdown-menu {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000; /* Pastikan dropdown berada di atas elemen lain */
+    position: absolute; /* Pastikan posisi dropdown benar */
+}
+
+.form-control {
+    display: block;
+    width: 100%; /* Pastikan input mengisi lebar yang tersedia */
+}
+
 </style>
 
 <div class="page-content">
@@ -42,23 +58,10 @@
                             <h3 class="card-title mb-0">Persediaan Barang</h3>
                             <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">
                                 <i class="mdi mdi-plus-circle"></i> Tambah Barang
-                            </a>
+                            </a>                            
                         </div>
 
-                        <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                BA Stock Opname
-                            </button>
-                            <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-                                <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
-                                    <div class="mb-3">
-                                        <label for="stockOpnameDate" class="form-label">Pilih Tanggal:</label>
-                                        <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-info">Export</button>
-                                </form>
-                            </div>
-                        </div>
+                        
                         
                         <table id="datatable" class="table table-bordered yajra-datatable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
@@ -164,29 +167,53 @@
                 { data: 'satuan', name: 'satuan', className: 'text-center' },
                 { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center' }
             ],
-            dom: 'Bfrtip',
+            dom: '<"d-flex justify-content-between align-items-center"<"#exportDropdown">f>rtip',
             buttons: [
-                        {
-                            extend: 'collection',
-                            text: 'BA Stock Opname',
-                            buttons: [
-                                {
-                                    text: 'Pilih Tanggal',
-                                    action: function (e, dt, node, config) {
-                                        $('#dropdownMenuButton').dropdown('toggle');
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            text: 'Laporan Rincian Persediaan',
-                            action: function (e, dt, node, config) {
-                                window.location.href = "{{ route('barang.pemasukan.export') }}"; // Laravel route for exporting Excel
-                            }
-                        }
+                // {
+                //     extend: 'collection',
+                //     text: 'BA Stock Opname',
+                //     buttons: [
+                //         {
+                //             text: 'Pilih Tanggal',
+                //             action: function(e, dt, node, config) {
+                //                 let dropdownFormHtml = `
+                //                     <div class="dropdown-menu p-3" style="display: block; position: absolute; top: 100%; left: 0; z-index: 1000;">
+                //                         <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                //                             <div class="mb-3">
+                //                                 <label for="stockOpnameDate" class="form-label">Pilih Tanggal:</label>
+                //                                 <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
+                //                             </div>
+                //                             <button type="submit" class="btn btn-info">Export</button>
+                //                         </form>
+                //                     </div>
+                //                 `;
+                //                 $(node).after(dropdownFormHtml);
+
+                //                 // Tutup dropdown saat klik di luar
+                //                 $(document).on('click', function(event) {
+                //                     if (!$(event.target).closest('.dropdown-menu').length && !$(event.target).is(node)) {
+                //                         $('.dropdown-menu').remove();
+                //                     }
+                //                 });
+                //             }
+                //         }
+                //     ]
+                // },
+                // {
+                //     text: 'Laporan Rincian Persediaan',
+                //     action: function(e, dt, node, config) {
+                //         window.location.href = "{{ route('barang.pemasukan.export') }}";
+                //     }
+                // },
+                {
+                    text: '<i class="ri-add-circle-fill align-items-center"></i> Tambah Barang',
+                    action: function(e, dt, node, config) {
+                        window.location.href = "{{ route('barang.add') }}";
+                    }
+                }
             ],
             initComplete: function() {
-                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 33%;"><option value="">Semua Kelompok Barang</option></select>')
+                var kelompokSelect = $('<select id="kelompok_filter" class="form-select-sm" style="width: 36%; border: 1px solid #1156bf; color:#043277; font-weight: 500"><option value="">Semua Kelompok Barang</option></select>')
                     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
                     .on('change', function() {
                         table.draw();
@@ -196,6 +223,51 @@
                 @foreach($kelompokFilt as $kelompok)
                     kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
                 @endforeach
+
+                // $('.dt-buttons button').addClass('form-select');
+                // $('span').addClass('d-flex align-items-center');
+
+                $('#exportDropdown').before(`
+        <div class="d-flex justify-content-between">
+            <div style="margin-right: 0.7rem">
+                <div class="dropdown">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+                    BA Stock Opname <i class="ti ti-download font-size-14"></i>
+                    </button>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                        <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                            <div class="mb-3">
+                                <label for="stockOpnameDate" class="form-label">Pilih Tanggal:</label>
+                                <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
+                            </div>
+                            <button type="submit" class="btn btn-info">Export</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div>
+    <div class="dropdown">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+            Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
+        </button>
+        <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                <div class="mb-3">
+                    <label for="startDate" class="form-label">Tanggal Mulai:</label>
+                    <input type="date" class="form-control" id="startDate" name="start_date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="endDate" class="form-label">Tanggal Akhir:</label>
+                    <input type="date" class="form-control" id="endDate" name="end_date" required>
+                </div>
+                <button type="submit" class="btn btn-info">Export</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+        </div>
+    `);
     
                 // Styling untuk select
                 $('.form-select').each(function() {
@@ -206,13 +278,13 @@
                                     'font-size': '.9rem',
                                     'font-weight': '500',
                                     'line-height': '1.5',
-                                    'color': '#505d69',
-                                    'background-color': '#fff',
+                                    'color': '#043277',
+                                    'background-color': '#e2f3fe',
                                     'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
                                     'background-repeat': 'no-repeat',
                                     'background-position': 'right .75rem center',
                                     'background-size': '16px 12px',
-                                    'border': '1px solid #ced4da',
+                                    'border': '1px solid #1156bf',
                                     'border-radius': '.25rem',
                                     'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
                                     'appearance': 'none'
@@ -223,15 +295,17 @@
                 $('.form-control').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
+                        'border': '1px solid #1156bf'
                     });
                 });
 
                 $('label').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
                         'font-weight': '600',
+                        'color': '#043277'
                     });
                 });
 
