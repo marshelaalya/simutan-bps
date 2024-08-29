@@ -1,5 +1,10 @@
-@extends('admin.admin_master')
-@section('admin')
+@extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 
+         'pegawai.pegawai_master'))
+
+@section(auth()->user()->role === 'admin' ? 'admin' : 
+         (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
+         
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 

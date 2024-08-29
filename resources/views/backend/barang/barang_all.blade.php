@@ -63,42 +63,39 @@
 
                         
                         
-                        <table id="datatable" class="table table-bordered yajra-datatable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th width="10%" class="text-center">Kode</th>
-                                    <th width="20%">Kelompok Barang</th>
-                                    <th>Nama Barang</th>
-                                    <th width="1%" class="text-center">Stok</th>
-                                    <th width="1%" class="text-center">Satuan</th>
-                                    <th width="1%" class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @foreach($barangs as $item)
-                                    <tr>
-                                        <td class="text-center">{{ $item->kode }}</td>
-                                        <td>{{ $item->kelompok->nama ?? 'N/A' }}</td>
-                                        <td>{{ $item->nama }}</td>
-                                        <td class="text-center">{{ $item->qty_item }}</td>
-                                        <td class="text-center">{{ $item->satuan ?? 'N/A' }}</td>
-                                        <td class="table-actions">
-                                            <button class="btn bg-success btn-sm add-stock-btn" data-bs-toggle="modal" data-bs-target="#addStockModal" data-id="{{ $item->id }}" data-nama="{{ $item->nama }}">
-                                                <i class="fas fa-plus" style="color: #397e48"></i>
-                                            </button>
+                        @if(Auth::user()->role == 'admin')
+    <!-- Tabel untuk Admin -->
+    <table id="datatable" class="table table-bordered yajra-datatable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead>
+            <tr>
+                <th width="10%" class="text-center">Kode</th>
+                <th width="20%">Kelompok Barang</th>
+                <th>Nama Barang</th>
+                <th width="1%" class="text-center">Stok</th>
+                <th width="1%" class="text-center">Satuan</th>
+                <th width="1%" class="text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+@elseif(Auth::user()->role == 'supervisor' || Auth::user()->role == 'pegawai')
+    <!-- Tabel untuk Supervisor dan Pegawai -->
+    <table id="datatable" class="table table-bordered yajra-datatable2" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead>
+            <tr>
+                <th width="10%" class="text-center">Kode</th>
+                <th width="20%">Kelompok Barang</th>
+                <th>Nama Barang</th>
+                <th width="1%" class="text-center">Stok</th>
+                <th width="1%" class="text-center">Satuan</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+@endif
 
-                                            <a href="{{ route('barang.edit', $item->id) }}" class="btn bg-warning btn-sm">
-                                                <i class="fas fa-edit" style="color: #ca8a04"></i>
-                                            </a>
-
-                                            <a href="{{ route('barang.delete', $item->id) }}" class="btn bg-danger btn-sm">
-                                                <i class="fas fa-trash-alt text-danger"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach --}}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -140,7 +137,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 <script>
@@ -169,42 +166,6 @@
             ],
             dom: '<"d-flex justify-content-between align-items-center"<"#exportDropdown">f>rtip',
             buttons: [
-                // {
-                //     extend: 'collection',
-                //     text: 'BA Stock Opname',
-                //     buttons: [
-                //         {
-                //             text: 'Pilih Tanggal',
-                //             action: function(e, dt, node, config) {
-                //                 let dropdownFormHtml = `
-                //                     <div class="dropdown-menu p-3" style="display: block; position: absolute; top: 100%; left: 0; z-index: 1000;">
-                //                         <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
-                //                             <div class="mb-3">
-                //                                 <label for="stockOpnameDate" class="form-label">Pilih Tanggal:</label>
-                //                                 <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
-                //                             </div>
-                //                             <button type="submit" class="btn btn-info">Export</button>
-                //                         </form>
-                //                     </div>
-                //                 `;
-                //                 $(node).after(dropdownFormHtml);
-
-                //                 // Tutup dropdown saat klik di luar
-                //                 $(document).on('click', function(event) {
-                //                     if (!$(event.target).closest('.dropdown-menu').length && !$(event.target).is(node)) {
-                //                         $('.dropdown-menu').remove();
-                //                     }
-                //                 });
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     text: 'Laporan Rincian Persediaan',
-                //     action: function(e, dt, node, config) {
-                //         window.location.href = "{{ route('barang.pemasukan.export') }}";
-                //     }
-                // },
                 {
                     text: '<i class="ri-add-circle-fill align-items-center"></i> Tambah Barang',
                     action: function(e, dt, node, config) {
@@ -237,10 +198,10 @@
                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
                         <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
                             <div class="mb-3">
-                                <label for="stockOpnameDate" class="form-label">Pilih Tanggal:</label>
+                                <label for="stockOpnameDate" class="form-label" style="font-size: .7875rem">Pilih Tanggal:</label>
                                 <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
                             </div>
-                            <button type="submit" class="btn btn-info">Export</button>
+                            <button type="submit" class="btn btn-sm btn-info">Export</button>
                         </form>
                     </div>
                 </div>
@@ -253,14 +214,14 @@
         <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
             <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
                 <div class="mb-3">
-                    <label for="startDate" class="form-label">Tanggal Mulai:</label>
+                    <label for="startDate" class="form-label" style="font-size: .7875rem">Tanggal Mulai:</label>
                     <input type="date" class="form-control" id="startDate" name="start_date" required>
                 </div>
                 <div class="mb-3">
-                    <label for="endDate" class="form-label">Tanggal Akhir:</label>
+                    <label for="endDate" class="form-label" style="font-size: .7875rem">Tanggal Akhir:</label>
                     <input type="date" class="form-control" id="endDate" name="end_date" required>
                 </div>
-                <button type="submit" class="btn btn-info">Export</button>
+                <button type="submit" class="btn btn-sm btn-info">Export</button>
             </form>
         </div>
     </div>
@@ -329,6 +290,46 @@
             $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
             $('.form-control').removeClass('form-control-sm');
         });
+
+        $(document).on('click', '.delete-btn', function(e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data barang ini akan dihapus!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: {
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Dihapus!',
+                        response.message,
+                        'success'
+                    );
+                    // Reload table data or remove row from table
+                    table.ajax.reload();
+                },
+                error: function(response) {
+                    Swal.fire(
+                        'Error!',
+                        'Data barang gagal dihapus.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+
             
 
         // Handle the Add Stock button click
@@ -370,7 +371,240 @@
             });
         });
     });
+});
 </script>
 
+<script>
+    $(document).ready(function() {
+    $('[data-tooltip]').tooltip();
+});
+
+    $(document).ready(function() {
+        var table = $('.yajra-datatable2').DataTable({
+            // processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: {
+                url: "{{ route('barang.all') }}",  // Pastikan route ini sesuai dengan yang ada di web.php
+                data: function(d) {
+                    d.kelompok_id = $('#kelompok_filter').val();  // Filter berdasarkan kelompok barang
+                }
+            },
+            columns: [
+                { data: 'kode', name: 'kode', className: 'text-center' },
+                { data: 'kelompok_barang', name: 'kelompok_barang' },
+                { data: 'nama', name: 'nama' },
+                { data: 'qty_item', name: 'qty_item', className: 'text-center' },
+                { data: 'satuan', name: 'satuan', className: 'text-center' },
+            ],
+            dom: '<"d-flex justify-content-between align-items-center"<"#exportDropdown">f>rtip',
+            buttons: [
+                {
+                    text: '<i class="ri-add-circle-fill align-items-center"></i> Tambah Barang',
+                    action: function(e, dt, node, config) {
+                        window.location.href = "{{ route('barang.add') }}";
+                    }
+                }
+            ],
+            initComplete: function() {
+                var kelompokSelect = $('<select id="kelompok_filter" class="form-select-sm" style="width: 36%; border: 1px solid #1156bf; color:#043277; font-weight: 500"><option value="">Semua Kelompok Barang</option></select>')
+                    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
+                    .on('change', function() {
+                        table.draw();
+                    });
+
+                // Menambahkan opsi untuk kelompok barang dari server (opsional, jika ingin dinamis)
+                @foreach($kelompokFilt as $kelompok)
+                    kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
+                @endforeach
+
+                // $('.dt-buttons button').addClass('form-select');
+                // $('span').addClass('d-flex align-items-center');
+
+                $('#exportDropdown').before(`
+        <div class="d-flex justify-content-between">
+            <div style="margin-right: 0.7rem">
+                <div class="dropdown">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+                    BA Stock Opname <i class="ti ti-download font-size-14"></i>
+                    </button>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                        <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                            <div class="mb-3">
+                                <label for="stockOpnameDate" class="form-label" style="font-size: .7875rem">Pilih Tanggal:</label>
+                                <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-info">Export</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div>
+    <div class="dropdown">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+            Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
+        </button>
+        <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                <div class="mb-3">
+                    <label for="startDate" class="form-label" style="font-size: .7875rem">Tanggal Mulai:</label>
+                    <input type="date" class="form-control" id="startDate" name="start_date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="endDate" class="form-label" style="font-size: .7875rem">Tanggal Akhir:</label>
+                    <input type="date" class="form-control" id="endDate" name="end_date" required>
+                </div>
+                <button type="submit" class="btn btn-sm btn-info">Export</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+        </div>
+    `);
+    
+                // Styling untuk select
+                $('.form-select').each(function() {
+                                $(this).css({
+                                    'display': 'block',
+                                    'padding': '.47rem 1.75rem .47rem .75rem',
+                                    '-moz-padding-start': 'calc(.75rem - 3px)',
+                                    'font-size': '.9rem',
+                                    'font-weight': '500',
+                                    'line-height': '1.5',
+                                    'color': '#043277',
+                                    'background-color': '#e2f3fe',
+                                    'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                                    'background-repeat': 'no-repeat',
+                                    'background-position': 'right .75rem center',
+                                    'background-size': '16px 12px',
+                                    'border': '1px solid #1156bf',
+                                    'border-radius': '.25rem',
+                                    'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                                    'appearance': 'none'
+                                });
+                            
+                });
+
+                $('.form-control').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '1.67rem',
+                        'border': '1px solid #1156bf'
+                    });
+                });
+
+                $('label').each(function() {
+                    $(this).css({
+                        'margin-bottom': '0px',
+                        'height': '1.67rem',
+                        'font-weight': '600',
+                        'color': '#043277'
+                    });
+                });
+
+                var observer = new MutationObserver(function(mutations) {
+                                mutations.forEach(function(mutation) {
+                                    $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                                });
+                            });
+                
+                            // Memulai observer pada elemen yang mengandung tombol
+                            observer.observe(document.body, {
+                                childList: true,
+                                subtree: true
+                            });
+            }
+        });
+
+        $(document).ready(function() {
+            $('.dt-button').removeClass('dt-button buttons-collection');
+            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
+            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
+            $('.form-control').removeClass('form-control-sm');
+        });
+
+        $(document).on('click', '.delete-btn', function(e) {
+    e.preventDefault();
+    var url = $(this).attr('href');
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data barang ini akan dihapus!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                data: {
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Dihapus!',
+                        response.message,
+                        'success'
+                    );
+                    // Reload table data or remove row from table
+                    table.ajax.reload();
+                },
+                error: function(response) {
+                    Swal.fire(
+                        'Error!',
+                        'Data barang gagal dihapus.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+
+            
+
+        // Handle the Add Stock button click
+        $('#datatable').on('click', '.add-stock-btn', function() {
+            var barangId = $(this).data('id');
+            var barangNama = $(this).data('nama');
+
+            $('#barang_id').val(barangId);
+            $('#addStockModalLabel').text('Tambah Stok Barang: ' + barangNama);
+        });
+
+        // Handle form submission
+        $('#addStockForm').on('submit', function(e) {
+            e.preventDefault();
+            var barangId = $('#barang_id').val();
+            var qty = $('#stok_qty').val();
+
+            $.ajax({
+                url: '{{ route('barang.addStock') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    barang_id: barangId,
+                    qty: qty
+                },
+                success: function(response) {
+                    $('#addStockModal').modal('hide');
+                    
+                    // Show success notification
+                    toastr.success('Stok berhasil ditambahkan!', 'Berhasil');
+
+                    // Refresh halaman
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    // Show error notification
+                    toastr.error('Gagal menambahkan stok. Coba lagi.', 'Error');
+                }
+            });
+        });
+    });
+});
+</script>
 
 @endsection
