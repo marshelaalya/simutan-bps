@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Dashboard | SIMUTAN - Admin & Dashboard Template</title>
+    {{-- <title>SIMUTAN</title> --}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesdesign" name="author" />
@@ -81,6 +81,39 @@
         50% { transform: scale(1.5); opacity: 0.5; }
         100% { transform: scale(1); opacity: 1; }
     }
+
+    .coin {
+  width: 100px;
+  height: 100px;
+  /* background-color: gold; */
+  border-radius: 50%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: spin-coin 2s infinite linear;
+}
+
+.coin:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  /* background-color: #e6b800; */
+  border-radius: 50%;
+}
+
+@keyframes spin-coin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+    
     </style>
 </head>
 
@@ -88,7 +121,7 @@
 
     <!-- Loading Spinner -->
     <div id="loading">
-        <div class="pulsing-dot">
+        <div class="coin">
             <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
         </div>
     </div>

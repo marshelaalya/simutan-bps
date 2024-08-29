@@ -1,5 +1,11 @@
 @extends('admin.admin_master')
 @section('admin')
+
+<head>
+    <title>
+        Ubah Password | SIMUTAN
+    </title>
+</head>
  
 
 <div class="page-content">

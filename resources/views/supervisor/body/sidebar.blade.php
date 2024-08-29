@@ -19,14 +19,10 @@
                 </li>     
                 
                 <li>
-                    <a href="javascript:void(0);" class="has-arrow waves-effect">
-                        <i class="ri-mail-send-line"></i>
-                        <span>Barang</span>
+                    <a href="{{ route('barang.all') }}" class="waves-effect">
+                        <i class="ti ti-package font-size-20" style="margin-left: -1.5px"></i>
+                        <span>Stok Barang</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('kelompok.all') }}">Kelompok Barang</a></li>
-                        <li><a href="{{ route('barang.all') }}">Persediaan Barang</a></li>
-                    </ul>
                 </li>
                             
                 <li>

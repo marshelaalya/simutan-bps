@@ -1,6 +1,12 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
 @section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
+<head>
+    <title>
+        Semua Kelompok Barang | SIMUTAN
+    </title>
+</head>
+
 <style>
     .table-actions {
         display: inline-flex;
