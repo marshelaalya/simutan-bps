@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Permintaan;
 use App\Models\Pengeluaran;
+use App\Models\Pemasukan;
 use App\Models\User;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
@@ -404,72 +405,100 @@ class PermintaanController extends Controller
     {
         $permintaan_id = $request->input('permintaan_id');
         $tableData = $request->input('table_data');
-
-        // Hapus entri lama berdasarkan permintaan_id
-        Pilihan::where('permintaan_id', $permintaan_id)->delete();
-
-        $tableData = json_decode($request->input('table_data'), true); // Decode JSON jika perlu
-
-    if (is_array($tableData) && !empty($tableData)) {
-        foreach ($tableData as $index => $item) {
-            // Validasi data
-            if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
-                // Temukan Barang dan Kelompok berdasarkan nama
-                $barang = Barang::where('nama', $item['barang_nama'])->first();
-                $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
-
-                if ($barang && $kelompok) {
-                    // Ekstrak angka dari qty_req
-                    $qty_req_str = $item['qty_req'];
-                    $qty_req = filter_var($qty_req_str, FILTER_SANITIZE_NUMBER_INT);
-                    
-                    // Validasi apakah qty_req adalah angka yang valid
-                    if ($qty_req === false || !is_numeric($qty_req)) {
-                        return redirect()->route('permintaan.saya')->with([
-                            'message' => 'Kuantitas tidak valid',
-                            'alert-type' => 'error'
-                        ]);
-                    }
-
-                    // Buat entri Pilihan baru
-                    $newPilihan = new Pilihan();
-                    $newPilihan->permintaan_id = $permintaan_id;
-                    $newPilihan->date = $item['date'] ?? null;
-                    $newPilihan->description = $item['description'] ?? null;
-                    $newPilihan->barang_id = $barang->id;
-                    $newPilihan->req_qty = (int)$qty_req;
-                    $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur sesuai kebutuhan
-                    $newPilihan->created_by = Auth::user()->name;
-                    $newPilihan->save(); // Simpan ke database
-
-                    // Sesuaikan kuantitas barang
-                    $barang->qty_item -= (int)$qty_req;
-                    $barang->save();
-                } else {
-                    Log::info('Barang atau Kelompok tidak ditemukan:', ['barang' => $item['barang_nama'], 'kelompok' => $item['kelompok_nama']]);
-                }
-            } else {
-                Log::info('Data item tidak valid:', ['item' => $item]);
+    
+        // Ambil data barang lama dan kembalikan stok
+        $oldItems = Pilihan::where('permintaan_id', $permintaan_id)->get();
+    
+        foreach ($oldItems as $oldItem) {
+            $barang = Barang::find($oldItem->barang_id);
+            if ($barang) {
+                // Kembalikan stok barang
+                $barang->qty_item += $oldItem->req_qty;
+                $barang->save();
+    
+                // Opsi: Log pengembalian stok ke tabel pemasukan
+                $newPemasukan = new Pemasukan();
+                $newPemasukan->barang_id = $barang->id;
+                $newPemasukan->qty = $oldItem->req_qty;
+                $newPemasukan->tanggal = now(); // Atau gunakan tanggal yang sesuai
+                $newPemasukan->keterangan = 'Pengembalian stok karena update permintaan';
+                $newPemasukan->save();
             }
         }
-    } else {
-        // Jika data tabel tidak valid
-        Log::info('Data tabel tidak valid:', ['data' => $tableData]);
-
-        return redirect()->route('permintaan.saya')->with([
-            'message' => 'Data tabel tidak valid',
-            'alert-type' => 'error'
-        ]);
-    }
-
-            
-
+    
+        // Hapus entri lama berdasarkan permintaan_id
+        Pilihan::where('permintaan_id', $permintaan_id)->delete();
+    
+        // Proses data tabel baru
+        $tableData = json_decode($request->input('table_data'), true); // Decode JSON jika perlu
+    
+        if (is_array($tableData) && !empty($tableData)) {
+            foreach ($tableData as $index => $item) {
+                // Validasi data
+                if (isset($item['kelompok_nama'], $item['barang_nama'], $item['qty_req'])) {
+                    // Temukan Barang dan Kelompok berdasarkan nama
+                    $barang = Barang::where('nama', $item['barang_nama'])->first();
+                    $kelompok = Kelompok::where('nama', $item['kelompok_nama'])->first();
+    
+                    if ($barang && $kelompok) {
+                        // Ekstrak angka dari qty_req
+                        $qty_req_str = $item['qty_req'];
+                        $qty_req = filter_var($qty_req_str, FILTER_SANITIZE_NUMBER_INT);
+    
+                        // Validasi apakah qty_req adalah angka yang valid
+                        if ($qty_req === false || !is_numeric($qty_req)) {
+                            return redirect()->route('permintaan.saya')->with([
+                                'message' => 'Kuantitas tidak valid',
+                                'alert-type' => 'error'
+                            ]);
+                        }
+    
+                        // Buat entri Pilihan baru
+                        $newPilihan = new Pilihan();
+                        $newPilihan->permintaan_id = $permintaan_id;
+                        $newPilihan->date = $item['date'] ?? null;
+                        $newPilihan->description = $item['description'] ?? null;
+                        $newPilihan->barang_id = $barang->id;
+                        $newPilihan->req_qty = (int)$qty_req;
+                        $newPilihan->pilihan_no = sprintf('P-%04d', $index + 1); // Atur sesuai kebutuhan
+                        $newPilihan->created_by = Auth::user()->name;
+                        $newPilihan->save(); // Simpan ke database
+    
+                        // Sesuaikan kuantitas barang
+                        $barang->qty_item -= (int)$qty_req;
+                        $barang->save();
+    
+                        // Catat pengurangan stok ke tabel pengeluarans
+                        $newPengeluaran = new Pengeluaran();
+                        $newPengeluaran->barang_id = $barang->id;
+                        $newPengeluaran->permintaan_id = $permintaan_id;
+                        $newPengeluaran->qty = (int)$qty_req;
+                        $newPengeluaran->tanggal = now(); // Atur tanggal sesuai kebutuhan
+                        $newPengeluaran->save(); // Simpan ke tabel pengeluarans
+                    } else {
+                        Log::info('Barang atau Kelompok tidak ditemukan:', ['barang' => $item['barang_nama'], 'kelompok' => $item['kelompok_nama']]);
+                    }
+                } else {
+                    Log::info('Data item tidak valid:', ['item' => $item]);
+                }
+            }
+        } else {
+            // Jika data tabel tidak valid
+            Log::info('Data tabel tidak valid:', ['data' => $tableData]);
+    
+            return redirect()->route('permintaan.saya')->with([
+                'message' => 'Data tabel tidak valid',
+                'alert-type' => 'error'
+            ]);
+        }
+    
         // Notifikasi sukses dan redirect
         return redirect()->route('permintaan.saya')->with([
             'message' => 'Data berhasil diperbarui dan kuantitas barang diperbarui',
             'alert-type' => 'success'
         ]);
     }
+    
     public function PermintaanPrint($id)
     {
         // Ambil data permintaan dan pilihan

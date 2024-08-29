@@ -201,7 +201,7 @@
                                 
                                 <!-- Tabel -->
                                 <label for="mainForm" class="text-info"> Tabel Permintaan Barang</label>
-                                <form id="mainForm" method="put" action="{{ route('permintaan.update', $id) }}">
+                                <form id="mainForm" method="POST" action="{{ route('permintaan.update', $id) }}">
                                     @csrf
                                     @method('put')
                                     <!-- Hidden Fields -->
