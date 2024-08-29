@@ -417,7 +417,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h4 class="card-title mb-0">Permintaan Barang</h4>
+                    <h4 class="card-title mb-0">Permintaan Barang [Pending]</h4>
                     <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light ml-3">
                         <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
                     </a>
@@ -440,6 +440,11 @@
                         <!-- DataTable akan mengisi baris di sini -->
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-end mt-3">
+                    <a href="{{ route('permintaan.all') }}" class="text-info custom-link">
+                        Lihat Selengkapnya <i class="ti ti-arrow-right font-size-14"></i>
+                    </a>
+                </div>
 
             </div> <!-- end col -->
         </div> <!-- end row -->              
@@ -469,7 +474,7 @@
                         ajax: {
                             url: "{{ route('permintaan.all') }}",
                             data: function(d) {
-                                d.admin_approval = $('#admin_approval_filter').val();
+                                d.admin_approval = $('#admin_approval_filter').val() || 'pending';
                                 d.supervisor_approval = $('#supervisor_approval_filter').val();
                             }
                         },
@@ -568,32 +573,29 @@
                         initComplete: function() {
                             // Filter untuk admin approval
                             // Filter untuk approval admin
-var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 24%;"><option value="">Semua Status Admin</option></select>')
-    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
-    .on('change', function() {
-        table.draw();
-    });
+                            var adminSelect = $('<select id="admin_approval_filter" class="form-select-sm" style="width: 20%; border: 1px solid #1156bf; color:#043277; font-weight: 500;"><option value="pending" selected>Admin Pending</option></select>')
+        .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
+        .on('change', function() {
+            table.draw();
+        });
+        adminSelect.val('pending'); // Set default value ke "pending"
 
-// Menambahkan opsi untuk approval admin
-adminSelect.append('<option value="pending">Admin Pending</option>');
-adminSelect.append('<option value="approved by admin">Admin Approved</option>');
-adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
+// // Filter untuk approval supervisor
+// var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select-sm" style="width: 24%; border: 1px solid #1156bf; color:#043277; font-weight: 500;"><option value="">Semua Status Supervisor</option></select>')
+//     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
+//     .on('change', function() {
+//         table.draw();
+//     });
 
-// Filter untuk approval supervisor
-var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 28%;"><option value="">Semua Status Supervisor</option></select>')
-    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
-    .on('change', function() {
-        table.draw();
-    });
-
-// Menambahkan opsi untuk approval supervisor
-supervisorSelect.append('<option value="pending">Supervisor Pending</option>');
-supervisorSelect.append('<option value="approved by supervisor">Supervisor Approved</option>');
-supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejected</option>');
+// // Menambahkan opsi untuk approval supervisor
+// supervisorSelect.append('<option value="pending">Supervisor Pending</option>');
+// supervisorSelect.append('<option value="approved by supervisor">Supervisor Approved</option>');
+// supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejected</option>');
 
                 
                             // Styling untuk select
-                            $('.form-select').each(function() {
+                            // Styling untuk select
+                $('.form-select').each(function() {
                                 $(this).css({
                                     'display': 'block',
                                     'padding': '.47rem 1.75rem .47rem .75rem',
@@ -601,41 +603,41 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                                     'font-size': '.9rem',
                                     'font-weight': '500',
                                     'line-height': '1.5',
-                                    'color': '#505d69',
-                                    'background-color': '#fff',
+                                    'color': '#043277',
+                                    'background-color': '#e2f3fe',
                                     'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
                                     'background-repeat': 'no-repeat',
                                     'background-position': 'right .75rem center',
                                     'background-size': '16px 12px',
-                                    'border': '1px solid #ced4da',
+                                    'border': '1px solid #1156bf',
                                     'border-radius': '.25rem',
                                     'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
                                     'appearance': 'none'
                                 });
-                            });
+                            
+                });
 
-                            $('.form-control').each(function() {
+                $('.form-control').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
+                        'border': '1px solid #1156bf'
                     });
                 });
 
                 $('label').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
                         'font-weight': '600',
-                        'display': 'flex',
-                        'gap': '10px',
-                        'align-items': 'center',
+                        'color': '#043277'
                     });
                 });
 
                 $('select[name="datatable_length"]').css({
                     'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
-                    'height': '2.38rem',
-                    'border': '1px solid #ced4da',
+                    'height': '1.67rem',
+                    'border': '1px solid #043277',
                     'border-radius': '.25rem',
                 });
                 

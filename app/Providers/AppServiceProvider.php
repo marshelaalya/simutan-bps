@@ -36,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Carbon::setLocale('id');
+        
         View::composer('*', function ($view) {
             // Mendapatkan tanggal awal dan akhir bulan ini
             $startOfMonth = Carbon::now()->startOfMonth()->format('Y-m-d');

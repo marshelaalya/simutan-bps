@@ -39,7 +39,7 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="panggilan" class="col-sm-2 col-form-label">Username</label>
+                                <label for="panggilan" class="col-sm-2 col-form-label">Panggilan</label>
                                 <div class="form-group col-sm-10">
                                     <input name="panggilan" value="{{ $user->panggilan }}" class="form-control" type="text" id="username">
                                 </div>
@@ -68,7 +68,7 @@
                                                 <p class="text-success">Foto saat ini:</p>
                                                 <div class="mt-2">
                                                     <!-- Menggunakan path lengkap dari user->foto -->
-                                                    <img id="foto-preview" src="{{ asset($user->foto) }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
+                                                    <img id="foto-preview" src="{{ asset('storage/' . $user->foto) }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
                                                 </div>
                                             @else
                                                 <p class="text-warning">Belum ada foto</p>
@@ -94,7 +94,7 @@
                                                 <p class="text-success">Tanda tangan saat ini:</p>
                                                 <div class="mt-2">
                                                     <!-- Menggunakan path lengkap dari user->signature -->
-                                                    <img id="ttd-preview" src="{{ asset($user->ttd) }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
+                                                    <img id="ttd-preview" src="{{ asset('storage/' . $user->ttd) }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
                                                 </div>
                                             @else
                                                 <p class="text-warning">Belum ada tanda tangan</p>

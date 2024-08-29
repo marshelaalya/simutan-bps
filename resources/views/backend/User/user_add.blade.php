@@ -44,6 +44,13 @@
                                     <input name="name" class="form-control" type="text" id="name" required>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label for="panggilan" class="col-sm-2 col-form-label required">Nama Panggilan</label>
+                                <div class="form-group col-sm-10">
+                                    <input name="panggilan" class="form-control" type="text" id="panggilan" required>
+                                </div>
+                            </div>
                         
                             <div class="row mb-3">
                                 <label for="username" class="col-sm-2 col-form-label required">Username</label>

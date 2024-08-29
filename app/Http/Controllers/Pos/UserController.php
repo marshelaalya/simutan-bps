@@ -55,6 +55,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
+            'panggilan' => 'required|string|max:255',
             'role' => 'required|in:admin,supervisor,pegawai',
             'image' => 'nullable|image|mimes:png|max:2048',
             'signature' => 'nullable|image|mimes:png|max:2048',
@@ -64,6 +65,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
+            'panggilan' => $request->panggilan,
             'role' => $request->role,
             'password' => Hash::make('password'),
         ]);

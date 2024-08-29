@@ -1,94 +1,94 @@
 id,kode,nama,kelompok_id,qty_item,satuan,foto_barang
-1,1010301001000200,"Ballpoint Standard AE7 0,5 Warna Merah",1,8,Buah,backend/assets/images/barang/foto_1010301001000200.png
-2,1010301001000205,Pulpen Faster C6,1,36,Buah,backend/assets/images/barang/foto_1010301001000205.png
-3,1010301001000211,Balliner Biru,1,11,Buah,backend/assets/images/barang/foto_1010301001000211.png
-4,1010301001000213,Pulpen Pilot Frixion Hitam,1,4,Buah,backend/assets/images/barang/foto_1010301001000213.png
-5,1010301001000214,Pulpen Pilot Frixion Biru,1,10,Buah,backend/assets/images/barang/foto_1010301001000214.png
-6,1010301001000217,Pensil Faber Castle 2B,1,24,Buah,backend/assets/images/barang/foto_1010301001000217.png
-7,1010301001000218,"Refill Pilot Frixion 0,7 Biru",1,16,Buah,backend/assets/images/barang/foto_1010301001000218.png
-8,1010301001000219,Permanent Marker Snowman 520,1,3,Buah,backend/assets/images/barang/foto_1010301001000219.png
-9,1010301001000220,Marker snowman hitam,1,17,Buah,backend/assets/images/barang/foto_1010301001000220.png
-10,1010301001000221,Marker snowman biru,1,11,Buah,backend/assets/images/barang/foto_1010301001000221.png
-11,1010301001000222,Balliner Hitam,1,15,Buah,backend/assets/images/barang/foto_1010301001000222.png
-12,1010301001000223,Pulpen Pilot Frixion Merah,1,8,Buah,backend/assets/images/barang/foto_1010301001000223.png
-13,1010301001000224,Pulpen 4 warna Joyko,1,4,Buah,backend/assets/images/barang/foto_1010301001000224.png
+1,1010301001000200,"Ballpoint Standard AE7 0,5 Warna Merah",1,8,Buah,storage/app/public/assets/images/barangs/foto_1010301001000200.png
+2,1010301001000205,Pulpen Faster C6,1,36,Buah,storage/app/public/assets/images/barangs/foto_1010301001000205.png
+3,1010301001000211,Balliner Biru,1,11,Buah,storage/app/public/assets/images/barangs/foto_1010301001000211.png
+4,1010301001000213,Pulpen Pilot Frixion Hitam,1,4,Buah,storage/app/public/assets/images/barangs/foto_1010301001000213.png
+5,1010301001000214,Pulpen Pilot Frixion Biru,1,10,Buah,storage/app/public/assets/images/barangs/foto_1010301001000214.png
+6,1010301001000217,Pensil Faber Castle 2B,1,24,Buah,storage/app/public/assets/images/barangs/foto_1010301001000217.png
+7,1010301001000218,"Refill Pilot Frixion 0,7 Biru",1,16,Buah,storage/app/public/assets/images/barangs/foto_1010301001000218.png
+8,1010301001000219,Permanent Marker Snowman 520,1,3,Buah,storage/app/public/assets/images/barangs/foto_1010301001000219.png
+9,1010301001000220,Marker snowman hitam,1,17,Buah,storage/app/public/assets/images/barangs/foto_1010301001000220.png
+10,1010301001000221,Marker snowman biru,1,11,Buah,storage/app/public/assets/images/barangs/foto_1010301001000221.png
+11,1010301001000222,Balliner Hitam,1,15,Buah,storage/app/public/assets/images/barangs/foto_1010301001000222.png
+12,1010301001000223,Pulpen Pilot Frixion Merah,1,8,Buah,storage/app/public/assets/images/barangs/foto_1010301001000223.png
+13,1010301001000224,Pulpen 4 warna Joyko,1,4,Buah,storage/app/public/assets/images/barangs/foto_1010301001000224.png
 14,1010301001000226,Pentel Techniklick,1,5,Buah,
-15,1010301001000227,Refill Pilot Frixion Hitam,1, 4 ,Buah,backend/assets/images/barang/foto_1010301001000227.png
-16,1010301001000228,Pulpen joyko Q gel,1,9,Buah,backend/assets/images/barang/foto_1010301001000228.png
+15,1010301001000227,Refill Pilot Frixion Hitam,1, 4 ,Buah,storage/app/public/assets/images/barangs/foto_1010301001000227.png
+16,1010301001000228,Pulpen joyko Q gel,1,9,Buah,storage/app/public/assets/images/barangs/foto_1010301001000228.png
 17,1010301001000229,Refill pilot frixion merah,1,22,Buah,
-18,1010301002000194,Tinta stempel otomatis biru,1,2,Buah,backend/assets/images/barang/foto_1010301002000194.png
-19,1010301003000030,Binder Clips No.111,1,3,Buah,backend/assets/images/barang/foto_1010301003000030.png
-20,1010301003000031,Binder Clips No.200,1,26,Kotak,backend/assets/images/barang/foto_1010301003000031.png
-21,1010301003000032,Binder Clips No.260,1,38,Kotak,backend/assets/images/barang/foto_1010301003000032.png
-22,1010301003000085,Binder Clips No.155,1,24,Kotak,backend/assets/images/barang/foto_1010301003000085.png
+18,1010301002000194,Tinta stempel otomatis biru,1,2,Buah,storage/app/public/assets/images/barangs/foto_1010301002000194.png
+19,1010301003000030,Binder Clips No.111,1,3,Buah,storage/app/public/assets/images/barangs/foto_1010301003000030.png
+20,1010301003000031,Binder Clips No.200,1,26,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000031.png
+21,1010301003000032,Binder Clips No.260,1,38,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000032.png
+22,1010301003000085,Binder Clips No.155,1,24,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000085.png
 23,1010301003000126,Binder Clips No.155-Joyko,1,5,Kotak,
 24,1010301003000128,Binder Clips No.260-Joyko,1,1,Kotak,
-25,1010301003000191,Binder Clips No.105,1,3,Kotak,backend/assets/images/barang/foto_1010301003000191.png
-26,1010301003000192,Trigonal clips No.1,1,13,Kotak,backend/assets/images/barang/foto_1010301003000192.png
-27,1010301003000193,Trigonal Clips No.3,1,21,Kotak,backend/assets/images/barang/foto_1010301003000193.png
-28,1010301003000197,Penjepit Kertas No.5,1,15,Kotak,backend/assets/images/barang/foto_1010301003000197.png
-29,1010301004000014,Tip Ex,1,14,Kotak,backend/assets/images/barang/foto_1010301004000014.png
-30,1010301004000149,Penghapus Faber Castle,1,50,Buah,backend/assets/images/barang/foto_1010301004000149.png
+25,1010301003000191,Binder Clips No.105,1,3,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000191.png
+26,1010301003000192,Trigonal clips No.1,1,13,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000192.png
+27,1010301003000193,Trigonal Clips No.3,1,21,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000193.png
+28,1010301003000197,Penjepit Kertas No.5,1,15,Kotak,storage/app/public/assets/images/barangs/foto_1010301003000197.png
+29,1010301004000014,Tip Ex,1,14,Kotak,storage/app/public/assets/images/barangs/foto_1010301004000014.png
+30,1010301004000149,Penghapus Faber Castle,1,50,Buah,storage/app/public/assets/images/barangs/foto_1010301004000149.png
 31,1010301004000150,Tipex correction roll joyko,1,13,Buah,
-32,1010301006000120,Ordner Folio Bindex,1,24,Buah,backend/assets/images/barang/foto_1010301006000120.png
-33,1010301006000157,Ordner 1 2 folio bindex,1,8,Buah,backend/assets/images/barang/foto_1010301006000157.png
+32,1010301006000120,Ordner Folio Bindex,1,24,Buah,storage/app/public/assets/images/barangs/foto_1010301006000120.png
+33,1010301006000157,Ordner 1 2 folio bindex,1,8,Buah,storage/app/public/assets/images/barangs/foto_1010301006000157.png
 34,1010301006000209,Interx map kancing Folio joyko,1,2,Buah,
-35,1010301006000213,Map Hijau Snelhcter Logo BPS,1,321,buah,backend/assets/images/barang/foto_1010301006000213.png
+35,1010301006000213,Map Hijau Snelhcter Logo BPS,1,321,buah,storage/app/public/assets/images/barangs/foto_1010301006000213.png
 36,1010301006000217,Map Plastik Kancing warna-warni,1,435,Buah,
-37,1010301006000218,Map Jaring Resleting Warna-warni,1,228,Buah,backend/assets/images/barang/foto_1010301006000218.png
-38,1010301006000220,Map Lidah Arsip (Aplikasi Sekar),1,150,Buah,backend/assets/images/barang/foto_1010301006000220.png
+37,1010301006000218,Map Jaring Resleting Warna-warni,1,228,Buah,storage/app/public/assets/images/barangs/foto_1010301006000218.png
+38,1010301006000220,Map Lidah Arsip (Aplikasi Sekar),1,150,Buah,storage/app/public/assets/images/barangs/foto_1010301006000220.png
 39,1010301006000221,Map Folio custom BPS,1,478,Buah,
 40,1010301008000001,Cutter,1,2,Paket,
-41,1010301010000086,lakban hitam,1,14,Buah,backend/assets/images/barang/foto_1010301010000086.png
+41,1010301010000086,lakban hitam,1,14,Buah,storage/app/public/assets/images/barangs/foto_1010301010000086.png
 42,1010301010000205,Glue Stick Kenko,1,10,Buah,
-43,1010301010000206,Lakban Bening,1,6,Buah,backend/assets/images/barang/foto_1010301010000206.png
-44,1010301010000209,Double tape 3M,1,6,Buah,backend/assets/images/barang/foto_1010301010000209.png
-45,1010301010000210,Lakban coklat besar daimaru,1,5,Buah,backend/assets/images/barang/foto_1010301010000210.png
-46,1010301012000001,Stapler HD 10,1,21,Buah,backend/assets/images/barang/foto_1010301012000001.png
-47,1010301013000001,Isi Staples No.10,1,36,Buah,backend/assets/images/barang/foto_1010301013000001.png
-48,1010301013000002,Isi Staples No.3,1,23,Kotak,backend/assets/images/barang/foto_1010301013000002.png
-49,1010301999000214,Post it Sign Here,1,21,Kotak,backend/assets/images/barang/foto_1010301999000214.png
-50,1010301999000220,Memo Stick Joyko,1,17,Pad,backend/assets/images/barang/foto_1010301999000220.png
+43,1010301010000206,Lakban Bening,1,6,Buah,storage/app/public/assets/images/barangs/foto_1010301010000206.png
+44,1010301010000209,Double tape 3M,1,6,Buah,storage/app/public/assets/images/barangs/foto_1010301010000209.png
+45,1010301010000210,Lakban coklat besar daimaru,1,5,Buah,storage/app/public/assets/images/barangs/foto_1010301010000210.png
+46,1010301012000001,Stapler HD 10,1,21,Buah,storage/app/public/assets/images/barangs/foto_1010301012000001.png
+47,1010301013000001,Isi Staples No.10,1,36,Buah,storage/app/public/assets/images/barangs/foto_1010301013000001.png
+48,1010301013000002,Isi Staples No.3,1,23,Kotak,storage/app/public/assets/images/barangs/foto_1010301013000002.png
+49,1010301999000214,Post it Sign Here,1,21,Kotak,storage/app/public/assets/images/barangs/foto_1010301999000214.png
+50,1010301999000220,Memo Stick Joyko,1,17,Pad,storage/app/public/assets/images/barangs/foto_1010301999000220.png
 51,1010301999000221,Post it sign here,1,21,Kotak,
 52,1010301999000223,Box file bantex folio warna,1,3,Buah,
-53,1010301999000224,Deli pencabut isi staples,1,7,Buah,backend/assets/images/barang/foto_1010301999000224.png
-54,1010301999000226,Joyko pencabut stapler,1,4,Buah,backend/assets/images/barang/foto_1010301999000226.png
+53,1010301999000224,Deli pencabut isi staples,1,7,Buah,storage/app/public/assets/images/barangs/foto_1010301999000224.png
+54,1010301999000226,Joyko pencabut stapler,1,4,Buah,storage/app/public/assets/images/barangs/foto_1010301999000226.png
 55,1010302001000108,Kertas Paper One A4 75 Gr,1,71,Buah,
 56,1010302001000109,Kertas Paper One F4 75 Gr,1,64,Rim,
 57,1010302001000113,Kertas A3 Paper One,1,103,Rim,
-58,1010302002000098,lembar pengantar,1,48,Rim,backend/assets/images/barang/foto_1010302002000098.png
-59,1010302002000099,lembar disposisi,1,13,Buah,backend/assets/images/barang/foto_1010302002000099.png
-60,1010302002000106,Memo sticky notes 6 warna,1,6,Buah,backend/assets/images/barang/foto_1010302002000106.png
-61,1010302005000140,Amplop coklat kecil logo BPS,1,1170,Buah,backend/assets/images/barang/foto_1010302005000140.png
-62,1010302005000141,Amplop coklat folio logo BPS,1,720,Buah,backend/assets/images/barang/foto_1010302005000141.png
-63,1010304004000171,Epson T774 Black Ink Bottle,1,2,Buah,backend/assets/images/barang/foto_1010304004000171.png
-64,1010304004000173,Epson T6641 Black,1,10,Buah,backend/assets/images/barang/foto_1010304004000173.png
+58,1010302002000098,lembar pengantar,1,48,Rim,storage/app/public/assets/images/barangs/foto_1010302002000098.png
+59,1010302002000099,lembar disposisi,1,13,Buah,storage/app/public/assets/images/barangs/foto_1010302002000099.png
+60,1010302002000106,Memo sticky notes 6 warna,1,6,Buah,storage/app/public/assets/images/barangs/foto_1010302002000106.png
+61,1010302005000140,Amplop coklat kecil logo BPS,1,1170,Buah,storage/app/public/assets/images/barangs/foto_1010302005000140.png
+62,1010302005000141,Amplop coklat folio logo BPS,1,720,Buah,storage/app/public/assets/images/barangs/foto_1010302005000141.png
+63,1010304004000171,Epson T774 Black Ink Bottle,1,2,Buah,storage/app/public/assets/images/barangs/foto_1010304004000171.png
+64,1010304004000173,Epson T6641 Black,1,10,Buah,storage/app/public/assets/images/barangs/foto_1010304004000173.png
 65,1010304004000175,Epson T6643 Magenta,1,1,Buah,
 66,1010304004000176,Epson T6644 Yellow,1,1,Buah,
-67,1010304004000178,Epson 003 Cyan,1,4,Buah,backend/assets/images/barang/foto_1010304004000178.png
-68,1010304004000179,Epson 003 Magenta,1,4,Buah,backend/assets/images/barang/foto_1010304004000179.png
-69,1010304004000180,Epson 003 Yellow,1,4,Buah,backend/assets/images/barang/foto_1010304004000180.png
-70,1010304004000183,Tinta Hp Laser Jet 204A Black,1,1,Buah,backend/assets/images/barang/foto_1010304004000183.png
-71,1010304004000184,Tinta Hp Laser Jet 204A Cyan,1,2,Buah,backend/assets/images/barang/foto_1010304004000184.png
-72,1010304004000185,Tinta Hp Laser Jet 204A Yellow,1,2,Buah,backend/assets/images/barang/foto_1010304004000185.png
-73,1010304004000186,Tinta Hp Laser Jet 204A Magenta,1,3,Buah,backend/assets/images/barang/foto_1010304004000186.png
+67,1010304004000178,Epson 003 Cyan,1,4,Buah,storage/app/public/assets/images/barangs/foto_1010304004000178.png
+68,1010304004000179,Epson 003 Magenta,1,4,Buah,storage/app/public/assets/images/barangs/foto_1010304004000179.png
+69,1010304004000180,Epson 003 Yellow,1,4,Buah,storage/app/public/assets/images/barangs/foto_1010304004000180.png
+70,1010304004000183,Tinta Hp Laser Jet 204A Black,1,1,Buah,storage/app/public/assets/images/barangs/foto_1010304004000183.png
+71,1010304004000184,Tinta Hp Laser Jet 204A Cyan,1,2,Buah,storage/app/public/assets/images/barangs/foto_1010304004000184.png
+72,1010304004000185,Tinta Hp Laser Jet 204A Yellow,1,2,Buah,storage/app/public/assets/images/barangs/foto_1010304004000185.png
+73,1010304004000186,Tinta Hp Laser Jet 204A Magenta,1,3,Buah,storage/app/public/assets/images/barangs/foto_1010304004000186.png
 74,1010304004000189,Original Tinta Epson T7741,1,13,Buah,
 75,1010304004000190,Original Tinta Epson T6642 Cyan,1,16,Buah,
 76,1010304004000191,Original Tinta Epson T6643 Magenta,1,15,Buah,
 77,1010304004000192,Original Tinta Epson T6644 Yellow,1,15,Buah,
 78,1010304004000194,CF230A Compatible,1,9,Buah,
 79,1010304004000195,CF289A Original,1,5,Buah,
-80,1010304004000196,CF280A Compatible,1,7,Buah,backend/assets/images/barang/foto_1010304004000196.png
-81,1010304004000197,Tinta Epson 008 Black,1,18,Buah,backend/assets/images/barang/foto_1010304004000197.png
-82,1010304004000198,Tinta Epson 008 Yellow,1,18,Buah,backend/assets/images/barang/foto_1010304004000198.png
-83,1010304004000199,Tinta Epson 008 Cyan,1,17,Buah,backend/assets/images/barang/foto_1010304004000199.png
-84,1010304004000200,Tinta Epson 008 Magenta,1,17,Buah,backend/assets/images/barang/foto_1010304004000200.png
-85,1010304010000001,Mouse,2,14,Buah,backend/assets/images/barang/foto_1010304010000001.png
-86,1010304999000118,Maintenance Box L15160,2,2,Buah,backend/assets/images/barang/foto_1010304999000118.png
-87,1010304999000119,Maintenance Box L-1455,2,3,Buah,backend/assets/images/barang/foto_1010304999000119.png
-88,1010304999000123,Wireless keyboard numerik,2,6,Buah,backend/assets/images/barang/foto_1010304999000123.png
-89,1010304999000124,wireless keyboard biasa,2,6,Buah,backend/assets/images/barang/foto_1010304999000124.png
+80,1010304004000196,CF280A Compatible,1,7,Buah,storage/app/public/assets/images/barangs/foto_1010304004000196.png
+81,1010304004000197,Tinta Epson 008 Black,1,18,Buah,storage/app/public/assets/images/barangs/foto_1010304004000197.png
+82,1010304004000198,Tinta Epson 008 Yellow,1,18,Buah,storage/app/public/assets/images/barangs/foto_1010304004000198.png
+83,1010304004000199,Tinta Epson 008 Cyan,1,17,Buah,storage/app/public/assets/images/barangs/foto_1010304004000199.png
+84,1010304004000200,Tinta Epson 008 Magenta,1,17,Buah,storage/app/public/assets/images/barangs/foto_1010304004000200.png
+85,1010304010000001,Mouse,2,14,Buah,storage/app/public/assets/images/barangs/foto_1010304010000001.png
+86,1010304999000118,Maintenance Box L15160,2,2,Buah,storage/app/public/assets/images/barangs/foto_1010304999000118.png
+87,1010304999000119,Maintenance Box L-1455,2,3,Buah,storage/app/public/assets/images/barangs/foto_1010304999000119.png
+88,1010304999000123,Wireless keyboard numerik,2,6,Buah,storage/app/public/assets/images/barangs/foto_1010304999000123.png
+89,1010304999000124,wireless keyboard biasa,2,6,Buah,storage/app/public/assets/images/barangs/foto_1010304999000124.png
 90,1010399999000342,Kardus Box Batching Uk 36x26x10 cm,3,920,Buah,
-91,1010399999000350,Clipboard Kayu,3,17,Buah,backend/assets/images/barang/foto_1010399999000350.png
-92,1010399999000434,Ballpoint Peserta FKP,3,3225,Buah,backend/assets/images/barang/foto_1010399999000434.png
-93,1010399999000530,Box Arsip Bag Umum,3,1,Buah,backend/assets/images/barang/foto_1010399999000530.png
+91,1010399999000350,Clipboard Kayu,3,17,Buah,storage/app/public/assets/images/barangs/foto_1010399999000350.png
+92,1010399999000434,Ballpoint Peserta FKP,3,3225,Buah,storage/app/public/assets/images/barangs/foto_1010399999000434.png
+93,1010399999000530,Box Arsip Bag Umum,3,1,Buah,storage/app/public/assets/images/barangs/foto_1010399999000530.png
