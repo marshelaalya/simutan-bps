@@ -376,8 +376,12 @@ public function dataForIndex()
     public function exportPemasukan(Request $request)
     {
         // Dapatkan tanggal dari request
-        $startDate = $request->get('start_date');
-        $endDate = $request->get('end_date');
+        $startDate = Carbon::parse($request->get('start_date'));
+        $endDate = Carbon::parse($request->get('end_date'));
+        
+        // Format tanggal menjadi nama bulan dan tahun dalam bahasa Indonesia
+        $startDateFormatted = $startDate->translatedFormat('j F Y');
+        $endDateFormatted = $endDate->translatedFormat('j F Y');
         
         // Tentukan path file Excel yang akan diakses di storage/excel
         $filePath = storage_path('app/excel/Laporan_Rincian_Persediaan.xlsx');
@@ -390,7 +394,8 @@ public function dataForIndex()
             
             // Periksa apakah file sementara berhasil dibuat dan siap diunduh
             if ($updatedFilePath) {
-                $filename = "Laporan_Rincian_Persediaan_{$startDate}_{$endDate}.xlsx";
+                // Gunakan format tanggal yang diinginkan dalam nama file
+                $filename = "Laporan_Rincian_Persediaan_{$startDateFormatted}_{$endDateFormatted}.xlsx";
                 return response()->download($updatedFilePath, $filename)->deleteFileAfterSend(true);
             } else {
                 return redirect()->back()->with('error', 'Gagal membuat file untuk diunduh.');
@@ -399,4 +404,5 @@ public function dataForIndex()
             return redirect()->back()->with('error', 'File Excel tidak ditemukan!');
         }
     }
+    
 }
