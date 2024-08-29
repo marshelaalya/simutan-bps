@@ -56,7 +56,7 @@
                                 </div>
                             </a>
                         @empty
-                            <p class="text-center">No new notifications</p>
+                            <p class="text-center">Tidak ada notifikasi terbaru</p>
                         @endforelse
                     </div>
                     
@@ -111,9 +111,12 @@
         </div>
     </div>
 </header>
-
 <!-- Styles for Notification Dropdown -->
 <style>
+    .notification-menu {
+        width: 500px; /* Atur lebar notifikasi menjadi 500px */
+    }
+
     .notification-list a {
         display: flex;
         align-items: center;
@@ -139,17 +142,6 @@
         height: 100%;
         font-size: 16px;
     }
-
-    .dropdown-menu.notification-menu {
-    width: 500px;
-    max-height: 400px;
-    overflow-y: auto;
-    word-wrap: break-word;
-}
-
-.text-wrap {
-    white-space: normal; /* Membuat teks membungkus ke baris berikutnya */
-}
 </style>
 
 <script>

@@ -115,14 +115,14 @@ class UserController extends Controller
 {
     $user = User::findOrFail($id);
 
-    // Validate the input including files
+    // Validasi input termasuk file
     $request->validate([
         'role' => 'required|in:admin,supervisor,pegawai',
-        'image' => 'nullable|image|mimes:png|max:2048',
-        'signature' => 'nullable|image|mimes:png|max:2048',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'signature' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-    // Update user role
+    // Update user role and other fields
     $user->update([
         'role' => strtolower($request->role),
         'panggilan' => $request->panggilan,
@@ -131,18 +131,20 @@ class UserController extends Controller
     // Handle file upload for photo
     if ($request->hasFile('image')) {
         $image = $request->file('image');
-        $imagePath = $image->storeAs('public/assets/images/users', 'foto_' . $user->id . '.png');
+        $extension = $image->getClientOriginalExtension(); // Mendapatkan ekstensi file asli
+        $imagePath = $image->storeAs('public/backend/assets/images/users', 'foto_' . $user->id . '.' . $extension);
         $user->update([
-            'foto' => str_replace('public/', 'backend/', $imagePath)
+            'foto' => str_replace('public/', '', $imagePath)
         ]);
     }
 
     // Handle file upload for signature
     if ($request->hasFile('signature')) {
         $signature = $request->file('signature');
-        $signaturePath = $signature->storeAs('public/assets/images/users', 'ttd_' . $user->id . '.png');
+        $extension = $signature->getClientOriginalExtension(); // Mendapatkan ekstensi file asli
+        $signaturePath = $signature->storeAs('public/backend/assets/images/users', 'ttd_' . $user->id . '.' . $extension);
         $user->update([
-            'ttd' => str_replace('public/', 'backend/', $signaturePath)
+            'ttd' => str_replace('public/', '', $signaturePath)
         ]);
     }
 

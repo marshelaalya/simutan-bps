@@ -93,12 +93,11 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('permintaan/update-status/{id}', 'PermintaanUpdateStatus')->name('permintaan.updateStatus');
         Route::get('/permintaan/saya', 'PermintaanSaya')->name('permintaan.saya');
         Route::get('/permintaan/{id}/edit', 'PermintaanEdit')->name('permintaan.edit');
-        Route::put('/permintaan/update/{id}', 'PermintaanUpdate')->name('permintaan.update');
+        Route::put('/permintaan/{id}', 'PermintaanUpdate')->name('permintaan.update');
         Route::get('/permintaan/delete/{id}', 'PermintaanDelete')->name('permintaan.delete');
         Route::get('/permintaan/print/{id}', 'PermintaanPrint')->name('permintaan.print');
         
         Route::get('permintaan/data', [PermintaanController::class, 'getPermintaanData'])->name('permintaan.data');
-        Route::resource('permintaan', PermintaanController::class);
     });
 
     Route::controller(KelompokController::class)->group(function () {

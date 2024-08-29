@@ -64,18 +64,16 @@ class DashboardController extends Controller
         ->limit(3) // Batasi jumlah pengguna yang ditampilkan, misalnya 5 pengguna teratas
         ->get();
 
-if ($user->role === 'admin') {
-    $permintaans = $query->get();
-    return view('admin.index', compact('user','permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
-} elseif ($user->role === 'pegawai') {
-    $permintaans = $query->where('user_id', $user->id)->get();
-    return view('pegawai.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
-} else {
-    $permintaans = $query->get();
-    return view('supervisor.index', compact('user','permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
-}
-
-return redirect()->route('home');
+        if ($user->role === 'admin') {
+            $permintaans = $query->get();
+            return view('admin.index', compact('user','permintaans', 'barangs', 'kelompoks', 'kelompokWithMostBarangs', 'topBarangs', 'notifications', 'unreadCount', 'topUsers'));
+        } elseif ($user->role === 'pegawai') {
+            $permintaans = $query->where('user_id', $user->id)->get();
+            return view('pegawai.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
+        } else {
+            $permintaans = $query->where('user_id', $user->id)->get();
+            return view('supervisor.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
+        }
 }
    
 

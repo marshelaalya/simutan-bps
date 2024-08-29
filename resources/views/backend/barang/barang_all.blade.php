@@ -525,43 +525,43 @@
         });
 
         $(document).on('click', '.delete-btn', function(e) {
-    e.preventDefault();
-    var url = $(this).attr('href');
-    Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data barang ini akan dihapus!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    Swal.fire(
-                        'Dihapus!',
-                        response.message,
-                        'success'
-                    );
-                    // Reload table data or remove row from table
-                    table.ajax.reload();
-                },
-                error: function(response) {
-                    Swal.fire(
-                        'Error!',
-                        'Data barang gagal dihapus.',
-                        'error'
-                    );
+            e.preventDefault();
+            var url = $(this).attr('href');
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data barang ini akan dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Dihapus!',
+                                response.message,
+                                'success'
+                            );
+                            // Reload table data or remove row from table
+                            table.ajax.reload();
+                        },
+                        error: function(response) {
+                            Swal.fire(
+                                'Error!',
+                                'Data barang gagal dihapus.',
+                                'error'
+                            );
+                        }
+                    });
                 }
             });
-        }
-    });
 
             
 

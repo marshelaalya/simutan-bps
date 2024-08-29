@@ -173,12 +173,16 @@ public function dataForIndex()
         // Handle file upload
         if ($request->hasFile('foto')) {
             $file = $request->file('foto');
-            $fileName = 'backend/assets/images/barang/foto_' . $request->kode_barang . '.png'; // Generate file name
-
-            $barang->foto_barang = $fileName; // Save file name in database
+            $extension = $file->getClientOriginalExtension(); // Mendapatkan ekstensi file asli (jpg, jpeg, png, dll)
+            $fileName = 'foto_' . $request->kode_barang . '.' . $extension; // Gunakan ekstensi asli
+            $filePath = $file->storeAs('public/backend/assets/images/barang', $fileName); // Simpan file
+    
+            $filePath = str_replace('public/', '', $filePath); // Update path relatif
+            $barang->foto_barang = $filePath; // Simpan path file di database
+        } else {
+            $barang->foto_barang = null; // Jika tidak ada foto, simpan nilai null
         }
         
-
         $barang->save();
 
         // Simpan stok awal bulan
@@ -197,8 +201,6 @@ public function dataForIndex()
 
         return redirect()->route('barang.all')->with($notification);
     }
-
-
 
     public function KelompokStore(Request $request){
         Kelompok::insert([
@@ -281,6 +283,7 @@ public function dataForIndex()
         ]);
 
         $barang_id = $request->id;
+        $kode_barang = $request->kode_barang;
         $satuan = $request->satuan;
 
         // Ambil data barang sebelum di-update
@@ -303,6 +306,16 @@ public function dataForIndex()
                     $satuan = $satuanBaru;
                 }
             }
+        }
+
+         // Handle file upload for photo
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $extension = $foto->getClientOriginalExtension(); // Mendapatkan ekstensi file asli
+            $fotoPath = $foto->storeAs('public/backend/assets/images/barang', 'foto_' . $kode_barang . '.' . $extension);
+            $fotoPath = str_replace('public/', '', $fotoPath); // Menghapus 'public/' dari path untuk penyimpanan yang benar
+        } else {
+            $fotoPath = $barangLama->foto_barang; // Jika tidak ada foto baru, gunakan yang lama
         }
 
         // Update the barang record

@@ -77,7 +77,7 @@
                                         <p class="text-success">Foto saat ini:</p>
                                         <div class="mt-2">
                                             <!-- Menggunakan path lengkap dari barang->foto -->
-                                            <img src="{{ asset($barang->foto_barang) }}" alt="Foto Barang" class="img-fluid" style="max-width: 200px;">
+                                            <img src="{{ asset('storage/' . $barang->foto_barang) }}" alt="Foto Barang" class="img-fluid" style="max-width: 200px;">
                                         </div>
                                     @else
                                         <p class="text-warning">Belum ada foto</p>

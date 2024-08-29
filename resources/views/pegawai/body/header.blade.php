@@ -25,7 +25,6 @@
             <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect" id="vertical-menu-btn">
                 <i class="ri-menu-2-line align-middle"></i>
             </button>
-
         </div>
 
         <div class="d-flex">
@@ -36,7 +35,7 @@
                     <i class="ri-notification-3-line"></i>
                     <span class="badge bg-danger">{{ session('unreadCount', 0) }}</span>
                 </button>
-                <div class="dropdown-menu dropdown-menu-end">
+                <div class="dropdown-menu dropdown-menu-end notification-menu">
                     <h6 class="dropdown-header">Notifications</h6>
                     <div class="notification-list">
                         @forelse (session('notifications', []) as $notification)
@@ -56,10 +55,9 @@
                                 </div>
                             </a>
                         @empty
-                            <p class="text-center">No new notifications</p>
+                            <p class="text-center">Tidak ada notifikasi terbaru</p>
                         @endforelse
                     </div>
-                    
                     <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">Lihat Selengkapnya</a>
                 </div>
             </div>
@@ -101,10 +99,7 @@
                     <!-- item-->
                     <a class="dropdown-item" href="{{ route('pegawai.profile') }}"><i class="ri-user-line align-middle me-1"></i> Profile</a>
                     <a class="dropdown-item" href="{{ route('change.password') }}"><i class="ri-wallet-2-line align-middle me-1"></i> Change Password</a>
-                    {{-- <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-                    <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a> --}}
                     <div class="dropdown-divider"></div>
-
                     <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                 </div>
             </div>
@@ -112,9 +107,12 @@
     </div>
 </header>
 
-
 <!-- Styles for Notification Dropdown -->
 <style>
+    .notification-menu {
+        width: 500px; /* Atur lebar notifikasi menjadi 500px */
+    }
+
     .notification-list a {
         display: flex;
         align-items: center;
