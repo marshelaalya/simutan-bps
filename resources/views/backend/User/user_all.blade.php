@@ -1,6 +1,12 @@
 @extends('admin.admin_master')
 @section('admin')
 
+<head>
+    <title>
+        Semua Pengguna | SIMUTAN
+    </title>
+</head>
+
 <style>
 /* Mengatur elemen pencarian dan dropdown filter */
 #datatable_filter {

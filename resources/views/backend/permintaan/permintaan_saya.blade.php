@@ -5,6 +5,16 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<head>
+    <title>
+        Permintaan Saya | SIMUTAN
+    </title>
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <style>
     .filter-buttons {
         display: flex;
@@ -283,6 +293,12 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                     'border-radius': '.25rem',
                     'border': '1px solid #1156bf',
                 });
+
+                $('.custom-select').each(function() {
+                    $(this).css({
+                    'padding': '0.1rem 1.75rem .375rem .75rem',
+                });
+            });
     
                 var observer = new MutationObserver(function(mutations) {
                     mutations.forEach(function(mutation) {

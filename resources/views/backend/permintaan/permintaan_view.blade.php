@@ -5,6 +5,12 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<head>
+    <title>
+        Lihat Permintaan | SIMUTAN
+    </title>
+</head>
+
 
 <div class="page-content">
     <div class="container-fluid">

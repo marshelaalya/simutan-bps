@@ -1,5 +1,12 @@
 @extends('supervisor.supervisor_master')
 @section('supervisor')
+
+<head>
+    <title>
+        Edit Profile | SIMUTAN
+    </title>
+</head>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div class="page-content">

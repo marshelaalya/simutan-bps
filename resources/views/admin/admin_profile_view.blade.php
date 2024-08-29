@@ -1,6 +1,12 @@
 @extends('admin.admin_master')
 @section('admin')
 
+<head>
+    <title>
+        Lihat Profile | SIMUTAN
+    </title>
+</head>
+
 <div class="page-content">
     <div class="container-fluid">
         <div class="row">

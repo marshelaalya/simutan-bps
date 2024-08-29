@@ -1,6 +1,12 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
 @section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
+<head>
+    <title>
+        Semua Permintaan | SIMUTAN
+    </title>
+</head>
+
 <style>
 .filter-buttons {
     display: flex;

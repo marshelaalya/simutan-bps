@@ -1,6 +1,12 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
 @section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
+<head>
+    <title>
+        Approve Permintaan | SIMUTAN
+    </title>
+</head>
+
 !-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 

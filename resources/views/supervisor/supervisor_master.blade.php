@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Dashboard Supervisor | SIMUTAN</title>
+    {{-- <title>SIMUTAN</title> --}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Premium Multipurpose supervisor & Dashboard Template" name="description" />
     <meta content="Themesdesign" name="author" />
 
     <!-- App favicon -->
@@ -32,11 +32,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <link rel="stylesheet" href="{{ asset('vendor/libs/bs-stepper/bs-stepper.css') }}" />
 
-    <!-- SweetAlert2 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-
-
     <style>
         .table-wrapper {
             overflow-x: auto;
@@ -45,10 +40,60 @@
             border-collapse: collapse !important;
             width: 100%;
         }
+        
+        /* Spinner Styles */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure spinner is above all content */
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner img {
+            width: 100px; /* Adjust size as needed */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pulsing-dot {
+        width: 50px;
+        height: 50px;
+        /* background: #3498db; */
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    
     </style>
 </head>
 
 <body data-topbar="dark">
+
+    <!-- Loading Spinner -->
+    <div id="loading">
+        <div class="pulsing-dot">
+            <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
+        </div>
+    </div>
 
     <!-- Begin page -->
     <div id="layout-wrapper">
@@ -81,7 +126,6 @@
     <script src="{{ asset('backend/assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/node-waves/waves.min.js') }}"></script>
-    
 
     {{-- <script src="{{ asset('backend/assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -122,8 +166,6 @@
     <!-- Handle Bars JS -->
     <script src="{{ asset('backend/assets/js/handlebars.js') }}"></script>
 
-
-
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
@@ -148,6 +190,16 @@
 
     <!-- Notify JS (Optional) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify.js/2.0.0/notify.min.js" integrity="sha512-iy8/ErLJUuqWbu30yUSCxXtE3FCDZi3y5op0Duqdp7vtpeh1E6ZyAPnRS+OrJHddh4uP30oYpwNt7TXPbmP5lQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Custom JavaScript to Handle Spinner -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide the loading spinner
+            document.getElementById('loading').style.display = 'none';
+            // Show the main content
+            document.querySelector('#layout-wrapper').style.display = 'block';
+        });
+    </script>
 
 </body>
 

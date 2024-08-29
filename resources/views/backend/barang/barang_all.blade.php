@@ -1,7 +1,16 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : (auth()->user()->role === 'supervisor' ? 'supervisor.supervisor_master' : 'pegawai.pegawai_master'))
 @section(auth()->user()->role === 'admin' ? 'admin' : (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<head>
+    <title>
+        Persediaan Barang | SIMUTAN
+    </title>
+</head>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
     .table-actions {
@@ -397,7 +406,7 @@
                 { data: 'qty_item', name: 'qty_item', className: 'text-center' },
                 { data: 'satuan', name: 'satuan', className: 'text-center' },
             ],
-            dom: '<"d-flex justify-content-between align-items-center"<"#exportDropdown">f>rtip',
+            // dom: 'lfrtip',
             buttons: [
                 {
                     text: '<i class="ri-add-circle-fill align-items-center"></i> Tambah Barang',
@@ -421,47 +430,6 @@
                 // $('.dt-buttons button').addClass('form-select');
                 // $('span').addClass('d-flex align-items-center');
 
-                $('#exportDropdown').before(`
-        <div class="d-flex justify-content-between">
-            <div style="margin-right: 0.7rem">
-                <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
-                    BA Stock Opname <i class="ti ti-download font-size-14"></i>
-                    </button>
-                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-                        <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
-                            <div class="mb-3">
-                                <label for="stockOpnameDate" class="form-label" style="font-size: .7875rem">Pilih Tanggal:</label>
-                                <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
-                            </div>
-                            <button type="submit" class="btn btn-sm btn-info">Export</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div>
-    <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
-            Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
-        </button>
-        <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-            <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
-                <div class="mb-3">
-                    <label for="startDate" class="form-label" style="font-size: .7875rem">Tanggal Mulai:</label>
-                    <input type="date" class="form-control" id="startDate" name="start_date" required>
-                </div>
-                <div class="mb-3">
-                    <label for="endDate" class="form-label" style="font-size: .7875rem">Tanggal Akhir:</label>
-                    <input type="date" class="form-control" id="endDate" name="end_date" required>
-                </div>
-                <button type="submit" class="btn btn-sm btn-info">Export</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-        </div>
-    `);
     
                 // Styling untuk select
                 $('.form-select').each(function() {
@@ -503,6 +471,19 @@
                     });
                 });
 
+                $('select[name="datatable_length"]').css({
+                    'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
+                    'height': '1.67rem',
+                    'border-radius': '.25rem',
+                    'border': '1px solid #1156bf',
+                });
+
+                $('.custom-select').each(function() {
+                    $(this).css({
+                    'padding': '0.1rem 1.75rem .375rem .75rem',
+                });
+            });
+
                 var observer = new MutationObserver(function(mutations) {
                                 mutations.forEach(function(mutation) {
                                     $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
@@ -522,6 +503,7 @@
             $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
             $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
             $('.form-control').removeClass('form-control-sm');
+            $('.custom-select').removeClass('custom-select-sm p-0');
         });
 
         $(document).on('click', '.delete-btn', function(e) {
