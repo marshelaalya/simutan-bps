@@ -8,9 +8,6 @@
 </head>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
     .table-actions {
@@ -65,9 +62,11 @@
                         
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h3 class="card-title mb-0">Persediaan Barang</h3>
+                            @if(Auth::user()->role == 'admin')
                             <a href="{{ route('barang.add') }}" class="btn btn-info waves-effect waves-light ml-3">
                                 <i class="mdi mdi-plus-circle"></i> Tambah Barang
-                            </a>                            
+                            </a>                 
+                            @endif           
                         </div>
 
                         

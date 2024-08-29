@@ -5,6 +5,10 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <head>
     <title>
         Dashboard | SIMUTAN
@@ -494,7 +498,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                                                 <div class="swiper-slide">
                                                     <div class="card-slider" style="padding: 15px">
                                                         @if($item->foto_barang)
-                                                        <img src="{{ $item->foto_barang }}" class="card-slider-img-top" alt="Gambar Barang">
+                                                        <img src="{{asset($item->foto_barang) }}" class="card-slider-img-top" alt="Gambar Barang">
                                                         @else
                                                         <img src="http://127.0.0.1:8000/upload/no_image.jpg" class="card-slider-img-top" alt="No Image">
                                                     @endif

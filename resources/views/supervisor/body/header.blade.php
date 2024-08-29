@@ -68,6 +68,7 @@
 
         </div>
 
+        <div class="d-flex">
         <!-- Notification Dropdown -->
         <div class="dropdown d-inline-block ms-1">
             <button type="button" class="btn header-item noti-icon waves-effect" id="notification-dropdown"
