@@ -95,7 +95,7 @@ public function BarangAllAct(Request $request)
                     data-nama="' . $row->nama . '" 
                     style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: green; padding: 15px;" 
                     data-tooltip="Tambah Stok Barang">
-                <i class="ti ti-plus font-size-20 align-middle"></i>
+                <i class="ti ti-circle-plus font-size-20 align-middle"></i>
             </button>
                     <a href="'.route('barang.edit', $row->id).'" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Barang">
                         <i class="ti ti-edit font-size-20 align-middle"></i>
@@ -177,6 +177,7 @@ public function dataForIndex()
 
             $barang->foto_barang = $fileName; // Save file name in database
         }
+        
 
         $barang->save();
 

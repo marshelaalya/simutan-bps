@@ -192,7 +192,7 @@
         <div class="d-flex justify-content-between">
             <div style="margin-right: 0.7rem">
                 <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
                     BA Stock Opname <i class="ti ti-download font-size-14"></i>
                     </button>
                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
@@ -208,7 +208,7 @@
             </div>
             <div>
     <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
             Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
         </button>
         <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
@@ -425,7 +425,7 @@
         <div class="d-flex justify-content-between">
             <div style="margin-right: 0.7rem">
                 <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
                     BA Stock Opname <i class="ti ti-download font-size-14"></i>
                     </button>
                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
@@ -441,7 +441,7 @@
             </div>
             <div>
     <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #b92e2e; background-color:#fee2e2; border: 1px solid #bf1111">
+                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
             Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
         </button>
         <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
