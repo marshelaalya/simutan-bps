@@ -132,16 +132,16 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
         $sheet->getStyle('A7')->getFont()->setBold(true)->setSize(12)->setUnderline(true)->setName('Cambria');
         $sheet->getStyle('A7')->getAlignment()->setHorizontal('center');
 
-        // Mengambil tanggal dan mengkonversinya ke format yang diinginkan
-        $lastDayOfMonth = Carbon::now()->endOfMonth();
-        $dayName = $this->getDayName($lastDayOfMonth);
-        $day = $this->convertNumberToWords($lastDayOfMonth->day);
-        $monthName = $lastDayOfMonth->locale('id')->isoFormat('MMMM');
-        $year = 'Dua Ribu ' . $this->convertNumberToWords($lastDayOfMonth->year % 1000);
+        // Mengambil tanggal yang dipilih dan mengkonversinya ke format yang diinginkan
+        $selectedDate = $this->tanggal;
+        $dayName = $this->getDayName($selectedDate);
+        $day = $this->convertNumberToWords($selectedDate->day);
+        $monthName = $selectedDate->locale('id')->isoFormat('MMMM');
+        $year = 'Dua Ribu ' . $this->convertNumberToWords($selectedDate->year % 1000);
         $dateInWords = "{$dayName} {$day} {$monthName} tahun {$year}";
 
         $sheet->mergeCells('A8:J8');
-        $sheet->setCellValue('A8', "Pada hari ini, {$dateInWords}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan {$monthName} Tahun Anggaran {$lastDayOfMonth->year} dengan hasil rincian sebagai berikut:");
+        $sheet->setCellValue('A8', "Pada hari ini, {$dateInWords}, kami telah melaksanakan opname fisik saldo barang persediaan Bulan {$monthName} Tahun Anggaran {$selectedDate->year} dengan hasil rincian sebagai berikut:");
         $sheet->getStyle('A8')->getFont()->setSize(12)->setName('Cambria');
         $sheet->getStyle('A8')->getAlignment()->setWrapText(true);
 
@@ -341,7 +341,7 @@ class BarangExport implements FromCollection, WithHeadings, WithDrawings, WithCu
         $approvalStartRow = $dataEndRow + 4;
 
         // Set approval text before the stamp and signature
-        $formattedDate = $lastDayOfMonth->isoFormat('D MMMM Y'); // Format tanggal dalam bahasa Indonesia
+        $formattedDate = $selectedDate->isoFormat('D MMMM Y'); // Format tanggal dalam bahasa Indonesia
 
         // Gunakan tanggal tersebut pada cell yang diinginkan
         $sheet->setCellValue("B$approvalStartRow", "Disetujui tanggal, $formattedDate");

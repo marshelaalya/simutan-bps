@@ -251,7 +251,7 @@
             Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
         </button>
         <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-            <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+            <form id="stockOpnameForm" action="{{ route('barang.pemasukan.export') }}" method="GET">
                 <div class="mb-3">
                     <label for="startDate" class="form-label">Tanggal Mulai:</label>
                     <input type="date" class="form-control" id="startDate" name="start_date" required>

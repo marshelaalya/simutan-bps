@@ -387,24 +387,30 @@ public function dataForIndex()
     }
     
 
-    public function exportPemasukan()
+    public function exportPemasukan(Request $request)
     {
-        // Tentukan path file Excel yang akan diakses
-        $filePath = realpath(resource_path('excel/Laporan_Rincian_Persediaan.xlsx'));
-    
+        // Dapatkan tanggal dari request
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        // Tentukan path file Excel yang akan diakses di storage/excel
+        $filePath = storage_path('app/excel/Laporan_Rincian_Persediaan.xlsx');
+        
         // Pastikan file Excel benar-benar ada
         if (file_exists($filePath)) {
             // Panggil fungsi untuk memproses file Excel
             $exporter = new PemasukanExport();
-            $newFilePath = $exporter->export($filePath);
-    
-            // Tentukan nama file untuk di-download
-            $filename = "Laporan_Rincian_Persediaan_Updated.xlsx";
-    
-            // Return download file
-            return response()->download($newFilePath, $filename)->deleteFileAfterSend(true);
+            $updatedFilePath = $exporter->export($filePath, $startDate, $endDate);
+            
+            // Periksa apakah file sementara berhasil dibuat dan siap diunduh
+            if ($updatedFilePath) {
+                $filename = "Laporan_Rincian_Persediaan_{$startDate}_{$endDate}.xlsx";
+                return response()->download($updatedFilePath, $filename)->deleteFileAfterSend(true);
+            } else {
+                return redirect()->back()->with('error', 'Gagal membuat file untuk diunduh.');
+            }
+        } else {
+            return redirect()->back()->with('error', 'File Excel tidak ditemukan!');
         }
-    
-        return redirect()->back()->with('error', 'File Excel tidak ditemukan!');
-    }    
+    }
 }

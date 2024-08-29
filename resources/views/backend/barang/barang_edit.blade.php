@@ -13,7 +13,7 @@
 
                         <form method="post" action="{{ route('barang.update', $barang->id) }}" id="myForm" enctype="multipart/form-data">
                             @csrf
-                            @method('PUT') <!-- Menggunakan method PUT untuk update -->
+                            @method('POST') <!-- or use PATCH -->
 
                             <input type="hidden" name="id" value="{{ $barang->id }}">
                             <input type="hidden" name="existing_foto" value="{{ $barang->foto }}"> <!-- Menyimpan nama foto yang ada -->
