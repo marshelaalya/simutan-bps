@@ -85,20 +85,6 @@ public function BarangAllAct(Request $request)
             ->addColumn('foto_barang', function ($row) {
                 return $row->foto_barang ? '<img src="' . asset('storage/' . $row->foto_barang) . '" alt="Foto Barang" style="width: 50px; height: 50px;">' : 'Tidak ada foto';
             })
-            // ->addColumn('action', function ($row) {
-            //     return '
-            //         <div class="table-actions">
-            //             <button class="btn bg-success btn-sm add-stock-btn" data-bs-toggle="modal" data-bs-target="#addStockModal" data-id="' . $row->id . '" data-nama="' . $row->nama . '">
-            //                 <i class="fas fa-plus" style="color: #397e48"></i>
-            //             </button>
-            //             <a href="' . route('barang.edit', $row->id) . '" class="btn bg-warning btn-sm">
-            //                 <i class="fas fa-edit" style="color: #ca8a04"></i>
-            //             </a>
-            //             <a href="' . route('barang.delete', $row->id) . '" class="btn bg-danger btn-sm">
-            //                 <i class="fas fa-trash-alt text-danger"></i>
-            //             </a>
-            //         </div>';
-            // })
             ->addColumn('action', function($row){
                 return '<div class="table-actions" style="text-align: center; vertical-align: middle;">
                 <button class="btn btn-sm add-stock-btn hover:bg-success" 
@@ -113,7 +99,7 @@ public function BarangAllAct(Request $request)
                     <a href="'.route('barang.edit', $row->id).'" class="btn btn-sm hover:bg-warning" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #e1a017; padding: 15px;" data-tooltip="Edit Barang">
                         <i class="ti ti-edit font-size-20 align-middle"></i>
                     </a>
-                    <a href="'.route('barang.delete', $row->id).'" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Barang">
+                    <a href="'.route('barang.delete', $row->id).'" class="btn btn-sm text-danger hover:bg-danger delete-btn" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Barang">
                         <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
                     </a>
                    

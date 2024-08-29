@@ -5,10 +5,6 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <style>
     .step-indicator {
         display: flex;
@@ -520,6 +516,28 @@
             $('#req_qty').val('');
             $('#current_qty').text('');
             validateForm();
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('submit_btn').addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah submit form default
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Pastikan permintaan sudah sesuai!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            confirmButtonText: 'Ya, kirim!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika user mengkonfirmasi, submit form
+                document.getElementById('your_form_id').submit();
+            }
         });
     });
 </script>
