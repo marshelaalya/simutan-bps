@@ -288,8 +288,6 @@
     $(document).ready(function() {
         var availableQty = 0;
         var barang_satuan = '';
-        var today = new Date().toISOString().split('T')[0];
-        $('#date').attr('min', today);
 
         function validateForm() {
             var date = $('#date').val();

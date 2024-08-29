@@ -1,10 +1,13 @@
 @extends(auth()->user()->role === 'admin' ? 'admin.admin_master' : 'supervisor.supervisor_master')
 @section(auth()->user()->role === 'admin' ? 'admin' : 'supervisor')
 
+!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-
 
 <div class="page-content">
     <div class="container-fluid">
@@ -133,11 +136,11 @@
                         <!-- Approval Actions -->
                         <div class="mt-4 d-flex justify-content-end">
                             <!-- Form Approval -->
-                            <form action="{{ route('permintaan.updateStatus', $permintaan->id) }}" method="POST" style="display: inline;">
+                            <form id="approveForm" action="{{ route('permintaan.updateStatus', $permintaan->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('PATCH')
                                 <input type="hidden" name="status" value="approved">
-                                <button type="submit" class="btn btn-success me-2">Approve</button>
+                                <button type="button" class="btn btn-success me-2" id="approveButton">Approve</button>
                             </form>
 
                             <!-- Button to trigger reject modal -->
@@ -152,7 +155,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('permintaan.updateStatus', $permintaan->id) }}" method="POST">
+                                            <form id="rejectForm" action="{{ route('permintaan.updateStatus', $permintaan->id) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <input type="hidden" name="status" value="rejected">
@@ -161,7 +164,7 @@
                                                     <textarea id="rejectReason" name="reason" class="form-control" rows="3" required></textarea>
                                                 </div>
                                                 <div class="d-flex justify-content-end">
-                                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                                    <button type="button" id="rejectButton" class="btn btn-danger">Reject</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -177,11 +180,43 @@
 </div>
 
 <script>
-    document.getElementById('rejectButton').addEventListener('click', function() {
-        var rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
-        rejectModal.show();
+    document.getElementById('approveButton').addEventListener('click', function(e) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Permintaan ini akan diterima!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, setujui!',
+            confirmButtonColor: '#28a745',
+            cancelButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Kirim formulir jika pengguna mengonfirmasi
+                document.getElementById('approveForm').submit();
+            }
+        });
     });
-</script>
+    </script>
 
+<script>
+    document.getElementById('rejectButton').addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah form terkirim secara langsung
+    
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Permintaan ini akan ditolak!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Ya, tolak!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika pengguna mengonfirmasi, kirimkan form
+                document.getElementById('rejectForm').submit();
+            }
+        });
+    });
+    </script>
 
 @endsection

@@ -131,27 +131,29 @@
             // Styling untuk select
         
 
-                $('.form-control').each(function() {
+            $('.form-control').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
+                        'border': '1px solid #1156bf'
                     });
                 });
 
                 $('label').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
                         'font-weight': '600',
                         'gap': '10px',
                         'align-items': 'center',
+                        'color': '#043277'
                     });
                 });
 
                 $('select[name="datatable_length"]').css({
                     'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
-                    'height': '2.38rem',
-                    'border': '1px solid #ced4da',
+                    'height': '1.67rem',
+                    'border': '1px solid rgb(17, 86, 191)',
                     'border-radius': '.25rem',
                 });
     

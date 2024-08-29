@@ -5,10 +5,6 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <style>
     .filter-buttons {
         display: flex;
@@ -185,9 +181,9 @@ var viewButton = `
 `;
 
 var deleteButton = row.status === 'pending' ? `
-    <a href="${deleteUrl}" class="btn btn-sm text-danger hover:bg-danger" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Permintaan">
-        <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
-    </a>
+    <a href="${deleteUrl}" class="btn btn-sm text-danger hover:bg-danger delete-btn" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Permintaan">
+    <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
+</a>
 ` : `
     <a href="${deleteUrl}" class="btn btn-sm text-secondary" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: gray; pointer-events: none; opacity: 0.5; padding: 15px;" data-tooltip="Hapus Permintaan">
         <i class="ti ti-trash font-size-20 align-middle"></i>
@@ -218,7 +214,7 @@ return `
             initComplete: function() {
                 // Filter untuk admin approval
                 // Filter untuk approval admin
-var adminSelect = $('<select id="admin_approval_filter" class="form-select" style="width: 24%;"><option value="">Semua Status Admin</option></select>')
+var adminSelect = $('<select id="admin_approval_filter" class="form-select-sm" style="width: 20%; border: 1px solid #1156bf; color:#043277; font-weight: 500;"><option value="">Semua Status Admin</option></select>')
 .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')).css('justify-content', 'end')
 .on('change', function() {
 table.draw();
@@ -230,7 +226,7 @@ adminSelect.append('<option value="approved by admin">Admin Approved</option>');
 adminSelect.append('<option value="rejected by admin">Admin Rejected</option>');
 
 // Filter untuk approval supervisor
-var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select" style="width: 28%;"><option value="">Semua Status Supervisor</option></select>')
+var supervisorSelect = $('<select id="supervisor_approval_filter" class="form-select-sm" style="width: 24%; border: 1px solid #1156bf; color:#043277; font-weight: 500;"><option value="">Semua Status Supervisor</option></select>')
 .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
 .on('change', function() {
 table.draw();
@@ -267,26 +263,25 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                 $('.form-control').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
+                        'border': '1px solid #1156bf'
                     });
                 });
 
                 $('label').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
                         'font-weight': '600',
-                        'display': 'flex',
-                        'gap': '10px',
-                        'align-items': 'center',
+                        'color': '#043277'
                     });
                 });
 
                 $('select[name="datatable_length"]').css({
                     'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
-                    'height': '2.38rem',
-                    'border': '1px solid #ced4da',
+                    'height': '1.67rem',
                     'border-radius': '.25rem',
+                    'border': '1px solid #1156bf',
                 });
     
                 var observer = new MutationObserver(function(mutations) {
@@ -311,6 +306,45 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
             $('.form-control').removeClass('form-control-sm');
             $('select[name="datatable_length"]').removeClass('form-control p-0');
             $('.custom-select').removeClass('custom-select-sm');
+        });
+
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Permintaan ini akan dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Dihapus!',
+                                'Permintaan telah berhasil dihapus.',
+                                'success'
+                            );
+                            table.ajax.reload();
+                        },
+                        error: function(response) {
+                            Swal.fire(
+                                'Error!',
+                                'Permintaan gagal dihapus.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
         });
 
         

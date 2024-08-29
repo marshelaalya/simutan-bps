@@ -5,6 +5,8 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import Swiper from 'swiper';
 import 'swiper/css';
 import 'swiper/css/bundle';
+import Swal from 'sweetalert2';
+
 
 // Import jQuery dan DataTables
 import $ from 'jquery';

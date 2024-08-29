@@ -284,7 +284,7 @@
             //     }
             // ],
             initComplete: function() {
-                var select = $('<select id="roleFilter" class="form-select"><option value="">Semua Role</option></select>')
+                var select = $('<select id="roleFilter" class="form-select-sm" style="width: 24%; border: 1px solid #1156bf; color:#043277; font-weight: 500"><option value="">Semua Role</option></select>')
                     .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px')) // Tambahkan dropdown ke sebelah search box
                     .on('change', function() {
                         table.draw();
@@ -319,26 +319,25 @@
                 $('.form-control').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
+                        'border': '1px solid #1156bf'
                     });
                 });
 
                 $('label').each(function() {
                     $(this).css({
                         'margin-bottom': '0px',
-                        'height': '2.38rem',
+                        'height': '1.67rem',
                         'font-weight': '600',
-                        'display': 'flex',
-                        'gap': '10px',
-                        'align-items': 'center',
+                        'color': '#043277'
                     });
                 });
 
                 $('select[name="datatable_length"]').css({
                     'font-size': '.875rem', // Misalnya, menambahkan ukuran font jika diperlukan
-                    'height': '2.38rem',
-                    'border': '1px solid #ced4da',
+                    'height': '1.67rem',
                     'border-radius': '.25rem',
+                    'border': '1px solid #1156bf',
                 });
 
                 var observer = new MutationObserver(function(mutations) {

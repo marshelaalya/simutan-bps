@@ -13,7 +13,7 @@
 
                         <form method="post" action="{{ route('barang.update', $barang->id) }}" id="myForm" enctype="multipart/form-data">
                             @csrf
-                            @method('POST') <!-- or use PATCH -->
+                            @method('POST') <!-- Menggunakan method PUT untuk update -->
 
                             <input type="hidden" name="id" value="{{ $barang->id }}">
                             <input type="hidden" name="existing_foto" value="{{ $barang->foto }}"> <!-- Menyimpan nama foto yang ada -->
@@ -87,8 +87,9 @@
                                     <small class="form-text text-muted">Usahakan gambar dalam bentuk PNG atau JPG untuk hasil yang lebih baik.</small>
                                 </div>
                             </div>
-
-                            <input type="submit" class="btn btn-info waves-effect waves-light" value="Edit Barang">
+                            <div class="d-flex justify-content-end">
+                                <button type="button" id="editBtn" class="btn btn-info waves-effect waves-light">Edit Barang</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -173,4 +174,24 @@
         });
     });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('editBtn').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Perubahan akan disimpan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, simpan perubahan!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika pengguna mengkonfirmasi, submit form secara manual
+                document.getElementById('myForm').submit();
+            }
+        });
+    });
+</script>
+
 @endsection
