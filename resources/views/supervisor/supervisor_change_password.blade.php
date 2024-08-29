@@ -1,5 +1,11 @@
 @extends('supervisor.supervisor_master')
 @section('supervisor')
+
+<head>
+    <title>
+        Ubah Passowrd | SIMUTAN
+    </title>
+</head>
  
 
 <div class="page-content">

@@ -5,6 +5,12 @@
 @section(auth()->user()->role === 'admin' ? 'admin' : 
          (auth()->user()->role === 'supervisor' ? 'supervisor' : 'pegawai'))
 
+<head>
+    <title>
+        Dashboard | SIMUTAN
+    </title>
+</head>
+
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 
 <style>
@@ -31,6 +37,30 @@
     align-items: center;
     position: absolute; /* Position them absolutely */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+}
+
+.marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    margin-top: -10px; /* Mengatur posisi tulisan lebih ke atas */
+    height: 2rem;
+}
+
+.marquee p {
+    display: inline-block;
+    width: 200%;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
 }
 
 .swiper-pagination{
@@ -635,37 +665,6 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
             </div>
         </div>
             
-            
-            
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h4 class="card-title mb-0">Stok Barang</h4>
-                        </div>
-                        <table id="datatable" class="table table-bordered yajra-datatable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">            
-                            <thead>
-                                <tr>
-                                    <th width="10%" class="text-center">Kode</th>
-                                    <th width="20%">Kelompok Barang</th>
-                                    <th>Nama Barang</th>
-                                    <th width="1%" class="text-center">Stok</th>
-                                    <th width="1%" class="text-center">Satuan</th>
-                                    {{-- <th width="1%" class="text-center">Aksi</th> --}}
-                                </tr>
-                            </thead>
-                            <tbody>  
-                            </tbody>
-                        </table>
-
-                        <div class="d-flex justify-content-end fw-bold">
-                            <a href="{{ route('permintaan.all') }}" class="text-info">Lihat Selengkapnya <i class="mdi mdi-arrow-right font-size-16 text-info align-middle"></i></a>
-                        </div>                
-                    </div><!-- end card -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-        </div><!-- end row -->
     </div>
 </div>
 
@@ -682,145 +681,6 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        var table = $('.yajra-datatable').DataTable({
-            // processing: true,
-            serverSide: true,
-            responsive: true,
-            ajax: {
-                url: "{{ route('barang.all') }}",  // Pastikan route ini sesuai dengan yang ada di web.php
-                data: function(d) {
-                    d.kelompok_id = $('#kelompok_filter').val();  // Filter berdasarkan kelompok barang
-                }
-            },
-            columns: [
-                { data: 'kode', name: 'kode', className: 'text-center align-content-center' },
-                { data: 'kelompok.nama', name: 'kelompok.nama', className: 'align-content-center' },
-                { data: 'nama', name: 'nama', className: 'align-content-center' },
-                { data: 'qty_item', name: 'qty_item', className: 'text-center align-content-center' },
-                { data: 'satuan', name: 'satuan.nama', className: 'text-center align-content-center' }
-            ],
-            dom: 'Brftip',
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export &nbsp',
-                    className: 'form-select',
-                    buttons: [
-                        {
-                            extend: 'excelHtml5',
-                            text: 'Export Excel',
-                            title: 'Data Barang',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'copy',
-                            text: 'Copy',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'csv',
-                            text: 'CSV',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'pdf',
-                            text: 'PDF',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        },
-                        {
-                            extend: 'print',
-                            text: 'Print',
-                            exportOptions: {
-                                columns: ':not(.no-export)' // Eksklusi kolom dengan kelas 'no-export'
-                            },
-                        }
-                    ]
-                }
-            ],
-            initComplete: function() {
-                // Filter untuk kelompok barang
-                var kelompokSelect = $('<select id="kelompok_filter" class="form-select" style="width: 33%;"><option value="">Semua Kelompok Barang</option></select>')
-                    .appendTo($('#datatable_filter').css('display', 'flex').css('align-items', 'center').css('gap', '10px'))
-                    .on('change', function() {
-                        table.draw();
-                    });
-
-                // Menambahkan opsi untuk kelompok barang dari server (opsional, jika ingin dinamis)
-                @foreach($kelompoks as $kelompok)
-                    kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
-                @endforeach
-    
-                // Styling untuk select
-                $('.form-select').each(function() {
-                    $(this).css({
-                        'display': 'block',
-                        'padding': '.47rem 1.75rem .47rem .75rem',
-                        '-moz-padding-start': 'calc(.75rem - 3px)',
-                        'font-size': '.9rem',
-                        'font-weight': '500',
-                        'line-height': '1.5',
-                        'color': '#505d69',
-                        'background-color': '#fff',
-                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
-                        'background-repeat': 'no-repeat',
-                        'background-position': 'right .75rem center',
-                        'background-size': '16px 12px',
-                        'border': '1px solid #ced4da',
-                        'border-radius': '.25rem',
-                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
-                        'appearance': 'none'
-                    });
-                });
-
-                $('.form-control').each(function() {
-                    $(this).css({
-                        'margin-bottom': '0px',
-                        'height': '2.38rem',
-                    });
-                });
-
-                $('label').each(function() {
-                    $(this).css({
-                        'margin-bottom': '0px',
-                        'height': '2.38rem',
-                        'font-weight': '600',
-                    });
-                });
-    
-                var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
-                    });
-                });
-    
-                // Memulai observer pada elemen yang mengandung tombol
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            }
-        });
-
-        $(document).ready(function() {
-            $('.dt-button').removeClass('dt-button buttons-collection');
-            $('.dt-button-background').remove(); // Hapus semua elemen dengan class .dt-button-background
-            $('.dt-button-down-arrow').remove(); // Hapus semua elemen dengan class .dt-button-down-arrow
-            $('.form-control').removeClass('form-control-sm');
-        });
-
-    });
-</script>
 
 
 

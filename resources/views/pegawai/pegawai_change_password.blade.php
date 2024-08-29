@@ -1,6 +1,11 @@
 @extends('pegawai.pegawai_master')
 @section('pegawai')
  
+<head>
+    <title>
+        Ubah Password | SIMUTAN
+    </title>
+</head>
 
 <div class="page-content">
 <div class="container-fluid">

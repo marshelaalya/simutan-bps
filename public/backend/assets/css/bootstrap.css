@@ -297,9 +297,9 @@ select:disabled{
 [list]::-webkit-calendar-picker-indicator{
     display:none
 }
-[type=button],[type=reset],[type=submit],button{
+/* [type=button],[type=reset],[type=submit],button{
     -webkit-appearance:button
-}
+} */
 [type=button]:not(:disabled),[type=reset]:not(:disabled),[type=submit]:not(:disabled),button:not(:disabled){
     cursor:pointer
 }
@@ -338,10 +338,10 @@ legend+*{
 ::-webkit-inner-spin-button{
     height:auto
 }
-[type=search]{
+/* [type=search]{
     outline-offset:-2px;
     -webkit-appearance:textfield
-}
+} */
 ::-webkit-search-decoration{
     -webkit-appearance:none
 }
@@ -2223,8 +2223,8 @@ textarea.form-control-lg{
     -webkit-appearance:none;
     -moz-appearance:none;
     appearance:none;
-    -webkit-print-color-adjust:exact;
-    color-adjust:exact;
+    /* -webkit-print-color-adjust:exact;
+    color-adjust:exact; */
     -webkit-transition:background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
     transition:background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
     transition:background-color .15s ease-in-out,background-position .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
@@ -11748,6 +11748,3 @@ button[data-tooltip]:hover::before {
     --bs-bg-opacity:0.15;
     background-color:rgba(var(--bs-warning-rgb),var(--bs-bg-opacity))!important
 }
-
- */
-/*# sourceMappingURL=bootstrap.min.css.map */
