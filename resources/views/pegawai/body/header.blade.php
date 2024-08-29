@@ -60,7 +60,7 @@
                         @endforelse
                     </div>
                     
-                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">View All</a>
+                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">Lihat Selengkapnya</a>
                 </div>
             </div>
 

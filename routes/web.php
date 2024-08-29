@@ -12,6 +12,7 @@ use App\Http\Controllers\Pos\KelompokController;
 use App\Http\Controllers\Pos\BarangController;
 use App\Http\Controllers\Pos\PilihanController;
 use App\Http\Controllers\Pos\DefaultController;
+use App\Http\Controllers\Pos\NotificationController;
 use App\Http\Controllers\WizardController;
 use App\Models\Permintaan;
 use Illuminate\Support\Carbon;
@@ -34,15 +35,19 @@ Route::get('/index', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    Route::post('/notifications/mark-all-read', [DashboardController::class, 'markAllRead'])->name('notifications.markAllRead');
-    
-    Route::get('/notifications', [DashboardController::class, 'viewAllNotifications'])->name('notifications.viewAll');
     
     Route::get('/admin/index', [DashboardController::class, 'index'])->name('admin.index');
     Route::get('/pegawai/index', [DashboardController::class, 'index'])->name('pegawai.index');
 
     Route::get('/pegawai/index', [UserController::class, 'topUsers'])->name('pegawai.index');
+
+    Route::controller(NotificationController::class)->group(function () {
+        Route::post('/notifications/mark-all-read', 'markAllRead')->name('notifications.markAllRead');
+        Route::get('/notifications/view-all', 'viewAllNotifications')->name('notifications.viewAll');
+        Route::get('/notifications/mark-as-read/{id}', 'markAsRead')->name('notifications.markAsRead');
+        Route::get('/notifications/load', 'loadMore')->name('notifications.load');
+
+    });
 
     Route::controller(AdminController::class)->group(function () {
         Route::get('/admin/logout', 'destroy')->name('admin.logout');

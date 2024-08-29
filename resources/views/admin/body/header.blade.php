@@ -60,7 +60,7 @@
                         @endforelse
                     </div>
                     
-                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">View All</a>
+                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">Lihat Selengkapnya</a>
                 </div>
             </div>
 
@@ -139,6 +139,17 @@
         height: 100%;
         font-size: 16px;
     }
+
+    .dropdown-menu.notification-menu {
+    width: 500px;
+    max-height: 400px;
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+.text-wrap {
+    white-space: normal; /* Membuat teks membungkus ke baris berikutnya */
+}
 </style>
 
 <script>

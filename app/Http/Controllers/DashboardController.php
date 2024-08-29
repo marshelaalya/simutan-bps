@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Permintaan;
 use App\Models\Notification;
 use App\Models\Barang;
+
 use App\Models\Kelompok;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,7 @@ class DashboardController extends Controller
     ->limit(5)
     ->get();
 
-    $topUsers = User::select('users.id', 'users.panggilan', 'users.foto', \DB::raw('COUNT(permintaans.id) as requests'))
+    $topUsers = User::select('users.id', 'users.panggilan', 'users.foto', DB::raw('COUNT(permintaans.id) as requests'))
         ->leftJoin('permintaans', 'users.id', '=', 'permintaans.user_id')
         ->groupBy('users.id', 'users.panggilan', 'users.foto')
         ->orderBy('requests', 'desc')
@@ -90,27 +91,6 @@ return redirect()->route('home');
 
         return view('dashboard', compact('notifications', 'unreadCount'));
     }
-
-    public function markAllRead()
-{
-    $user = Auth::user();
-    Notification::where('user_id', $user->id)
-                ->where('is_read', false)
-                ->update(['is_read' => true]);
-
-    return response()->json(['status' => 'success']);
-}
-
-public function viewAllNotifications()
-{
-    $user = Auth::user();
-    $notifications = Notification::where('user_id', $user->id)
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-    return view('notifications.index', compact('notifications'));
-}
-
-
 
     public function PermintaanAll()
     {

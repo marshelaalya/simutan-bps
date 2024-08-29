@@ -278,18 +278,22 @@ public function dataForIndex()
             'satuan' => 'required|string',
             'satuanBaru' => 'nullable|string',
         ]);
-    
+
         $barang_id = $request->id;
         $satuan = $request->satuan;
-    
+
+        // Ambil data barang sebelum di-update
+        $barangLama = Barang::findOrFail($barang_id);
+        $qtyLama = $barangLama->qty_item;
+
         // Jika satuan adalah 'lainnya', periksa dan tambahkan satuan baru
         if ($satuan === 'lainnya') {
             $satuanBaru = $request->satuanBaru;
-    
+
             if (!empty($satuanBaru)) {
                 // Check if the new satuan already exists
                 $existingSatuan = Barang::whereRaw('LOWER(satuan) = ?', [strtolower($satuanBaru)])->first();
-    
+
                 if ($existingSatuan) {
                     // Use the existing satuan
                     $satuan = $existingSatuan->satuan;
@@ -299,7 +303,7 @@ public function dataForIndex()
                 }
             }
         }
-    
+
         // Update the barang record
         Barang::findOrFail($barang_id)->update([
             'kode' => $request->kode_barang,
@@ -309,12 +313,40 @@ public function dataForIndex()
             'satuan' => $satuan,
             'updated_at' => Carbon::now(),
         ]);
-    
+
+        // Logika untuk mencatat pemasukan atau pengeluaran
+        $qtyBaru = $request->qty_item;
+
+        if ($qtyBaru > $qtyLama) {
+            // Tambahkan ke pemasukan
+            $selisih = $qtyBaru - $qtyLama;
+            DB::table('pemasukans')->insert([
+                'barang_id' => $barang_id,
+                'qty' => $selisih,
+                'tanggal' => Carbon::now(),
+                'keterangan' => 'Penyesuaian setelah update barang',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(), 
+            ]);
+        } elseif ($qtyBaru < $qtyLama) {
+            // Tambahkan ke pengeluaran
+            $selisih = $qtyLama - $qtyBaru;
+            
+            DB::table('pengeluarans')->insert([
+                'barang_id' => $barang_id,
+                'qty' => $selisih,
+                'tanggal' => Carbon::now(),
+                'permintaan_id' => null,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(), 
+            ]);
+        }
+
         $notification = array(
             'message' => 'Barang berhasil di update',
             'alert-type' => 'success'
         );
-    
+
         return redirect()->route('barang.all')->with($notification);
     }
 

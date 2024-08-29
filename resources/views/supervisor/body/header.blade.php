@@ -39,8 +39,15 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <h6 class="dropdown-header">Notifications</h6>
                     <div class="notification-list">
-                        @forelse (session('notifications', []) as $notification)
-                            <a class="dropdown-item" href="{{ route('permintaan.approve', ['id' => $notification->permintaan_id]) }}">
+                        @php
+                            $groupedNotifications = session('notifications', [])->groupBy('user_id');
+                        @endphp
+                        @forelse ($groupedNotifications as $userId => $notifications)
+                            @php
+                                $count = $notifications->count();
+                                $firstNotification = $notifications->first();
+                            @endphp
+                            <a class="dropdown-item" href="{{ route('notifications.viewAll') }}#notification-{{ $firstNotification->id }}">
                                 <div class="d-flex align-items-center">
                                     <div class="me-3">
                                         <div class="avatar-sm">
@@ -50,8 +57,8 @@
                                         </div>
                                     </div>
                                     <div class="flex-1">
-                                        <h6 class="mt-0 mb-1">{{ $notification->message }}</h6>
-                                        <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                        <h6 class="mt-0 mb-1">Terdapat {{ $count }} permintaan dari User ID {{ $userId }}</h6>
+                                        <small class="text-muted">&nbsp;{{ $firstNotification->created_at->diffForHumans() }}</small>
                                     </div>
                                 </div>
                             </a>
@@ -60,9 +67,10 @@
                         @endforelse
                     </div>
                     
-                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">View All</a>
+                    <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">Lihat Selengkapnya</a>
                 </div>
             </div>
+        </div>
 
             <!-- Fullscreen Button -->
             <div class="dropdown d-none d-lg-inline-block ms-1">
