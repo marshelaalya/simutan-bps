@@ -206,10 +206,6 @@
                             <div class="form-group mb-3 text-end">
                                 <button class="btn btn-info w-auto waves-effect waves-light" type="submit">Masuk</button>
                             </div>
-
-                            <div class="form-group mb-3 text-center">
-                                <a href="#" class="text-muted"><i class="mdi mdi-lock"></i> Lupa password?</a>
-                            </div>
                         </form>
                     </div>
                 </div>
