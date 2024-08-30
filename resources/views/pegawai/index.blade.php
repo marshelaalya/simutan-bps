@@ -233,6 +233,16 @@
         margin: 0;
     }
 
+    .kelompok-button {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Waktu transisi 0.5s, bisa disesuaikan */
+}
+
+.kelompok-button.show {
+    opacity: 1;
+}
+
+
     .large-circle2 {
         width: 180px;
         height: 180px;
@@ -441,14 +451,7 @@ overflow: hidden; /* Supaya elemen di dalamnya tidak keluar dari border-radius *
                 <div>
                     <p style="font-size: 16px; margin-bottom:0.5rem;">Sistem Mutasi Persediaan (SIMUTAN) adalah sistem yang digunakan untuk mengetahui jumlah dan mutasi barang serta menilai dari selisih kelebihan atau kekurangan barang</p>
                 </div>
-                {{-- <p class="text-muted fs-5">
-                    Selamat datang di <strong>SIMUTAN</strong>, sistem mutasi persediaan yang dirancang untuk memberikan visibilitas lengkap terhadap jumlah dan perubahan barang Anda. Dengan fitur mutasi barang yang terperinci, SIMUTAN memudahkan Anda untuk memantau kelebihan dan kekurangan persediaan, serta memastikan efisiensi dalam manajemen stok. Jelajahi fitur-fitur kami dan tingkatkan kontrol Anda terhadap persediaan dengan lebih mudah!
-                </p> --}}
             </div>
-            {{-- <div class="greeting-actions">
-                <button class="btn btn-primary" onclick="showMoreInfo()">Pelajari Lebih Lanjut</button>
-                <button class="btn btn-outline-secondary" onclick="viewStats()">Lihat Statistik</button>
-            </div> --}}
         </div>
 
         <div>
@@ -759,6 +762,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 easing: 'easeInOutBounce'
             }
         }
+    });
+});
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll('.kelompok-button');
+
+    buttons.forEach((button, index) => {
+        setTimeout(() => {
+            button.classList.add('show');
+        }, index * 200); // Sesuaikan delay untuk transisi bertahap
     });
 });
 

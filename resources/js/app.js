@@ -33,6 +33,20 @@ $(document).ready(function() {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    // Dapatkan semua elemen dengan class .fade-in
+    const cards = document.querySelectorAll('.fade-in');
+
+    // Tambahkan class 'show' untuk setiap card setelah halaman dimuat
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('show');
+        }, index * 200); // Delay antara satu card dan yang lainnya untuk efek bertahap
+    });
+});
+
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-delete').forEach(function (button) {

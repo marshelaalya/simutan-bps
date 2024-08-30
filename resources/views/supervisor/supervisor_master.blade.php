@@ -113,7 +113,9 @@
   }
 }
 
-
+.card {
+    opacity: 0; transition: opacity 0.5s ease-in-out;
+}
 
     
     </style>
@@ -232,6 +234,19 @@
             // Show the main content
             document.querySelector('#layout-wrapper').style.display = 'block';
         });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        const cards = document.querySelectorAll('.card');
+
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = 1;
+            }, index * 100);
+        });
+    });
+
     </script>
 
 </body>
