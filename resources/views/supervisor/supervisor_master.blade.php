@@ -43,46 +43,24 @@
         
         /* Spinner Styles */
         #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; /* Ensure spinner is above all content */
-        }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #eff3f6; /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure spinner is above all content */
+    opacity: 0; /* Mulai dengan opasitas 0 */
+    transition: opacity 1s ease-in-out; /* Tambahkan transisi fade-in */
+}
 
-        .spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        .spinner img {
-            width: 100px; /* Adjust size as needed */
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .pulsing-dot {
-        width: 50px;
-        height: 50px;
-        /* background: #3498db; */
-        border-radius: 50%;
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.5); opacity: 0.5; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
-    .coin {
+#loading.fade-in {
+    opacity: 1; /* Opasitas 1 saat efek fade-in terjadi */
+}
+.coin {
   width: 100px;
   height: 100px;
   /* background-color: gold; */
@@ -113,6 +91,25 @@
   }
 }
 
+.pulsing-dot {
+        width: 80px;
+        height: 80px;
+        /* background: #dff0ff; */
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        display: flex;
+    justify-content: center; /* Memusatkan gambar di dalam elemen pulsing-dot */
+    align-items: center;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+
+
 .card {
     opacity: 0; transition: opacity 0.5s ease-in-out;
 }
@@ -122,13 +119,6 @@
 </head>
 
 <body data-topbar="dark">
-
-    <!-- Loading Spinner -->
-    <div id="loading">
-        <div class="coin">
-            <img src="{{ asset('backend/assets/images/logo2.png') }}" class="logo-spin" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
-        </div>
-    </div>
 
     <!-- Begin page -->
     <div id="layout-wrapper">
@@ -229,12 +219,17 @@
     <!-- Custom JavaScript to Handle Spinner -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide the loading spinner
-            document.getElementById('loading').style.display = 'none';
-            // Show the main content
-            document.querySelector('#layout-wrapper').style.display = 'block';
+            // Setelah 2 detik, sembunyikan spinner dan tampilkan konten utama
+            setTimeout(function() {
+                document.getElementById('loading').style.opacity = '0'; // Mulai transisi menghilang
+                setTimeout(function() {
+                    document.getElementById('loading').style.display = 'none'; // Sembunyikan setelah transisi selesai
+                    document.querySelector('#layout-wrapper').style.display = 'block'; // Tampilkan konten utama
+                }, 500); // Durasi transisi fade-out, bisa disesuaikan jika diperlukan
+            }, 2000); // Tampilkan spinner selama 2 detik
         });
-    </script>
+        
+            </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

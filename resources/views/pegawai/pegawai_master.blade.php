@@ -122,13 +122,6 @@
 
 <body data-topbar="dark">
 
-    <!-- Loading Spinner -->
-    <div id="loading">
-        <div class="coin">
-            <img src="{{ asset('backend/assets/images/logo2.png') }}" class="logo-spin" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
-        </div>
-    </div>
-
     <!-- Begin page -->
     <div id="layout-wrapper">
 
@@ -225,15 +218,19 @@
     <!-- Notify JS (Optional) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify.js/2.0.0/notify.min.js" integrity="sha512-iy8/ErLJUuqWbu30yUSCxXtE3FCDZi3y5op0Duqdp7vtpeh1E6ZyAPnRS+OrJHddh4uP30oYpwNt7TXPbmP5lQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Custom JavaScript to Handle Spinner -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide the loading spinner
-            document.getElementById('loading').style.display = 'none';
-            // Show the main content
-            document.querySelector('#layout-wrapper').style.display = 'block';
+            // Setelah 2 detik, sembunyikan spinner dan tampilkan konten utama
+            setTimeout(function() {
+                document.getElementById('loading').style.opacity = '0'; // Mulai transisi menghilang
+                setTimeout(function() {
+                    document.getElementById('loading').style.display = 'none'; // Sembunyikan setelah transisi selesai
+                    document.querySelector('#layout-wrapper').style.display = 'block'; // Tampilkan konten utama
+                }, 500); // Durasi transisi fade-out, bisa disesuaikan jika diperlukan
+            }, 2000); // Tampilkan spinner selama 2 detik
         });
-    </script>
+        
+            </script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
