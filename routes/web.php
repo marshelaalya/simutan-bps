@@ -118,7 +118,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/barang/store', 'BarangStore')->name('barang.store');
         Route::get('/barang/edit/{id}', 'BarangEdit')->name('barang.edit');
         Route::post('/barang/update/{id}', 'BarangUpdate')->name('barang.update');
-        Route::get('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
+        Route::delete('/barang/delete/{id}', 'BarangDelete')->name('barang.delete');
         Route::get('barang/data-all', 'dataForAll')->name('barang.data.all');
         Route::get('barang/data-index', 'dataForIndex')->name('barang.data.index');    
         Route::post('/barang/add-stock', 'addStock')->name('barang.addStock');

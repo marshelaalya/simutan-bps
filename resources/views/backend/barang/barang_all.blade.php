@@ -150,8 +150,8 @@
 
 <script>
     $(document).ready(function() {
-    $('[data-tooltip]').tooltip();
-});
+        $('[data-tooltip]').tooltip();
+    });
 
     $(document).ready(function() {
         var table = $('.yajra-datatable').DataTable({
@@ -193,72 +193,67 @@
                     kelompokSelect.append('<option value="{{ $kelompok->id }}">{{ $kelompok->nama }}</option>');
                 @endforeach
 
-                // $('.dt-buttons button').addClass('form-select');
-                // $('span').addClass('d-flex align-items-center');
-
                 $('#exportDropdown').before(`
-        <div class="d-flex justify-content-between">
-            <div style="margin-right: 0.7rem">
-                <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
-                    BA Stock Opname <i class="ti ti-download font-size-14"></i>
-                    </button>
-                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-                        <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
-                            <div class="mb-3">
-                                <label for="stockOpnameDate" class="form-label" style="font-size: .7875rem">Pilih Tanggal:</label>
-                                <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
+                    <div class="d-flex justify-content-between">
+                        <div style="margin-right: 0.7rem">
+                            <div class="dropdown">
+                                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
+                                    BA Stock Opname <i class="ti ti-download font-size-14"></i>
+                                </button>
+                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                                    <form id="stockOpnameForm" action="{{ route('barang.export') }}" method="GET">
+                                        <div class="mb-3">
+                                            <label for="stockOpnameDate" class="form-label" style="font-size: .7875rem">Pilih Tanggal:</label>
+                                            <input type="date" class="form-control" id="stockOpnameDate" name="tanggal" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-info">Export</button>
+                                    </form>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-sm btn-info">Export</button>
-                        </form>
+                        </div>
+                        <div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
+                                    Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
+                                </button>
+                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                                    <form id="stockOpnameForm" action="{{ route('barang.pemasukan.export') }}" method="GET">
+                                        <div class="mb-3">
+                                            <label for="startDate" class="form-label" style="font-size: .7875rem">Tanggal Mulai:</label>
+                                            <input type="date" class="form-control" id="startDate" name="start_date" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="endDate" class="form-label" style="font-size: .7875rem">Tanggal Akhir:</label>
+                                            <input type="date" class="form-control" id="endDate" name="end_date" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-sm btn-info">Export</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div>
-    <div class="dropdown">
-                    <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
-            Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
-        </button>
-        <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-            <form id="stockOpnameForm" action="{{ route('barang.pemasukan.export') }}" method="GET">
-                <div class="mb-3">
-                    <label for="startDate" class="form-label" style="font-size: .7875rem">Tanggal Mulai:</label>
-                    <input type="date" class="form-control" id="startDate" name="start_date" required>
-                </div>
-                <div class="mb-3">
-                    <label for="endDate" class="form-label" style="font-size: .7875rem">Tanggal Akhir:</label>
-                    <input type="date" class="form-control" id="endDate" name="end_date" required>
-                </div>
-                <button type="submit" class="btn btn-sm btn-info">Export</button>
-            </form>
-        </div>
-    </div>
-</div>
+                `);
 
-        </div>
-    `);
-    
                 // Styling untuk select
                 $('.form-select').each(function() {
-                                $(this).css({
-                                    'display': 'block',
-                                    'padding': '.47rem 1.75rem .47rem .75rem',
-                                    '-moz-padding-start': 'calc(.75rem - 3px)',
-                                    'font-size': '.9rem',
-                                    'font-weight': '500',
-                                    'line-height': '1.5',
-                                    'color': '#043277',
-                                    'background-color': '#e2f3fe',
-                                    'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
-                                    'background-repeat': 'no-repeat',
-                                    'background-position': 'right .75rem center',
-                                    'background-size': '16px 12px',
-                                    'border': '1px solid #1156bf',
-                                    'border-radius': '.25rem',
-                                    'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
-                                    'appearance': 'none'
-                                });
-                            
+                    $(this).css({
+                        'display': 'block',
+                        'padding': '.47rem 1.75rem .47rem .75rem',
+                        '-moz-padding-start': 'calc(.75rem - 3px)',
+                        'font-size': '.9rem',
+                        'font-weight': '500',
+                        'line-height': '1.5',
+                        'color': '#043277',
+                        'background-color': '#e2f3fe',
+                        'background-image': 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3e%3cpath fill=\'none\' stroke=\'%230a1832\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3e%3c/svg%3e")',
+                        'background-repeat': 'no-repeat',
+                        'background-position': 'right .75rem center',
+                        'background-size': '16px 12px',
+                        'border': '1px solid #1156bf',
+                        'border-radius': '.25rem',
+                        'transition': 'border-color .15s ease-in-out, box-shadow .15s ease-in-out',
+                        'appearance': 'none'
+                    });
                 });
 
                 $('.form-control').each(function() {
@@ -279,16 +274,16 @@
                 });
 
                 var observer = new MutationObserver(function(mutations) {
-                                mutations.forEach(function(mutation) {
-                                    $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
-                                });
-                            });
-                
-                            // Memulai observer pada elemen yang mengandung tombol
-                            observer.observe(document.body, {
-                                childList: true,
-                                subtree: true
-                            });
+                    mutations.forEach(function(mutation) {
+                        $('.dt-button-background').remove(); // Hapus elemen dengan class .dt-button-background
+                    });
+                });
+
+                // Memulai observer pada elemen yang mengandung tombol
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
             }
         });
 
@@ -319,14 +314,15 @@
                     "_token": "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    Swal.fire(
-                        'Dihapus!',
-                        response.message,
-                        'success'
-                    );
-                    // Reload table data or remove row from table
-                    table.ajax.reload();
-                },
+    Swal.fire({
+        title: 'Dihapus!',
+        text: response.message,
+        icon: 'success'
+    }).then(() => {
+        window.location.href = window.location.href; // Reload halaman setelah sukses
+    });
+},
+
                 error: function(response) {
                     Swal.fire(
                         'Error!',
@@ -337,8 +333,8 @@
             });
         }
     });
+});
 
-            
 
         // Handle the Add Stock button click
         $('#datatable').on('click', '.add-stock-btn', function() {
@@ -379,7 +375,6 @@
             });
         });
     });
-});
 </script>
 
 <script>
@@ -525,13 +520,15 @@
                             "_token": "{{ csrf_token() }}"
                         },
                         success: function(response) {
-                            Swal.fire(
-                                'Dihapus!',
-                                response.message,
-                                'success'
-                            );
-                            // Reload table data or remove row from table
-                            table.ajax.reload();
+                            Swal.fire({
+                                title: 'Dihapus!',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 1500, 
+                                showConfirmButton: false 
+                            }).then(() => {
+                                location.reload(); 
+                            });
                         },
                         error: function(response) {
                             Swal.fire(
