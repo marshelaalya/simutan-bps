@@ -18,7 +18,9 @@
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" /> --}}
+    
     <style>
         body {
             background: linear-gradient(135deg, #043277, #2575fc);
@@ -98,6 +100,43 @@
         h1 {
             color: #333;
         }
+
+        .input-group-text {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding-left: 0;
+}
+
+.input-group-text i {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.input-group.position-relative {
+    display: flex;
+    align-items: center;
+}
+
+.input-group-text.position-absolute {
+    right: 10px; /* Sesuaikan dengan padding input */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.input-group-text.position-absolute i {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .input-group.has-validation>.dropdown-toggle:nth-last-child(n+4), .input-group.has-validation>:nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu){
+    border-radius: 25px;
+}
+
     </style>
 </head>
 
@@ -129,8 +168,14 @@
 
                             <div class="form-group mb-3">
                                 <label for="password">Password</label>
-                                <input class="form-control" id="password" name="password" type="password" required="" placeholder="Password">
+                                <div class="input-group position-relative">
+                                    <input class="form-control" id="password" name="password" type="password" required="" placeholder="Password">
+                                    <span class="input-group-text position-absolute" id="togglePassword">
+                                        <i class="ti ti-eye text-dark"></i>
+                                    </span>
+                                </div>
                             </div>
+                            
 
                             <div class="form-group mb-3 text-end">
                                 <button class="btn btn-info w-auto waves-effect waves-light" type="submit">Masuk</button>
@@ -186,6 +231,34 @@
         }
         @endif
     </script>
+
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+
+    togglePassword.addEventListener('mousedown', function () {
+        // Show the password
+        password.setAttribute('type', 'text');
+        this.querySelector('i').classList.remove('ti-eye');
+        this.querySelector('i').classList.add('ti-eye-closed');
+    });
+
+    togglePassword.addEventListener('mouseup', function () {
+        // Hide the password
+        password.setAttribute('type', 'password');
+        this.querySelector('i').classList.remove('ti-eye-closed');
+        this.querySelector('i').classList.add('ti-eye');
+    });
+
+    // Prevent the toggle from sticking if the user moves the mouse off the button
+    togglePassword.addEventListener('mouseout', function () {
+        password.setAttribute('type', 'password');
+        this.querySelector('i').classList.remove('ti-eye-closed');
+        this.querySelector('i').classList.add('ti-eye');
+    });
+</script>
+
+
 
 </body>
 
