@@ -69,11 +69,14 @@
         }
 
         .pulsing-dot {
-        width: 50px;
-        height: 50px;
-        /* background: #3498db; */
+        width: 80px;
+        height: 80px;
+        background: #dff0ff;
         border-radius: 50%;
         animation: pulse 1.5s infinite;
+        display: flex;
+    justify-content: center; /* Memusatkan gambar di dalam elemen pulsing-dot */
+    align-items: center;
     }
 
     @keyframes pulse {
@@ -121,8 +124,9 @@
 
     <!-- Loading Spinner -->
     <div id="loading">
-        <div class="coin">
-            <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
+        <div class="pulsing-dot">
+                <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="Logo" style="width:4rem;">
+             <!-- Ganti dengan path ke logo Anda -->
         </div>
     </div>
 
