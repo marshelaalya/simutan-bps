@@ -42,18 +42,7 @@
         }
         
         /* Spinner Styles */
-        #loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; /* Ensure spinner is above all content */
-        }
+        
 
         .spinner {
             animation: spin 1s linear infinite;
@@ -85,36 +74,7 @@
         100% { transform: scale(1); opacity: 1; }
     }
 
-    .coin {
-  width: 100px;
-  height: 100px;
-  /* background-color: gold; */
-  border-radius: 50%;
-  position: relative;
-  transform-style: preserve-3d;
-  animation: spin-coin 2s infinite linear;
-}
-
-.coin:before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
-  /* background-color: #e6b800; */
-  border-radius: 50%;
-}
-
-@keyframes spin-coin {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
-}
+    
 
 .card {
     opacity: 0; transition: opacity 0.5s ease-in-out;
@@ -126,13 +86,7 @@
 
 <body data-topbar="dark">
 
-    <!-- Loading Spinner -->
-    <div id="loading">
-        <div class="coin">
-                <img src="{{ asset('backend/assets/images/logo2.png') }}" alt="Logo" style="width:6rem;">
-             <!-- Ganti dengan path ke logo Anda -->
-        </div>
-    </div>
+
 
     <!-- Begin page -->
     <div id="layout-wrapper">
@@ -232,12 +186,17 @@
 
     <!-- Custom JavaScript to Handle Spinner -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hide the loading spinner
-            document.getElementById('loading').style.display = 'none';
-            // Show the main content
-            document.querySelector('#layout-wrapper').style.display = 'block';
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    // Setelah 2 detik, sembunyikan spinner dan tampilkan konten utama
+    setTimeout(function() {
+        document.getElementById('loading').style.opacity = '0'; // Mulai transisi menghilang
+        setTimeout(function() {
+            document.getElementById('loading').style.display = 'none'; // Sembunyikan setelah transisi selesai
+            document.querySelector('#layout-wrapper').style.display = 'block'; // Tampilkan konten utama
+        }, 500); // Durasi transisi fade-out, bisa disesuaikan jika diperlukan
+    }, 2000); // Tampilkan spinner selama 2 detik
+});
+
     </script>
 
 <script>

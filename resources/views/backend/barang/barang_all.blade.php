@@ -213,8 +213,8 @@
                         </div>
                         <div>
                             <div class="dropdown">
-                                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
-                                    Laporan Rincian Persediaan <i class="ti ti-download font-size-16"></i>
+                                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false" style="color: #043277; background-color:#e2f3fe; border: 1px solid #043277">
+                                    Laporan Rincian Persediaan <i class="ti ti-download font-size-14"></i>
                                 </button>
                                 <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
                                     <form id="stockOpnameForm" action="{{ route('barang.pemasukan.export') }}" method="GET">
@@ -233,6 +233,62 @@
                         </div>
                     </div>
                 `);
+
+                var button = document.getElementById('dropdownMenuButton');
+        
+        button.addEventListener('mouseover', function () {
+            button.style.backgroundColor = '#d0e8fc';
+            button.style.borderColor = '#032e5c';
+            button.style.color = '#032e5c';
+        });
+        
+        button.addEventListener('mouseout', function () {
+            button.style.backgroundColor = '#e2f3fe';
+            button.style.borderColor = '#043277';
+            button.style.color = '#043277';
+        });
+
+        var button2 = document.getElementById('dropdownMenuButton2');
+        
+        button2.addEventListener('mouseover', function () {
+            button2.style.backgroundColor = '#d0e8fc';
+            button2.style.borderColor = '#032e5c';
+            button2.style.color = '#032e5c';
+        });
+        
+        button2.addEventListener('mouseout', function () {
+            button2.style.backgroundColor = '#e2f3fe';
+            button2.style.borderColor = '#043277';
+            button2.style.color = '#043277';
+        });
+
+        var startDateInput = document.getElementById('startDate');
+        var endDateInput = document.getElementById('endDate');
+
+        function updateEndDateMin() {
+            var startDate = startDateInput.value;
+            endDateInput.min = startDate;
+
+            // Jika endDate sudah lebih kecil dari startDate, reset endDate ke startDate
+            if (endDateInput.value && endDateInput.value < startDate) {
+                endDateInput.value = startDate;
+            }
+        }
+
+        startDateInput.addEventListener('change', updateEndDateMin);
+        endDateInput.addEventListener('change', function () {
+            // Tambah validasi jika diperlukan saat endDate diubah
+            var startDate = startDateInput.value;
+            var endDate = endDateInput.value;
+
+            if (endDate < startDate) {
+                alert('Tanggal akhir tidak boleh kurang dari tanggal mulai.');
+                endDateInput.value = startDate;
+            }
+        });
+
+        // Set min value pada halaman load jika startDate sudah dipilih sebelumnya
+        updateEndDateMin();
 
                 // Styling untuk select
                 $('.form-select').each(function() {
@@ -376,6 +432,25 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var button = document.getElementById('dropdownMenuButton');
+        
+        button.addEventListener('mouseover', function () {
+            button.style.backgroundColor = '#d0e8fc';
+            button.style.borderColor = '#032e5c';
+            button.style.color = '#032e5c';
+        });
+        
+        button.addEventListener('mouseout', function () {
+            button.style.backgroundColor = '#e2f3fe';
+            button.style.borderColor = '#043277';
+            button.style.color = '#043277';
+        });
+    });
+</script>
+
 
 <script>
     $(document).ready(function() {

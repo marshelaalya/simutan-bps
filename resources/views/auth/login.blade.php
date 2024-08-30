@@ -19,11 +19,9 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" /> --}}
-    
+
     <style>
         body {
-            background: linear-gradient(135deg, #043277, #2575fc);
             color: #fff;
             font-family: 'Roboto', sans-serif;
             display: flex;
@@ -52,12 +50,6 @@
         .card-body {
             padding: 2rem;
         }
-
-        /* .auth-logo img {
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        } */
 
         .btn-info {
             background-color: #2575fc;
@@ -102,40 +94,75 @@
         }
 
         .input-group-text {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    padding-left: 0;
-}
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            padding-left: 0;
+        }
 
-.input-group-text i {
-    font-size: 1.2rem;
-    color: #333;
-}
+        .input-group-text i {
+            font-size: 1.2rem;
+            color: #333;
+        }
 
-.input-group.position-relative {
+        .input-group.position-relative {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group-text.position-absolute {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .input-group-text.position-absolute i {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .input-group.has-validation>.dropdown-toggle:nth-last-child(n+4), .input-group.has-validation>:nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu){
+            border-radius: 25px;
+        }
+
+        .spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #eff3f6;
     display: flex;
+    justify-content: center;
     align-items: center;
+    z-index: 9999;
+    display: none; /* Hide by default */
 }
 
-.input-group-text.position-absolute {
-    right: 10px; /* Sesuaikan dengan padding input */
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100px;
+    margin-top: -20px; 
 }
 
-.input-group-text.position-absolute i {
-    font-size: 1.2rem;
-    color: #333;
+.spinner img {
+    width: 8rem;
+    animation: pulse 1.5s infinite;
 }
 
-.btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .input-group.has-validation>.dropdown-toggle:nth-last-child(n+4), .input-group.has-validation>:nth-last-child(n+3):not(.dropdown-toggle):not(.dropdown-menu), .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu){
-    border-radius: 25px;
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
 }
+
 
     </style>
 </head>
@@ -163,7 +190,7 @@
 
                             <div class="form-group mb-3">
                                 <label for="username">Username</label>
-                                <input class="form-control" id="username" name="username" type="text" required="" placeholder="Username">
+                                <input class="form-control" type="text" id="username" name="username" required>
                             </div>
 
                             <div class="form-group mb-3">
@@ -175,61 +202,41 @@
                                     </span>
                                 </div>
                             </div>
-                            
 
                             <div class="form-group mb-3 text-end">
                                 <button class="btn btn-info w-auto waves-effect waves-light" type="submit">Masuk</button>
                             </div>
-
-                            {{-- <div class="form-group mb-0 mt-2">
-                                <div class="d-flex justify-content-between">
-                                    <a href="{{ route('password.request') }}" class="text-muted"><i class="mdi mdi-lock"></i> Forgot your password?</a>
-                                    <a href="{{ route('register') }}" class="text-muted"><i class="mdi mdi-account-circle"></i> Create an account</a>
-                                </div>
-                            </div> --}}
                         </form>
                     </div>
                 </div>
-                <!-- end cardbody -->
             </div>
-            <!-- end card -->
         </div>
-        <!-- end container -->
     </div>
-    <!-- end -->
 
-    <!-- JAVASCRIPT -->
+    <!-- Spinner -->
+    <!-- Spinner -->
+<div id="spinner" class="spinner-wrapper">
+    <div class="spinner">
+        <img src="{{ asset('backend/assets/images/logo2.png') }}" alt="Logo">
+    </div>
+</div>
+
+
+    <!-- Javascript -->
     <script src="{{ asset('backend/assets/libs/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/simplebar/simplebar.min.js') }}"></script>
     <script src="{{ asset('backend/assets/libs/node-waves/waves.min.js') }}"></script>
-
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
     <script>
-        @if(Session::has('message'))
-        var type = "{{ Session::get('alert-type','info') }}"
-        switch(type){
-            case 'info':
-            toastr.info("{{ Session::get('message') }}");
-            break;
+        const form = document.querySelector('form');
+        const spinner = document.querySelector('#spinner');
 
-            case 'success':
-            toastr.success("{{ Session::get('message') }}");
-            break;
-
-            case 'warning':
-            toastr.warning("{{ Session::get('message') }}");
-            break;
-
-            case 'error':
-            toastr.error("{{ Session::get('message') }}");
-            break;
-        }
-        @endif
+        form.addEventListener('submit', function() {
+            spinner.style.display = 'flex'; // Show spinner
+        });
     </script>
 
 <script>
@@ -257,9 +264,6 @@
         this.querySelector('i').classList.add('ti-eye');
     });
 </script>
-
-
-
 </body>
 
 </html>

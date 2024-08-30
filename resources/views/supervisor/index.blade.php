@@ -18,6 +18,73 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
+        #loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #043277, #2575fc); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure spinner is above all content */
+    opacity: 0; /* Mulai dengan opasitas 0 */
+    transition: opacity 1s ease-in-out; /* Tambahkan transisi fade-in */
+}
+
+#loading.fade-in {
+    opacity: 1; /* Opasitas 1 saat efek fade-in terjadi */
+}
+.coin {
+  width: 100px;
+  height: 100px;
+  /* background-color: gold; */
+  border-radius: 50%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: spin-coin 2s infinite linear;
+}
+
+.coin:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  /* background-color: #e6b800; */
+  border-radius: 50%;
+}
+
+@keyframes spin-coin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.pulsing-dot {
+        width: 80px;
+        height: 80px;
+        /* background: #dff0ff; */
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        display: flex;
+    justify-content: center; /* Memusatkan gambar di dalam elemen pulsing-dot */
+    align-items: center;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+
         .tooltip-text {
             display: none;
             position: absolute;
