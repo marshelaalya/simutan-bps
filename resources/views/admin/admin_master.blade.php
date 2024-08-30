@@ -71,7 +71,7 @@
         .pulsing-dot {
         width: 80px;
         height: 80px;
-        background: #dff0ff;
+        /* background: #dff0ff; */
         border-radius: 50%;
         animation: pulse 1.5s infinite;
         display: flex;
@@ -124,8 +124,8 @@
 
     <!-- Loading Spinner -->
     <div id="loading">
-        <div class="pulsing-dot">
-                <img src="{{ asset('backend/assets/images/logo-bps.png') }}" alt="Logo" style="width:4rem;">
+        <div class="coin">
+                <img src="{{ asset('backend/assets/images/logo2.png') }}" alt="Logo" style="width:6rem;">
              <!-- Ganti dengan path ke logo Anda -->
         </div>
     </div>

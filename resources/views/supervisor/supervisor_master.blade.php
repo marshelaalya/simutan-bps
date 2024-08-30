@@ -124,7 +124,7 @@
     <!-- Loading Spinner -->
     <div id="loading">
         <div class="coin">
-            <img src="{{ asset('backend/assets/images/logo-bps.png') }}" class="logo-spin" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
+            <img src="{{ asset('backend/assets/images/logo2.png') }}" class="logo-spin" alt="Logo" style="width:4rem;"> <!-- Ganti dengan path ke logo Anda -->
         </div>
     </div>
 

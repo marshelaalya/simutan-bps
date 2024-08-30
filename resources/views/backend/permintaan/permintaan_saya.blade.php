@@ -105,7 +105,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h4 class="card-title mb-0">List Permintan Saya</h4>
+                            <h4 class="card-title mb-0">List Permintaan Saya</h4>
                             <div class="page-title-right">
                                 <a href="{{ route('pilihan.add') }}" class="btn btn-info waves-effect waves-light">
                                     <i class="mdi mdi-plus-circle"></i> Ajukan Permintaan
@@ -290,11 +290,6 @@ supervisorSelect.append('<option value="rejected by supervisor">Supervisor Rejec
                     'border': '1px solid #1156bf',
                 });
 
-                $('.custom-select').each(function() {
-                    $(this).css({
-                    'padding': '0.1rem 1.75rem .375rem .75rem',
-                });
-            });
     
                 var observer = new MutationObserver(function(mutations) {
                     mutations.forEach(function(mutation) {
