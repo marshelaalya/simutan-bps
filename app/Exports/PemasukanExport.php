@@ -121,110 +121,98 @@ class PemasukanExport
         $this->createNewSheetWithExistingAndNewBarang($spreadsheet, $existingBarang, $startDate, $endDate);
     }
 
-private function createNewSheetWithExistingAndNewBarang($spreadsheet, $existingBarang, $startDate, $endDate)
-{
-    // Buat sheet baru untuk barang baru
-    $newSheet = $spreadsheet->createSheet();
-    $newSheet->setTitle('Barang Baru');
-    
-    // Tambahkan header di sheet baru
-    $newSheet->setCellValue('A1', 'Kode Barang Baru');
-    $newSheet->setCellValue('B1', 'Nama Barang Baru');
-    
-    $rowIndex = 2; // Mulai dari baris kedua untuk memasukkan data barang baru
-    
-    // Ambil semua barang dari database yang tidak ada di Excel
-    $barangBaru = DB::table('barangs')
-        ->whereNotIn('kode', $existingBarang)
-        ->get();
-
-    // Inisialisasi array untuk menyimpan baris terakhir dari setiap kelompok kode
-    $kelompokKodeBaris = [];
-
-    // Iterasi melalui sheet untuk menemukan baris terakhir dari setiap kelompok kode
-    $sheet = $spreadsheet->getActiveSheet();
-    foreach ($sheet->getRowIterator(12) as $row) {
-        $cellIterator = $row->getCellIterator();
-        $cellIterator->setIterateOnlyExistingCells(false);
+    private function createNewSheetWithExistingAndNewBarang($spreadsheet, $existingBarang, $startDate, $endDate)
+    {
+        // Buat sheet baru untuk barang baru
+        $newSheet = $spreadsheet->createSheet();
+        $newSheet->setTitle('Barang Baru');
         
-        $rowData = [];
-        foreach ($cellIterator as $cell) {
-            $rowData[] = $cell->getValue();
-        }
-
-        $kode = $rowData[1];
-        if ($kode && strlen($kode) == 10) {
-            // Jika kode adalah kelompok kode (10 digit), inisialisasi sebagai array untuk menyimpan baris terkait
-            $kelompok_kode = $kode;
-            $kelompokKodeBaris[$kelompok_kode] = []; // Pastikan ini adalah array
-            $kelompokKodeBaris[$kelompok_kode]['last_row'] = $row->getRowIndex();
-        } elseif ($kode && strlen($kode) == 6 && isset($kelompok_kode)) {
-            // Jika kode adalah barang (6 digit) dalam kelompok kode, perbarui baris terakhir kelompok kode
-            $kelompokKodeBaris[$kelompok_kode]['last_row'] = $row->getRowIndex();
-            $kelompokKodeBaris[$kelompok_kode][$kode] = $row->getRowIndex();
-        }
-    }
-
-    // Masukkan barang baru di bawah baris terakhir dari kelompok kode yang sesuai di sheet utama
-    foreach ($barangBaru as $barang) {
-        $kelompokKode = substr($barang->kode, 0, 10); // Dapatkan 10 digit pertama sebagai kelompok kode
-        $kodeBarang = substr($barang->kode, 10); // Dapatkan 6 digit terakhir sebagai kode barang
-
-        if (isset($kelompokKodeBaris[$kelompokKode])) {
-            // Tentukan posisi baris berdasarkan urutan kode barang
-            $barisTujuan = $kelompokKodeBaris[$kelompokKode]['last_row'] + 1;
-            foreach ($kelompokKodeBaris[$kelompokKode] as $existingKode => $baris) {
-                if (is_numeric($existingKode) && $kodeBarang < $existingKode) {
-                    $barisTujuan = $baris;
-                    break;
-                }
+        // Tambahkan header di sheet baru
+        $newSheet->setCellValue('A1', 'Kode Barang Baru');
+        $newSheet->setCellValue('B1', 'Nama Barang Baru');
+        
+        $rowIndex = 2; // Mulai dari baris kedua untuk memasukkan data barang baru
+        
+        // Ambil semua barang dari database yang tidak ada di Excel
+        $barangBaru = DB::table('barangs')
+            ->whereNotIn('kode', $existingBarang)
+            ->get();
+    
+        // Inisialisasi array untuk menyimpan baris terakhir dari setiap kelompok kode
+        $kelompokKodeBaris = [];
+    
+        // Iterasi melalui sheet untuk menemukan baris terakhir dari setiap kelompok kode
+        $sheet = $spreadsheet->getActiveSheet();
+        foreach ($sheet->getRowIterator(12) as $row) {
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(false);
+            
+            $rowData = [];
+            foreach ($cellIterator as $cell) {
+                $rowData[] = $cell->getValue();
             }
-
-            // Sisipkan barang baru di posisi yang sesuai
-            $sheet->insertNewRowBefore($barisTujuan, 1);
-            $sheet->setCellValue('B' . $barisTujuan, $kodeBarang); // Masukkan 6 digit terakhir sebagai kode barang
-            $sheet->setCellValue('C' . $barisTujuan, $barang->nama); // Masukkan nama barang
-            $sheet->setCellValue('E' . $barisTujuan, 0); // Set kolom E ke 0
-            $sheet->setCellValue('J' . $barisTujuan, 0); // Set kolom J ke 0
-
-            // Hitung stok awal, pemasukan, pengeluaran, dan stok akhir
-            $stokAwal = DB::table('stok_awal_bulans')
-                ->where('barang_id', $barang->id)
-                ->where('tahun', Carbon::parse($startDate)->year)
-                ->where('bulan', Carbon::parse($startDate)->month)
-                ->value('qty_awal');
-
-            $totalPemasukan = DB::table('pemasukans')
-                ->where('barang_id', $barang->id)
-                ->whereBetween('tanggal', [$startDate, $endDate])
-                ->sum('qty');
-
-            $totalPengeluaran = DB::table('pengeluarans')
-                ->where('barang_id', $barang->id)
-                ->whereBetween('tanggal', [$startDate, $endDate])
-                ->sum('qty');
-
-            $stokAkhir = $stokAwal + $totalPemasukan - $totalPengeluaran;
-
-            // Masukkan nilai stok awal, pemasukan, pengeluaran, dan stok akhir ke dalam sheet Excel
-            $sheet->setCellValue('D' . $barisTujuan, $stokAwal); // Stok awal pada kolom D
-            $sheet->setCellValue('F' . $barisTujuan, $totalPemasukan); // Pemasukan pada kolom F
-            $sheet->setCellValue('G' . $barisTujuan, -$totalPengeluaran); // Pengeluaran pada kolom G (negatif)
-            $sheet->setCellValue('H' . $barisTujuan, "=F" . $barisTujuan . "+G" . $barisTujuan); // Rumus untuk kolom H
-            $sheet->setCellValue('I' . $barisTujuan, $stokAkhir); // Stok akhir pada kolom I
-
-            // Perbarui posisi kelompok kode
-            $kelompokKodeBaris[$kelompokKode]['last_row']++;
-            $kelompokKodeBaris[$kelompokKode][$kodeBarang] = $barisTujuan;
+    
+            $kode = $rowData[1];
+            if ($kode && strlen($kode) == 10) {
+                // Jika kode adalah kelompok kode (10 digit), simpan barisnya
+                $kelompok_kode = $kode;
+                $kelompokKodeBaris[$kelompok_kode] = $row->getRowIndex();
+            } elseif ($kode && strlen($kode) == 6 && isset($kelompok_kode)) {
+                // Jika kode adalah barang (6 digit) dalam kelompok kode, perbarui baris terakhir kelompok kode
+                $kelompokKodeBaris[$kelompok_kode] = $row->getRowIndex();
+            }
+        }
+    
+        // Masukkan barang baru di bawah baris terakhir dari kelompok kode yang sesuai di sheet utama
+        foreach ($barangBaru as $barang) {
+            $kelompokKode = substr($barang->kode, 0, 10); // Dapatkan 10 digit pertama sebagai kelompok kode
+    
+            if (isset($kelompokKodeBaris[$kelompokKode])) {
+                // Baris di mana kelompok kode terakhir kali muncul
+                $barisKelompok = $kelompokKodeBaris[$kelompokKode];
+                
+                // Sisipkan barang baru di bawah baris terakhir kelompok kode yang sesuai
+                $sheet->insertNewRowBefore($barisKelompok + 1, 1);
+                $sheet->setCellValue('B' . ($barisKelompok + 1), substr($barang->kode, 10)); // Masukkan 6 digit terakhir sebagai kode barang
+                $sheet->setCellValue('C' . ($barisKelompok + 1), $barang->nama); // Masukkan nama barang
+    
+                // Hitung stok awal, pemasukan, pengeluaran, dan stok akhir
+                $stokAwal = DB::table('stok_awal_bulans')
+                    ->where('barang_id', $barang->id)
+                    ->where('tahun', Carbon::parse($startDate)->year)
+                    ->where('bulan', Carbon::parse($startDate)->month)
+                    ->value('qty_awal');
+    
+                $totalPemasukan = DB::table('pemasukans')
+                    ->where('barang_id', $barang->id)
+                    ->whereBetween('tanggal', [$startDate, $endDate])
+                    ->sum('qty');
+    
+                $totalPengeluaran = DB::table('pengeluarans')
+                    ->where('barang_id', $barang->id)
+                    ->whereBetween('tanggal', [$startDate, $endDate])
+                    ->sum('qty');
+    
+                $stokAkhir = $stokAwal + $totalPemasukan - $totalPengeluaran;
+    
+                // Masukkan nilai stok awal, pemasukan, pengeluaran, dan stok akhir ke dalam sheet Excel
+                $sheet->setCellValue('D' . ($barisKelompok + 1), $stokAwal); // Stok awal pada kolom D
+                $sheet->setCellValue('F' . ($barisKelompok + 1), $totalPemasukan); // Pemasukan pada kolom F
+                $sheet->setCellValue('G' . ($barisKelompok + 1), -$totalPengeluaran); // Pengeluaran pada kolom G (negatif)
+                $sheet->setCellValue('H' . ($barisKelompok + 1), "=F" . ($barisKelompok + 1) . "+G" . ($barisKelompok + 1)); // Rumus untuk kolom H
+                $sheet->setCellValue('I' . ($barisKelompok + 1), $stokAkhir); // Stok akhir pada kolom I
+    
+                // Perbarui posisi kelompok kode
+                $kelompokKodeBaris[$kelompokKode]++;
+            }
+        }
+    
+        // Juga tambahkan barang baru ke sheet "Barang Baru" untuk pelacakan tambahan
+        foreach ($barangBaru as $barang) {
+            $newSheet->setCellValue('A' . $rowIndex, $barang->kode);
+            $newSheet->setCellValue('B' . $rowIndex, $barang->nama);
+            $rowIndex++;
         }
     }
-
-    // Juga tambahkan barang baru ke sheet "Barang Baru" untuk pelacakan tambahan
-    foreach ($barangBaru as $barang) {
-        $newSheet->setCellValue('A' . $rowIndex, $barang->kode);
-        $newSheet->setCellValue('B' . $rowIndex, $barang->nama);
-        $rowIndex++;
-    }
-}
     
 }

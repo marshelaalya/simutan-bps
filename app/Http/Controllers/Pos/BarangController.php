@@ -391,16 +391,24 @@ public function dataForIndex()
         }
     }   
 
-    public function barangDelete($id){
-        barang::findOrFail($id)->delete();
+public function barangDelete($id)
+{
+    $barang = barang::findOrFail($id);
+    $barang->delete();
 
-        $notification = array(
-            'message' => 'barang Barang berhasil dihapus',
-            'alert-type' => 'success'
-        );
-
-        return redirect()->back()->with($notification);
+    // Jika request berasal dari AJAX, kembalikan JSON response
+    if (request()->ajax()) {
+        return response()->json(['message' => 'Data barang berhasil dihapus.']);
     }
+
+    // Jika bukan AJAX, lanjutkan dengan redirect
+    $notification = array(
+        'message' => 'Barang berhasil dihapus',
+        'alert-type' => 'success'
+    );
+
+    return redirect()->back()->with($notification);
+}
 
     public function exportToExcel(Request $request)
     {
