@@ -143,6 +143,20 @@ public function dataForIndex()
 
     public function barangStore(Request $request)
     {
+
+        // Validasi kode barang untuk memastikan tidak ada duplikasi
+        $existingBarang = Barang::where('kode', $request->kode_barang)->first();
+        
+        if ($existingBarang) {
+            // Jika kode barang sudah ada, kembalikan dengan pesan error
+            $notification = array(
+                'message' => "Kode barang sudah terdaftar. Silakan gunakan kode yang berbeda.",
+                'alert-type' => "error"
+            );
+            return redirect()->back()->with($notification);
+        }
+
+
         $satuan = $request->satuan;
         $satuanBaru = $request->satuanBaru;
 

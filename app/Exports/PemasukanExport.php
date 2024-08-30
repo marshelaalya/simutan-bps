@@ -119,6 +119,26 @@ class PemasukanExport
         }
         // Simpan existingBarang untuk digunakan pada sheet baru
         $this->createNewSheetWithExistingAndNewBarang($spreadsheet, $existingBarang, $startDate, $endDate);
+        // Loop dari baris 580 dan cari "Jakarta" di kolom G
+        $row = 587;
+        while (true) {
+            $currentValue = $sheet->getCell('G' . $row)->getValue();
+            
+            // Jika menemukan "Jakarta", ubah nilainya
+            if (strpos($currentValue, 'Jakarta') !== false) {
+                $newValue = "Jakarta, " . Carbon::parse($endDate)->format('d-m-Y');
+                $sheet->setCellValue('G' . $row, $newValue);
+                break; // Keluar dari loop setelah mengganti nilai
+            }
+
+            $row++;
+            
+            // Tambahkan batasan untuk menghindari loop tanpa akhir
+            if ($row > $sheet->getHighestRow()) {
+                // Log::warning("Teks 'Jakarta' tidak ditemukan dari baris 580 ke atas.");
+                break;
+            }
+        }
     }
 
     private function createNewSheetWithExistingAndNewBarang($spreadsheet, $existingBarang, $startDate, $endDate)
@@ -163,18 +183,38 @@ class PemasukanExport
             }
         }
     
-        // Masukkan barang baru di bawah baris terakhir dari kelompok kode yang sesuai di sheet utama
+        // Cari baris "Jumlah" di kolom B mulai dari baris 581
+        $jumlahRow = null;
+        for ($row = 581; $row <= $sheet->getHighestRow(); $row++) {
+            $cellValue = $sheet->getCell('B' . $row)->getValue();
+            if (strtolower(trim($cellValue)) == 'jumlah') {
+                $jumlahRow = $row;
+                break;
+            }
+        }
+    
+        // Pastikan jumlahRow ditemukan
+        if ($jumlahRow === null) {
+            throw new \Exception('Tidak dapat menemukan baris dengan nilai "jumlah" di kolom B mulai dari baris 581.');
+        }
+    
+        // Masukkan barang baru yang kelompok kodenya belum ada di atas baris "Jumlah"
         foreach ($barangBaru as $barang) {
             $kelompokKode = substr($barang->kode, 0, 10); // Dapatkan 10 digit pertama sebagai kelompok kode
     
-            if (isset($kelompokKodeBaris[$kelompokKode])) {
-                // Baris di mana kelompok kode terakhir kali muncul
-                $barisKelompok = $kelompokKodeBaris[$kelompokKode];
-                
-                // Sisipkan barang baru di bawah baris terakhir kelompok kode yang sesuai
-                $sheet->insertNewRowBefore($barisKelompok + 1, 1);
-                $sheet->setCellValue('B' . ($barisKelompok + 1), substr($barang->kode, 10)); // Masukkan 6 digit terakhir sebagai kode barang
-                $sheet->setCellValue('C' . ($barisKelompok + 1), $barang->nama); // Masukkan nama barang
+            if (!isset($kelompokKodeBaris[$kelompokKode])) {
+                // Sisipkan kelompok kode baru sebelum "Jumlah"
+                $sheet->insertNewRowBefore($jumlahRow, 1);
+                $sheet->setCellValue('B' . $jumlahRow, $kelompokKode); // Masukkan kelompok kode di kolom B
+                $sheet->setCellValue('C' . $jumlahRow, ''); // Kosongkan kolom C
+    
+                // Update jumlahRow agar barang berikutnya disisipkan di bawah kelompok kode ini
+                $jumlahRow++;
+    
+                // Masukkan barang baru di bawah kelompok kode baru
+                $sheet->insertNewRowBefore($jumlahRow, 1);
+                $sheet->setCellValue('B' . $jumlahRow, substr($barang->kode, 10)); // Masukkan 6 digit terakhir sebagai kode barang
+                $sheet->setCellValue('C' . $jumlahRow, $barang->nama); // Masukkan nama barang
     
                 // Hitung stok awal, pemasukan, pengeluaran, dan stok akhir
                 $stokAwal = DB::table('stok_awal_bulans')
@@ -196,14 +236,14 @@ class PemasukanExport
                 $stokAkhir = $stokAwal + $totalPemasukan - $totalPengeluaran;
     
                 // Masukkan nilai stok awal, pemasukan, pengeluaran, dan stok akhir ke dalam sheet Excel
-                $sheet->setCellValue('D' . ($barisKelompok + 1), $stokAwal); // Stok awal pada kolom D
-                $sheet->setCellValue('F' . ($barisKelompok + 1), $totalPemasukan); // Pemasukan pada kolom F
-                $sheet->setCellValue('G' . ($barisKelompok + 1), -$totalPengeluaran); // Pengeluaran pada kolom G (negatif)
-                $sheet->setCellValue('H' . ($barisKelompok + 1), "=F" . ($barisKelompok + 1) . "+G" . ($barisKelompok + 1)); // Rumus untuk kolom H
-                $sheet->setCellValue('I' . ($barisKelompok + 1), $stokAkhir); // Stok akhir pada kolom I
+                $sheet->setCellValue('D' . $jumlahRow, $stokAwal); // Stok awal pada kolom D
+                $sheet->setCellValue('F' . $jumlahRow, $totalPemasukan); // Pemasukan pada kolom F
+                $sheet->setCellValue('G' . $jumlahRow, -$totalPengeluaran); // Pengeluaran pada kolom G (negatif)
+                $sheet->setCellValue('H' . $jumlahRow, "=F$jumlahRow+G$jumlahRow"); // Rumus untuk kolom H
+                $sheet->setCellValue('I' . $jumlahRow, $stokAkhir); // Stok akhir pada kolom I
     
-                // Perbarui posisi kelompok kode
-                $kelompokKodeBaris[$kelompokKode]++;
+                // Update jumlahRow agar barang berikutnya disisipkan di bawahnya
+                $jumlahRow++;
             }
         }
     

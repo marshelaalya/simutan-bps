@@ -126,6 +126,21 @@
 
 <script type="text/javascript">
     $(document).ready(function (){
+
+        $('#kode_barang').on('blur', function() {
+            var kodeBarang = $(this).val();
+            if (kodeBarang.length < 16) {
+                $(this).tooltip({
+                    title: "Kode barang harus terdiri dari 16 karakter.",
+                    placement: "top", // Menggunakan placement 'top' untuk menempatkan tooltip di atas
+                    trigger: "manual",
+                    customClass: 'text-left-tooltip' // Custom class untuk text-align kiri
+                }).tooltip('show');
+            } else {
+                $(this).tooltip('hide');
+            }
+        });
+
         $('#myForm').validate({
             rules: {
                 nama: {
