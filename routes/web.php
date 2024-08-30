@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/profile', 'Profile')->name('admin.profile');
         Route::get('/edit/profile', 'EditProfile')->name('edit.profile');
         Route::post('/store/profile', 'StoreProfile')->name('store.profile');
-        Route::get('/change/password', 'ChangePassword')->name('change.password');
+        Route::get('admin/change/password', 'ChangePassword')->name('admin.change.password');
         Route::post('/update/password', 'UpdatePassword')->name('update.password');
     });
 
@@ -63,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pegawai/profile', 'Profile')->name('pegawai.profile');
         Route::get('/edit/profile', 'EditProfile')->name('edit.profile');
         Route::post('/store/profile', 'StoreProfile')->name('store.profile');
-        Route::get('/change/password', 'ChangePassword')->name('change.password');
+        Route::get('pegawai/change/password', 'ChangePassword')->name('pegawai.change.password');
         Route::post('/update/password', 'UpdatePassword')->name('update.password');
     });
 
@@ -72,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/supervisor/profile', 'Profile')->name('supervisor.profile');
         Route::get('/edit/profile', 'EditProfile')->name('edit.profile');
         Route::post('/store/profile', 'StoreProfile')->name('store.profile');
-        Route::get('/change/password', 'ChangePassword')->name('change.password');
+        Route::get('/supervisor/change/password', 'ChangePassword')->name('supervisor.change.password');
         Route::post('/update/password', 'UpdatePassword')->name('update.password');
     });
 

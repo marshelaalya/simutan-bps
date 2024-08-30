@@ -70,7 +70,7 @@ class DashboardController extends Controller
         } elseif ($user->role === 'pegawai') {
             $permintaans = $query->where('user_id', $user->id)->get();
             return view('pegawai.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
-        } else {
+        } elseif ($user->role === 'supervisor') {
             $permintaans = $query->where('user_id', $user->id)->get();
             return view('supervisor.index', compact('user','permintaans', 'barangs', 'kelompoks', 'notifications', 'unreadCount', 'kelompokWithMostBarangs', 'topBarangs', 'topUsers'));
         }
