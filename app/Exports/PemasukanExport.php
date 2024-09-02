@@ -140,7 +140,6 @@ class PemasukanExport
             }
         }
     }
-
     private function createNewSheetWithExistingAndNewBarang($spreadsheet, $existingBarang, $startDate, $endDate)
     {
         // Buat sheet baru untuk barang baru
@@ -183,7 +182,59 @@ class PemasukanExport
             }
         }
     
-        // Cari baris "Jumlah" di kolom B mulai dari baris 581
+        // Masukkan barang baru yang kelompok kodenya sudah ada
+        foreach ($barangBaru as $barang) {
+            $kelompokKode = substr($barang->kode, 0, 10); // Dapatkan 10 digit pertama sebagai kelompok kode
+    
+            if (isset($kelompokKodeBaris[$kelompokKode])) {
+                // Jika kelompok kode sudah ada, tambahkan barang baru di bawahnya
+                $barisKelompok = $kelompokKodeBaris[$kelompokKode] + 1;
+                $sheet->insertNewRowBefore($barisKelompok, 1);
+                $sheet->setCellValue('B' . $barisKelompok, substr($barang->kode, 10)); // Masukkan 6 digit terakhir sebagai kode barang
+                $sheet->setCellValue('C' . $barisKelompok, $barang->nama); // Masukkan nama barang
+    
+                // Hitung stok awal, pemasukan, pengeluaran, dan stok akhir
+                $stokAwal = DB::table('stok_awal_bulans')
+                    ->where('barang_id', $barang->id)
+                    ->where('tahun', Carbon::parse($startDate)->year)
+                    ->where('bulan', Carbon::parse($startDate)->month)
+                    ->value('qty_awal');
+    
+                $totalPemasukan = DB::table('pemasukans')
+                    ->where('barang_id', $barang->id)
+                    ->whereBetween('tanggal', [$startDate, $endDate])
+                    ->sum('qty');
+    
+                $totalPengeluaran = DB::table('pengeluarans')
+                    ->where('barang_id', $barang->id)
+                    ->whereBetween('tanggal', [$startDate, $endDate])
+                    ->sum('qty');
+    
+                $stokAkhir = $stokAwal + $totalPemasukan - $totalPengeluaran;
+    
+                // Masukkan nilai stok awal, pemasukan, pengeluaran, dan stok akhir ke dalam sheet Excel
+                $sheet->setCellValue('D' . $barisKelompok, $stokAwal); // Stok awal pada kolom D
+                $sheet->setCellValue('F' . $barisKelompok, $totalPemasukan); // Pemasukan pada kolom F
+                $sheet->setCellValue('G' . $barisKelompok, -$totalPengeluaran); // Pengeluaran pada kolom G (negatif)
+                $sheet->setCellValue('H' . $barisKelompok, "=F$barisKelompok+G$barisKelompok"); // Rumus untuk kolom H
+                $sheet->setCellValue('I' . $barisKelompok, $stokAkhir); // Stok akhir pada kolom I
+    
+                // Tambahkan border tebal (thick) hanya pada outline (atas, bawah, kanan, kiri)
+                $sheet->getStyle('B' . $barisKelompok . ':I' . $barisKelompok)->applyFromArray([
+                    'borders' => [
+                        'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'left' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'right' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                    ],
+                ]);
+    
+                // Perbarui posisi terakhir kelompok kode
+                $kelompokKodeBaris[$kelompokKode] = $barisKelompok;
+            }
+        }
+    
+        // Setelah semua barang yang sesuai kelompok kodenya ditambahkan, cari posisi terbaru dari baris "Jumlah"
         $jumlahRow = null;
         for ($row = 581; $row <= $sheet->getHighestRow(); $row++) {
             $cellValue = $sheet->getCell('B' . $row)->getValue();
@@ -195,18 +246,32 @@ class PemasukanExport
     
         // Pastikan jumlahRow ditemukan
         if ($jumlahRow === null) {
-            throw new \Exception('Tidak dapat menemukan baris dengan nilai "jumlah" di kolom B mulai dari baris 581.');
+            throw new \Exception('Tidak dapat menemukan baris dengan nilai "jumlah" di kolom B.');
         }
     
-        // Masukkan barang baru yang kelompok kodenya belum ada di atas baris "Jumlah"
+        // Sisipkan kelompok kode baru dan barang-barang baru sebelum "Jumlah"
         foreach ($barangBaru as $barang) {
             $kelompokKode = substr($barang->kode, 0, 10); // Dapatkan 10 digit pertama sebagai kelompok kode
     
             if (!isset($kelompokKodeBaris[$kelompokKode])) {
-                // Sisipkan kelompok kode baru sebelum "Jumlah"
+                // Tambahkan kelompok kode baru sebelum "Jumlah"
                 $sheet->insertNewRowBefore($jumlahRow, 1);
                 $sheet->setCellValue('B' . $jumlahRow, $kelompokKode); // Masukkan kelompok kode di kolom B
                 $sheet->setCellValue('C' . $jumlahRow, ''); // Kosongkan kolom C
+    
+                // Terapkan format warna biru pada kelompok kode
+                $sheet->getStyle('B' . $jumlahRow)->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLUE);
+                $sheet->getStyle('B' . $jumlahRow)->getFont()->setBold(true); // Tambahkan tebal pada teks
+    
+                // Tambahkan border tebal (thick) hanya pada outline (atas, bawah, kanan, kiri)
+                $sheet->getStyle('B' . $jumlahRow . ':I' . $jumlahRow)->applyFromArray([
+                    'borders' => [
+                        'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'left' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'right' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                    ],
+                ]);
     
                 // Update jumlahRow agar barang berikutnya disisipkan di bawah kelompok kode ini
                 $jumlahRow++;
@@ -242,6 +307,15 @@ class PemasukanExport
                 $sheet->setCellValue('H' . $jumlahRow, "=F$jumlahRow+G$jumlahRow"); // Rumus untuk kolom H
                 $sheet->setCellValue('I' . $jumlahRow, $stokAkhir); // Stok akhir pada kolom I
     
+                // Tambahkan border tebal (thick) hanya pada outline (atas, bawah, kanan, kiri)
+                $sheet->getStyle('B' . $jumlahRow . ':I' . $jumlahRow)->applyFromArray([
+                    'borders' => [
+                        'top' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'bottom' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'left' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                        'right' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK],
+                    ],
+                ]);
                 // Update jumlahRow agar barang berikutnya disisipkan di bawahnya
                 $jumlahRow++;
             }
@@ -253,6 +327,5 @@ class PemasukanExport
             $newSheet->setCellValue('B' . $rowIndex, $barang->nama);
             $rowIndex++;
         }
-    }
-    
+    }    
 }
