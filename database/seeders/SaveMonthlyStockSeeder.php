@@ -1,25 +1,22 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Database\Seeders;
 
-use Illuminate\Console\Command;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class SaveMonthlyStock extends Command
+class SaveMonthlyStockSeeder extends Seeder
 {
-    protected $signature = 'stock:save-monthly';
-    protected $description = 'Simpan stok awal bulan untuk semua barang pada tanggal 1 setiap bulan';
-
-    public function __construct()
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
     {
-        parent::__construct();
-    }
-
-    public function handle()
-    {
-        // Dapatkan tanggal saat ini (misalnya 1 Januari 2024)
-        $currentDate = Carbon::now();
+        // Dapatkan tanggal saat ini dengan timezone yang tepat
+        $currentDate = Carbon::now('Asia/Jakarta');
         $year = $currentDate->year;
         $month = $currentDate->month;
 
@@ -41,10 +38,10 @@ class SaveMonthlyStock extends Command
                     'qty_awal' => $barang->qty_item, // Ambil qty saat ini sebagai stok awal bulan
                     'tahun' => $year,
                     'bulan' => $month,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now('Asia/Jakarta'),
+                    'updated_at' => Carbon::now('Asia/Jakarta'),
                 ]);
-            } 
+            }
         }
     }
 }

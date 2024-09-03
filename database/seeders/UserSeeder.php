@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Path ke file CSV
-        $filePath = storage_path('app/public/pegawai.csv');
+        $filePath = base_path('app/Console/Commands/barang.csv');
 
         // Baca CSV
         $data = array_map('str_getcsv', file($filePath));
