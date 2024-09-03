@@ -103,6 +103,8 @@
                 <a class="dropdown-item text-center" href="{{ route('notifications.viewAll') }}">Lihat Selengkapnya</a>
             </div>
         </div>
+        
+        
 
             <!-- Fullscreen Button -->
             <div class="dropdown d-none d-lg-inline-block ms-1">
@@ -186,10 +188,16 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const notificationDropdown = document.getElementById('notification-dropdown');
-        notificationDropdown.addEventListener('click', function () {
-            fetch('{{ route('notifications.markAllRead') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
+document.addEventListener('DOMContentLoaded', function () {
+    const notificationDropdown = document.getElementById('notification-dropdown');
+    notificationDropdown.addEventListener('click', function () {
+        fetch('{{ route('notifications.markAllRead') }}', { 
+            method: 'POST', 
+            headers: { 
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+            }
         });
     });
+});
+
 </script>

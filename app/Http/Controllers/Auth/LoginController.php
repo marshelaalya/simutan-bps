@@ -25,7 +25,7 @@ class LoginController extends Controller
 
         // Authentication failed
         return redirect()->back()->withErrors([
-            'email' => 'These credentials do not match our records.',
+            'email' => 'Masuk gagal, silakan coba lagi.',
         ]);
     }
 

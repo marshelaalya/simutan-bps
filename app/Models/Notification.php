@@ -17,4 +17,9 @@ class Notification extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function permintaan()
+    {
+        return $this->belongsTo(Permintaan::class, 'permintaan_id');
+    }
+
 }

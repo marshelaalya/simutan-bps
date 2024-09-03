@@ -188,7 +188,7 @@
                                 <td class="signature">
                                     <br>
                                     <p>Yang Menerima</p>
-                                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('backend/assets/images/users/ttd_' . auth()->user()->id . '.png'))) }}" alt="Signature {{ auth()->user()->name }}">
+                                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('backend/assets/images/users/ttd_' . $pilihan->first()->permintaan->user->id . '.png'))) }}" alt="Signature {{ auth()->user()->name }}">
                                     <div class="name">{{ $pilihan->first()->created_by }}</div>
                                 </td>
                                 <td class="signature">

@@ -238,8 +238,8 @@ class PermintaanController extends Controller
                 if ($barang) {
                     $barang->qty_item += $pilihan->req_qty; // Mengembalikan kuantitas
                     $barang->save();
-
-                    // / Hapus entri pengeluaran yang terkait
+    
+                    // Hapus entri pengeluaran yang terkait
                     Pengeluaran::where('permintaan_id', $permintaan->id)
                         ->where('barang_id', $barang->id)
                         ->delete();
@@ -274,8 +274,22 @@ class PermintaanController extends Controller
             ]);
         }
     
+        // Tambahkan notifikasi ke supervisor jika admin menyetujui permintaan
+        if ($user->role === 'admin' && $newStatus === 'approved') {
+            $supervisor = User::where('role', 'supervisor')->first(); // Ambil supervisor (asumsi hanya ada satu supervisor)
+            if ($supervisor) {
+                $supervisorNotificationMessage = 'Terdapat permintaan dari ' . $requestUser->name . ' yang membutuhkan persetujuan supervisor.';
+                Notification::create([
+                    'user_id' => $supervisor->id,
+                    'permintaan_id' => $permintaan->id,
+                    'message' => $supervisorNotificationMessage,
+                ]);
+            }
+        }
+        
         return redirect()->route('permintaan.all')->with('success', 'Permintaan berhasil diperbarui');
     }
+    
     public function PermintaanSaya(Request $request)
 {
     $userId = auth()->user()->id;

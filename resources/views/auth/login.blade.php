@@ -130,40 +130,44 @@
         }
 
         .spinner-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #eff3f6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    display: none; /* Hide by default */
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #eff3f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none; /* Hide by default */
+        }
 
-.spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    height: 100px;
-    margin-top: -20px; 
-}
+        .spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            height: 100px;
+            margin-top: -20px; 
+        }
 
-.spinner img {
-    width: 8rem;
-    animation: pulse 1.5s infinite;
-}
+        .spinner img {
+            width: 8rem;
+            animation: pulse 1.5s infinite;
+        }
 
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 1; }
-}
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
-
+        .alert {
+            font-size: 0.875rem;
+            color: #f44336; /* Red color for errors */
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 
@@ -185,7 +189,7 @@
                     <h3 class="text-center font-size-34 mt-0">Masuk</h3>
 
                     <div class="p-3">
-                        <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}">
+                        <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}" id="loginForm">
                             @csrf
 
                             <div class="form-group mb-3">
@@ -201,10 +205,15 @@
                                         <i class="ti ti-eye text-dark"></i>
                                     </span>
                                 </div>
+                                @if ($errors->any())
+                                    <div class="alert">
+                                        {{ $errors->first() }}
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="form-group mb-3 text-end">
-                                <button class="btn btn-info w-auto waves-effect waves-light" type="submit">Masuk</button>
+                                <button class="btn btn-info w-auto waves-effect waves-light" type="submit" id="loginButton">Masuk</button>
                             </div>
                         </form>
                     </div>
@@ -214,13 +223,11 @@
     </div>
 
     <!-- Spinner -->
-    <!-- Spinner -->
-<div id="spinner" class="spinner-wrapper">
-    <div class="spinner">
-        <img src="{{ asset('backend/assets/images/logo2.png') }}" alt="Logo">
+    <div id="spinner" class="spinner-wrapper">
+        <div class="spinner">
+            <img src="{{ asset('backend/assets/images/logo2.png') }}" alt="Logo">
+        </div>
     </div>
-</div>
-
 
     <!-- Javascript -->
     <script src="{{ asset('backend/assets/libs/jquery/jquery.min.js') }}"></script>
@@ -231,39 +238,40 @@
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 
     <script>
-        const form = document.querySelector('form');
+        const form = document.querySelector('#loginForm');
         const spinner = document.querySelector('#spinner');
+        const loginButton = document.querySelector('#loginButton');
 
         form.addEventListener('submit', function() {
-            spinner.style.display = 'flex'; // Show spinner
+            spinner.style.display = 'flex'; // Show spinner when form is submitted
+            loginButton.disabled = true; // Disable the login button to prevent multiple submissions
         });
     </script>
 
-<script>
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
 
-    togglePassword.addEventListener('mousedown', function () {
-        // Show the password
-        password.setAttribute('type', 'text');
-        this.querySelector('i').classList.remove('ti-eye');
-        this.querySelector('i').classList.add('ti-eye-closed');
-    });
+        togglePassword.addEventListener('mousedown', function () {
+            // Show the password
+            password.setAttribute('type', 'text');
+            this.querySelector('i').classList.remove('ti-eye');
+            this.querySelector('i').classList.add('ti-eye-closed');
+        });
 
-    togglePassword.addEventListener('mouseup', function () {
-        // Hide the password
-        password.setAttribute('type', 'password');
-        this.querySelector('i').classList.remove('ti-eye-closed');
-        this.querySelector('i').classList.add('ti-eye');
-    });
+        togglePassword.addEventListener('mouseup', function () {
+            // Hide the password
+            password.setAttribute('type', 'password');
+            this.querySelector('i').classList.remove('ti-eye-closed');
+            this.querySelector('i').classList.add('ti-eye');
+        });
 
-    // Prevent the toggle from sticking if the user moves the mouse off the button
-    togglePassword.addEventListener('mouseout', function () {
-        password.setAttribute('type', 'password');
-        this.querySelector('i').classList.remove('ti-eye-closed');
-        this.querySelector('i').classList.add('ti-eye');
-    });
-</script>
+        togglePassword.addEventListener('mouseout', function () {
+            password.setAttribute('type', 'password');
+            this.querySelector('i').classList.remove('ti-eye-closed');
+            this.querySelector('i').classList.add('ti-eye');
+        });
+    </script>
 </body>
 
 </html>
