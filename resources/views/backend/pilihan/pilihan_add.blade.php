@@ -164,7 +164,7 @@
                                             </select>
                                         </div>
                                     </div>                                    
-                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:30%">
+                                    <div style="-webkit-box-flex:0; -ms-flex:0 0 auto; flex:0 0 auto; width:29%">
                                         <div>
                                             <label for="barang_id" class="form-label text-info">Nama Barang</label>
                                             <select name="barang_id" class="form-select" id="barang_id" aria-label="Pilih Barang">
