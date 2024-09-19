@@ -105,6 +105,7 @@
     </div>
 </div>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const satuanSelect = document.getElementById('satuan');
@@ -124,17 +125,19 @@
     });
 </script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function (){
-
+    jQuery.noConflict();
+    jQuery(document).ready(function ($) {
         $('#kode_barang').on('blur', function() {
             var kodeBarang = $(this).val();
             if (kodeBarang.length < 16) {
                 $(this).tooltip({
                     title: "Kode barang harus terdiri dari 16 karakter.",
-                    placement: "top", // Menggunakan placement 'top' untuk menempatkan tooltip di atas
+                    placement: "top",
                     trigger: "manual",
-                    customClass: 'text-left-tooltip' // Custom class untuk text-align kiri
+                    customClass: 'text-left-tooltip'
                 }).tooltip('show');
             } else {
                 $(this).tooltip('hide');
@@ -144,7 +147,7 @@
         $('#myForm').validate({
             rules: {
                 nama: {
-                    required : true,
+                    required: true,
                 },
                 kelompok_id: {
                     required: true,
@@ -170,19 +173,20 @@
                     required: "Satuan barang harus dipilih.",
                 }
             },
-            errorElement : 'span', 
+            errorElement: 'span',
             errorPlacement: function (error, element) {
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight : function(element, errorClass, validClass) {
+            highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight : function(element, errorClass, validClass) {
+            unhighlight: function(element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             },
         });
     });
 </script>
+
 
 @endsection

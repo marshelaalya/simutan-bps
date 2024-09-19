@@ -11,9 +11,10 @@
     </title>
 </head>
          
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+         {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> --}}
          <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        
 
 <div class="page-content">
     <div class="container-fluid">
@@ -75,7 +76,7 @@
                                                 <p class="text-success">Foto saat ini:</p>
                                                 <div class="mt-2">
                                                     <!-- Menggunakan path lengkap dari user->foto -->
-                                                    <img id="foto-preview" src="{{ asset('storage/' . $user->foto) }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
+                                                    <img id="foto-preview" src="{{ asset($user->foto) }}" alt="Foto Pengguna" class="img-fluid" style="max-width: 200px;">
                                                 </div>
                                             @else
                                                 <p class="text-warning">Belum ada foto</p>
@@ -101,7 +102,7 @@
                                                 <p class="text-success">Tanda tangan saat ini:</p>
                                                 <div class="mt-2">
                                                     <!-- Menggunakan path lengkap dari user->signature -->
-                                                    <img id="ttd-preview" src="{{ asset('storage/' . $user->ttd) }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
+                                                    <img id="ttd-preview" src="{{ asset($user->ttd) }}" alt="Tanda Tangan Pengguna" class="img-fluid" style="max-width: 200px;">
                                                 </div>
                                             @else
                                                 <p class="text-warning">Belum ada tanda tangan</p>
@@ -127,9 +128,12 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function (){
+jQuery.noConflict();
+jQuery(document).ready(function ($) {
         // Validasi Form
         $('#myForm').validate({
             rules: {

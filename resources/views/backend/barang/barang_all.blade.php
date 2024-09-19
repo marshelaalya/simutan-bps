@@ -433,24 +433,6 @@
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var button = document.getElementById('dropdownMenuButton');
-        
-        button.addEventListener('mouseover', function () {
-            button.style.backgroundColor = '#d0e8fc';
-            button.style.borderColor = '#032e5c';
-            button.style.color = '#032e5c';
-        });
-        
-        button.addEventListener('mouseout', function () {
-            button.style.backgroundColor = '#e2f3fe';
-            button.style.borderColor = '#043277';
-            button.style.color = '#043277';
-        });
-    });
-</script>
-
 
 <script>
     $(document).ready(function() {

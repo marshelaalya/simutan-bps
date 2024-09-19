@@ -13,7 +13,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
 
 <style>
     .step-indicator {
@@ -142,7 +142,7 @@
                                     <p>Semua kolom harus diisi. Harap isi tanggal dan deskripsi sebelum melanjutkan.</p>
                                 </div>
                                 <div class="mt-4 d-flex justify-content-end">
-                                    <button type="button" class="btn btn-info" id="next_btn_step1">Next&nbsp;&nbsp;<i class="mdi mdi-arrow-right font-size-16 text-white align-middle"></i></button>
+                                    <button type="button" class="btn btn-info" id="next_btn_step1" disabled>Next&nbsp;&nbsp;<i class="mdi mdi-arrow-right font-size-16 text-white align-middle"></i></button>
                                 </div>
                             </div>
                         
@@ -222,7 +222,9 @@
                                         <!-- Navigation Buttons -->
                                         <div class="mt-4 d-flex justify-content-between">
                                             <button type="button" class="btn btn-info" id="prev_btn"><i class="mdi mdi-arrow-left font-size-16 text-white align-middle"></i>&nbsp;&nbsp;Previous</button>
-                                            <button type="submit" class="btn btn-success" id="submit_btn">Submit</button>
+                                            <!--<button type="submit" class="btn btn-success" id="submit_btn">Submit</button>-->
+                                            <button type="submit" class="btn btn-success" id="submit_btn" disabled>Submit</button>
+
                                         </div>
                                     </div>
                                 </form>
@@ -242,40 +244,67 @@
         <td class="text-center" style="vertical-align: middle;">@{{ qty_req }}</td>
         <td class="text-center" style="vertical-align: middle;">@{{ barang_satuan }}</td>
         <td style="text-align: center; vertical-align: middle;">
-
-            <a href="javascript:void(0);" class="btn btn-sm delete-button hover:bg-danger" data-id="@{{ id }}" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Pilihan">
+            <a href="javascript:void(0);" class="btn btn-sm delete-button" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Pilihan">
                 <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
             </a>          
         </td>
     </tr>
 </script>
 
-<script>
-    $(document).on('click', '.delete-button', function() {
-        $(this).closest('tr').remove();
-    });
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+
+<script id="document-template" type="text/x-handlebars-template">
+    <tr class="delete_add_more_item">
+        <td style="vertical-align: middle;">@{{ kelompok_nama }}</td>
+        <td style="vertical-align: middle;">@{{ barang_nama }}</td>
+        <td class="text-center" style="vertical-align: middle;">@{{ qty_req }}</td>
+        <td class="text-center" style="vertical-align: middle;">@{{ barang_satuan }}</td>
+        <td style="text-align: center; vertical-align: middle;">
+            <a href="javascript:void(0);" class="btn btn-sm delete-button" style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: red; padding: 15px;" data-tooltip="Hapus Pilihan">
+                <i class="ti ti-trash font-size-20 align-middle text-danger"></i>
+            </a>          
+        </td>
+    </tr>
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
         var availableQty = 0; // Variabel untuk menyimpan kuantitas barang yang tersedia
-        var barang_satuan = ''; // Variabel untuk menyimpan satuan barang
-
+        var barangSatuan = ''; // Variabel untuk menyimpan satuan barang
+        
+        // Fungsi untuk validasi form
         function validateForm() {
-            var date = $('#date').val();
-            var kelompok_id = $('#kelompok_id').val();
-            var barang_id = $('#barang_id').val();
-            var req_qty = $('#req_qty').val();
-            
-            if (date && kelompok_id && barang_id && req_qty && req_qty <= availableQty) {
-                $('#addMoreButton').prop('disabled', false);
-            } else {
-                $('#addMoreButton').prop('disabled', true);
-            }
+            var requestedQty = Number($('#req_qty').val());
+            var isQtyValid = requestedQty > 0 && requestedQty <= availableQty;
+
+            // Jika kuantitas valid, aktifkan tombol Add More Button
+            $('#addMoreButton').prop('disabled', !isQtyValid);
         }
 
+        // Fungsi untuk memeriksa apakah tabel memiliki data
+        function checkIfTableHasData() {
+            const tableBody = document.getElementById('table-body');
+            const noDataRow = document.getElementById('no-data-row');
+            const submitBtn = document.getElementById('submit_btn');
+
+            // Jika tabel kosong, tampilkan baris "Tidak ada barang terpilih" dan nonaktifkan tombol Submit
+            if (tableBody.children.length === 1 && tableBody.children[0].id === 'no-data-row') {
+            noDataRow.style.display = '';
+            submitBtn.disabled = true; // Disable submit button if table is empty
+        } else {
+            noDataRow.style.display = 'none';
+            submitBtn.disabled = false; // Enable submit button if there are data rows
+        }
+        }
+
+        // Event handler untuk perubahan tanggal
         $('#date').on('input', function() {
             var selectedDate = $(this).val();
+            validateStep1(); 
             if (selectedDate < today) {
                 $('#date_warning').show();
                 $('#addMoreButton').prop('disabled', true);
@@ -284,7 +313,12 @@
                 validateForm();
             }
         });
+        
+        $('#textarea').on('input', function() {
+        validateStep1(); // Validasi ketika deskripsi berubah
+    });
 
+        // Event handler untuk perubahan kelompok
         $('#kelompok_id').on('change', function() {
             var kelompok_id = $(this).val();
             $.ajax({
@@ -308,7 +342,7 @@
             });
         });
 
-        // Fungsi untuk menangani perubahan pada pilihan barang
+        // Event handler untuk perubahan barang
         $('#barang_id').on('change', function() {
             var barangId = $(this).val();
             
@@ -323,7 +357,6 @@
                             return;
                         }
 
-                        // Update UI
                         barangSatuan = data.satuan;
                         availableQty = data.qty_item;
                         $('#current_qty').val(availableQty);
@@ -338,9 +371,9 @@
             }
         });
 
-        // Fungsi untuk validasi kuantitas yang diminta
+        // Event handler untuk perubahan kuantitas yang diminta
         $('#req_qty').on('input', function() {
-            var requestedQty = $(this).val();
+            var requestedQty = parseInt($(this).val()); 
             if (requestedQty > availableQty) {
                 $('#qty_warning').show();
                 $('#addMoreButton').prop('disabled', true);
@@ -351,13 +384,49 @@
             }
         });
 
-        $(document).on("click", ".removeeventmore", function() {
+        // Event handler untuk tombol hapus
+        $(document).on("click", ".delete-button", function() {
             $(this).closest("tr").remove();
-            validateForm();
+            checkIfTableHasData(); // Periksa tabel setelah menghapus baris
         });
 
+        // Event handler untuk tombol Tambah Baris
+        $('#addMoreButton').on('click', function() {
+            var barangId = $('#barang_id').val();
+            if (!barangId) {
+                alert('Pilih barang terlebih dahulu.');
+                return;
+            }
+            
+            $(this).prop('disabled', true);
+            const source = $("#document-template").html();
+            const template = Handlebars.compile(source);
+
+            const context = {
+                date: $('#date').val(),
+                barang_nama: $('#barang_id option:selected').text(),
+                kelompok_nama: $('#kelompok_id option:selected').text(),
+                qty_req: $('#req_qty').val(),
+                barang_satuan: barangSatuan,
+                description: $('#textarea').val()
+            };
+
+            const html = template(context);
+            $('#table-body').append(html);
+            checkIfTableHasData(); // Periksa tabel setelah menambahkan baris
+            
+            // Reset field formulir
+            $('#kelompok_id').val('');
+            $('#current_qty').val('');
+            $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
+            $('#req_qty').val('');
+            $('#current_qty').text('');
+            validateForm(); // Validasi formulir
+        });
+
+        // Event handler untuk pengiriman formulir
         $('#mainForm').on('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
+            e.preventDefault(); // Mencegah pengiriman formulir default
 
             var date = $('#date').val();
             var description = $('#textarea').val();
@@ -372,11 +441,11 @@
                 var qty_req = $(this).find('td:eq(2)').text();
 
                 tableData.push({
-                    date: $('#hidden_date').val(), // Ambil dari hidden field
+                    date: $('#hidden_date').val(),
                     kelompok_nama: kelompok_nama,
                     barang_nama: barang_nama,
                     qty_req: qty_req,
-                    description: $('#hidden_description').val() // Ambil dari hidden field
+                    description: $('#hidden_description').val()
                 });
             });
 
@@ -384,11 +453,10 @@
             $(this).off('submit').submit(); 
         });
 
+        // Fungsi untuk validasi langkah 1
         function validateStep1() {
             var date = $('#date').val();
             var description = $('#textarea').val();
-            
-            console.log('Validating Step 1:', date, description); // Debugging
             
             if (date && description) {
                 $('#next_btn_step1').removeClass('disabled').prop('disabled', false);
@@ -399,9 +467,6 @@
                 return false; // Validasi gagal
             }
         }
-
-        // Validasi setiap kali input berubah di Step 1
-        $('#date, #textarea').on('input', validateStep1);
 
         // Fungsi untuk navigasi antar langkah
         function navigateToStep(step) {
@@ -416,14 +481,14 @@
             $('#submit_btn').toggle(step == 2);
             $('#addMoreButton').toggle(step == 2);
 
-            // Update circle step state
+            // Update state langkah bulat
             $('.step .circle').each(function() {
                 var circleStep = $(this).parent().data('step');
                 $(this).toggleClass('completed', circleStep < step);
             });
 
-             // Atur tombol Add More Button pada langkah 2
-             if (step === 2) {
+            // Atur tombol Add More Button pada langkah 2
+            if (step === 2) {
                 $('#addMoreButton').prop('disabled', true);
             }
 
@@ -431,12 +496,12 @@
             validateForm();
         }
 
-        // Navigasi menggunakan tombol "Next" di Step 1
+        // Navigasi menggunakan tombol "Next" di Langkah 1
         $('#next_btn_step1').on('click', function() {
             if (validateStep1()) {
                 navigateToStep(2);
             } else {
-                console.log('Validation failed on Step 1'); // Debugging
+                console.log('Validation failed on Step 1');
             }
         });
 
@@ -445,19 +510,15 @@
             navigateToStep(1);
         });
 
-        // Navigasi menggunakan klik pada circle
+        // Navigasi menggunakan klik pada lingkaran
         $('.step .circle').on('click', function() {
             var step = $(this).parent().data('step');
             
-            console.log('Circle clicked:', step); // Debugging
-
-            // Jika step yang ingin diakses adalah step 1, lakukan validasi
             if (step === 1) {
                 if (validateStep1()) {
                     navigateToStep(step);
                 }
             } else {
-                // Jika step yang ingin diakses lebih dari 1, hanya izinkan navigasi jika langkah sebelumnya sudah lengkap
                 var currentStep = $('.step.active').data('step');
                 if (currentStep < step) {
                     if (validateStep1()) {
@@ -474,61 +535,7 @@
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Function to check if the table is empty and manage the "No Data" row
-        function checkIfTableIsEmpty() {
-            const tableBody = document.getElementById('table-body');
-            const noDataRow = document.getElementById('no-data-row');
 
-            // Check if there are no rows in the table body (excluding the no-data row)
-            if (tableBody.children.length === 1 && tableBody.children[0].id === 'no-data-row') {
-                noDataRow.style.display = '';
-            } else {
-                noDataRow.style.display = 'none';
-            }
-        }
-
-        // Initial check on page load
-        checkIfTableIsEmpty();
-
-        // Event listener for removing a row
-        document.getElementById('table-body').addEventListener('click', function (e) {
-            if (e.target && e.target.matches('i.removeeventmore')) {
-                e.target.closest('tr').remove();
-                checkIfTableIsEmpty();
-            }
-        });
-
-        // Add row logic
-        $('#addMoreButton').on('click', function() {
-            $(this).prop('disabled', true);
-            const source = $("#document-template").html();
-            const template = Handlebars.compile(source);
-
-            const context = {
-                date: $('#date').val(),
-                barang_nama: $('#barang_id option:selected').text(),
-                kelompok_nama: $('#kelompok_id option:selected').text(),
-                qty_req: $('#req_qty').val(),
-                barang_satuan: barangSatuan,
-                description: $('#textarea').val()
-            };
-
-            const html = template(context);
-            $('#table-body').append(html);
-            checkIfTableIsEmpty();
-            
-            // Reset form fields
-            $('#kelompok_id').val('');
-            $('#current_qty').val('');
-            $('#barang_id').html('<option selected disabled>Pilih barang yang ingin diajukan</option>');
-            $('#req_qty').val('');
-            $('#current_qty').text('');
-            validateForm();
-        });
-    });
-</script>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 

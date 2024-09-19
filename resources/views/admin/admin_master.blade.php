@@ -30,7 +30,7 @@
     <link href="{{ asset('backend/assets/css/app.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-    <link rel="stylesheet" href="{{ asset('vendor/libs/bs-stepper/bs-stepper.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('vendor/libs/bs-stepper/bs-stepper.css') }}" /> --}}
 
     <style>
         .table-wrapper {
@@ -135,7 +135,7 @@
          <script src="{{ asset('backend/assets/js/pages/datatables.init.js') }}"></script> --}}
 
     <!-- ApexCharts -->
-    <script src="{{ asset('backend/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+   
 
     <!-- jQuery Vector Map -->
     <script src="{{ asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
@@ -153,11 +153,12 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-    <script src="{{ asset('backend/assets/js/pages/dashboard.init.js') }}"></script>
+    {{-- <script src="{{ asset('backend/assets/js/pages/dashboard.init.js') }}"></script> --}}
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
 
+
     <!-- Handle Bars JS -->
-    <script src="{{ asset('backend/assets/js/handlebars.js') }}"></script>
+    {{-- <script src="{{ asset('backend/assets/js/handlebars.js') }}"></script> --}}
 
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -184,20 +185,6 @@
     <!-- Notify JS (Optional) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/notify.js/2.0.0/notify.min.js" integrity="sha512-iy8/ErLJUuqWbu30yUSCxXtE3FCDZi3y5op0Duqdp7vtpeh1E6ZyAPnRS+OrJHddh4uP30oYpwNt7TXPbmP5lQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Custom JavaScript to Handle Spinner -->
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Setelah 2 detik, sembunyikan spinner dan tampilkan konten utama
-    setTimeout(function() {
-        document.getElementById('loading').style.opacity = '0'; // Mulai transisi menghilang
-        setTimeout(function() {
-            document.getElementById('loading').style.display = 'none'; // Sembunyikan setelah transisi selesai
-            document.querySelector('#layout-wrapper').style.display = 'block'; // Tampilkan konten utama
-        }, 500); // Durasi transisi fade-out, bisa disesuaikan jika diperlukan
-    }, 2000); // Tampilkan spinner selama 2 detik
-});
-
-    </script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

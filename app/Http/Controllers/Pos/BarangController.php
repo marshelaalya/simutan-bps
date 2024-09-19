@@ -189,13 +189,14 @@ public function dataForIndex()
             $file = $request->file('foto');
             $extension = $file->getClientOriginalExtension(); // Mendapatkan ekstensi file asli (jpg, jpeg, png, dll)
             $fileName = 'foto_' . $request->kode_barang . '.' . $extension; // Gunakan ekstensi asli
-            $filePath = $file->storeAs('public/backend/assets/images/barang', $fileName); // Simpan file
-    
-            $filePath = str_replace('public/', '', $filePath); // Update path relatif
-            $barang->foto_barang = $filePath; // Simpan path file di database
+            $filePath = $file->storeAs('backend/assets/images/barang', $fileName, 'public'); // Simpan file dengan nama asli
+        
+            // Menyimpan path lengkap termasuk nama file ke dalam database
+            $barang->foto_barang = 'backend/assets/images/barang/' . $fileName;
         } else {
             $barang->foto_barang = null; // Jika tidak ada foto, simpan nilai null
         }
+        
         
         $barang->save();
 

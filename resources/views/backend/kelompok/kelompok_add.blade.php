@@ -65,8 +65,12 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
 <script type="text/javascript">
-    $(document).ready(function (){
+    jQuery.noConflict();
+    jQuery(document).ready(function ($) {
         $('#myForm').validate({
             rules: {
                 nama: {
